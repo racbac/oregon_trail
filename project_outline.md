@@ -1,0 +1,25 @@
+# Project Outline
+## Objects
+- Caravan
+    - members
+        - Person family[]
+        - int health
+        - int pace
+        - int rations
+        - int food
+        - float money
+        - int boxes_ammo
+        - int tongues
+        - int wheels
+        - int axles
+        - int oxen
+    - methods
+- Store
+- Journey
+    - Date today
+    - int miles_travelled
+    - int weather
+- Game
+    - members
+    - methods
+        - start_game()
