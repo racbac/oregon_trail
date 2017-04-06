@@ -5,3 +5,4 @@ Put in anything that'll help us code this.
 - [game guide](https://www.gamefaqs.com/pc/577345-the-oregon-trail/faqs/30964)
 - [game script](https://www.gamefaqs.com/pc/577345-the-oregon-trail/faqs/56073)
 - [python example](https://github.com/ZakFarmer/OregonTrail)
+- [another game guide](https://www.gamefaqs.com/pc/577345-the-oregon-trail/faqs/30964)
