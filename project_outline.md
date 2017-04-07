@@ -23,3 +23,28 @@
     - members
     - methods
         - start_game()
+# Game Mechanics
+## Speed (miles per day)
+- Influenced by
+    - 
+    - pace
+        - steady
+        - strenuous
+        - grueling
+    - oxen
+        - healthy: 5
+        - sick: 4
+        - injured: 4
+    - weight
+        - belongings
+        - people
+    - weather
+        - hot
+        - warm 1x
+        - cool 1x
+        - cold
+        - rainy
+        - very rainy
+        - snowy
+        - very snowy
+    - weather
