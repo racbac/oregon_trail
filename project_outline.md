@@ -26,25 +26,23 @@
 # Game Mechanics
 ## Speed (miles per day)
 - Influenced by
-    - 
+    - base speed
+        - healthy ox: +5 mi/day per ox (limit 40 mi/day)
+        - injured ox: +4 mi/day per ox (limit 40 mi/day)
+        - family: family travels 3 mi/day on foot
     - pace
-        - steady
-        - strenuous
-        - grueling
-    - oxen
-        - healthy: 5
-        - sick: 4
-        - injured: 4
-    - weight
-        - belongings
-        - people
-    - weather
-        - hot
-        - warm 1x
-        - cool 1x
-        - cold
-        - rainy
-        - very rainy
-        - snowy
-        - very snowy
-    - weather
+        - steady: 1
+        - strenuous: 1.5
+        - grueling: 2
+    - weight?
+        - belongings: n/a for now
+        - people: 0.9 per person
+    - weather?
+        - hot: 0.8
+        - warm 1
+        - cool 1
+        - cold 0.9
+        - rainy: 0.9
+        - very rainy: 0.8
+        - snowy: 0.8
+        - very snowy: 0.6
