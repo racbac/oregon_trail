@@ -1,1 +1,32 @@
-h1 {color: red;}
+.wrapper {
+    max-width: 700px;
+    width: 80%; /* desired width */
+    position: relative;
+}
+
+.wrapper:before {
+    content:'';
+    display: block;
+    padding-bottom: 66%; /*relative height */
+}
+
+.content {
+    position: absolute;
+    border: solid 1px black;
+    top: 0px; bottom: 0px; right: 0px; left: 0px;
+        
+    background-color: black;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(./original_screenshots/start_screen.jpg);
+}
+
+main * {
+    margin: auto;
+    text-align: center;
+}
+
+h1 {
+    font-family:  "Georgia";
+}
