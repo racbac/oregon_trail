@@ -30,9 +30,9 @@ const RATIONS = {
 // maximum amount of each item allowed to carry
 const MAXIMUM = {
     OXEN: 20,
-    WHEEL: 3,
-    TONGUE: 3,
-    AXLE: 3,
+    WHEELS: 3,
+    TONGUES: 3,
+    AXLES: 3,
     FOOD: 2000,
     CLOTHING: 10000,
     AMMO: 10000
