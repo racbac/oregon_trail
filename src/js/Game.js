@@ -160,19 +160,28 @@ var Game={
       Game.waitForInput(null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
-      document.getElementById("game").innerHTML ="Matt store not done yet"
+      document.getElementById("game").innerHTML ="Matt store is not done yet. Continue to journey for now.";
+      Game.waitForInput(null,Game.scenes.Journey);
     },
     BuySupply:function(){
 
     },
     Journey:function(){
-
+      //find out if current at a landmark
+      //travel for a day per second
+      setTimeOut(Jour,1000);
+      Game.scenes.LandMark();
     },
     Fishing: function(){
 
     },
     LandMark: function(landmarkname){
-
+      //find out which landmark currently at, if any
+      var landmark=null;//Journey.getLandMark();
+      if(!landmark){
+        return;
+      }
+      document.getElementById("game").innerHTML ="Matt store not done yet";
     }
   },
   gameDiv: document.getElementById("game"),
