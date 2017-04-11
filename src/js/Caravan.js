@@ -3,6 +3,7 @@ function Caravan() {
 	this.family = [];
 	this.pace = 0;
 	this.rations = 0;
+	this.food=0;
 	this.money = 0.00;
 	this.boxes_ammo = 0;
 	this.tongues = 1;
@@ -42,5 +43,15 @@ Caravan.prototype.removeOx : function(oxenNum) {
 	if(this.oxen<0){
 		this.oxen=0;
 	}
+}
+Caravan.prototype.removeWagonTongue : function() {
+	this.tongues=this.tongues-1;
+}
+Caravan.prototype.removeFood : function(foodAmt) {
+	for(var i=0; i<foodAmt;i++){
+		this.food= this.food - 1;
+	}
+}
+Caravan.prototype.badWater : function() {
 
 }
