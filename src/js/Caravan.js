@@ -35,3 +35,12 @@ Caravan.prototype.removePerson : function(person) {
 		}
 	}
 }
+Caravan.prototype.removeOx : function(oxenNum) {
+	for(var i=0; i<oxenNum;i++){
+		this.oxen= this.oxen-1;
+	}
+	if(this.oxen<0){
+		this.oxen=0;
+	}
+
+}
