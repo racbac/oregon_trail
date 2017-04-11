@@ -23,3 +23,15 @@ Caravan.prototype.getHealth : function() {
 	
 	return totalHealth / familySize;
 }
+
+// Remove a person from the caravan (because they died)
+Caravan.prototype.removePerson : function(person) {
+	
+	var familySize = this.family.length;
+	
+	for (var i = 0; i < familySize; i++) {
+		if (this.family[i].name == person.name) {
+			this.family.splice(i,1);
+		}
+	}
+}
