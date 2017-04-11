@@ -18,13 +18,16 @@ var Game={
           Game.scenes.chooseOccupation();
         }
         else if(input ==2){
-           
+          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          Game.waitForInput(null,Game.scenes.startScreen);
         }
         else if(input == 3){
-
+          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          Game.waitForInput(null,Game.scenes.startScreen);
         }
         else if(input == 4){
-
+          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          Game.waitForInput(null,Game.scenes.startScreen);
         }
         else{
           Game.scenes.startScreen();
