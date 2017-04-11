@@ -5,16 +5,6 @@ function Person(name) {
 	this.health = 100;
 }
 	
-Person.prototype.getName : function() {
-
-	return this.name;
-}
-	
-Person.prototype.getHealth : function() {
-
-	return this.health;
-}
-	
 // Reduce a person's health, return -1 if this kills the person
 Person.prototype.sicken : function(healthChange) {
 	
