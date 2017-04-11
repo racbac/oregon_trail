@@ -167,6 +167,12 @@ var Game={
     },
     Journey:function(){
 
+    },
+    Fishing: function(){
+
+    },
+    LandMark: function(landmarkname){
+
     }
   },
   gameDiv: document.getElementById("game"),
