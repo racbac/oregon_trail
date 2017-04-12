@@ -1,3 +1,4 @@
+
 .wrapper {
     max-width: 700px;
     width: 80%; /* desired width */
@@ -14,7 +15,7 @@
     position: absolute;
     border: solid 1px black;
     top: 0px; bottom: 0px; right: 0px; left: 0px;
-        
+
     background-color: black;
     background-position: center center;
     background-repeat: no-repeat;
