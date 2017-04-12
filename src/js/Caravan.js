@@ -12,7 +12,7 @@ function Caravan() {
 }
 
 // Return the average health
-Caravan.prototype.getHealth : function() {
+Caravan.prototype.getHealth = function() {
 	
 	var familySize = this.family.length;
 	var totalHealth = 0;
@@ -24,8 +24,14 @@ Caravan.prototype.getHealth : function() {
 	return totalHealth / familySize;
 }
 
+// Add a person to the family
+Caravan.prototype.addPerson = function(person) {
+	
+	this.family.push(person);
+}
+
 // Remove a person from the caravan (because they died)
-Caravan.prototype.removePerson : function(person) {
+Caravan.prototype.removePerson = function(person) {
 	
 	var familySize = this.family.length;
 	
