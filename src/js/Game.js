@@ -1,4 +1,7 @@
+var gameCaravan = new Caravan();
+
 var Game={
+	
   scenes: {
     startScreen: function(){
       document.getElementById("game").innerHTML=
@@ -49,12 +52,15 @@ var Game={
       Game.waitForInput(document.getElementById("input"),function(choice){
         if(choice == 1){
           //Caravan.occupation="banker";
+		  gameCaravan.money = 1600;
         }
         else if(choice ==2){
           //Caravan.occupation="carpenter";
+		  gameCaravan.money = 400;
         }
         else if(choice == 3){
           //Caravan.occupation="farmer";
+		  gameCaravan.money = 400;
         }
         else if(choice == 4){
           document.getElementById("game").innerHTML =
@@ -72,7 +78,7 @@ var Game={
       });
     },
     enterNames: function(){
-      //Caravan.family=[null,null,null,null,null];
+
       document.getElementById("game").innerHTML =
         `<div id="enterNames">
           <div>
@@ -81,7 +87,11 @@ var Game={
           </div>
         </div>`;
       Game.waitForInput(document.getElementById("input"),function(leadername){
-        //Caravan.family[0].name=leadername;
+		  
+        // Add the leader to the caravan
+		var leader = new Person(leadername);
+		gameCaravan.addPerson(leader);
+		
         document.getElementById("enterNames").innerHTML =
           ` <div>
               What are the first names of the four other members in your party?
@@ -95,7 +105,11 @@ var Game={
             var nameFunc=function(name){
               var inputEle=document.getElementById("input");
               var index=+inputEle.parentNode.id[3];
-              //Caravan.family[index].name=name;
+              
+			  // Add a new peron to the caravan for each input name
+			  var newPerson = new Person(name);
+			  gameCaravan.addPerson(newPerson);
+			  
               if(index==4){
                 Game.scenes.chooseDepartureMonth();
                 return;
@@ -232,6 +246,7 @@ var Game={
   },
   gameDiv: document.getElementById("game"),
   start: function(){
+
     Game.scenes.startScreen();
   },
   waitForInput: function(element,callback=function(){}){
