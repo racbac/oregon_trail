@@ -189,19 +189,37 @@ var Game={
         document.getElementById("game").innerHTML ="<div>store information page 1. press enter for next.</div>"
         Game.waitForInput(null,null,function(){
           document.getElementById("game").innerHTML ="<div>store information page2. press enter to shop.</div>"
+          var price={
+            oxen:40/2, //yoke = 2oxen
+            food:0.2,
+            clothing:10,
+            baits:2/20, //box = 20 baits
+            wheels:10,
+            axles:10,
+            tongues:10
+          };
+          var cart={
+            oxen:0,
+            food:0,
+            clothing:0,
+            baits:0,
+            wheels:0,
+            axles:0,
+            tongues:0
+          };
           var storeFront=function(){
             document.getElementById("game").innerHTML =
             `<div id="mattstore">
               <div>
                 Matt's General Store<br>
                 Independence, Missouri<br>
-                date/data/date
+                <div id="date">date/data/date</div>
               </div>
               <ol>
                 <li>Oxen<span id="oxen_bill" style="float: right">$0.00</span></li>
                 <li>Food<span id="food_bill" style="float: right">$0.00</span></li>
                 <li>Clothing<span id="clothing_bill" style="float: right">$0.00</span></li>
-                <li>Ammo<span id="ammo_bill" style="float: right">$0.00</span></li>
+                <li>Bait<span id="bait_bill" style="float: right">$0.00</span></li>
                 <li>Spare Parts<span id="spare_bill" style="float: right">$0.00</span></li>
               </ol>
               <div>Total Bill: <span id="total_bill" style="float: right">$0.00</span></div>
@@ -213,7 +231,7 @@ var Game={
             var validationFunc=function(input){
               return +input&&+input>0&&+input<6;
             }
-            Game.waitForInput([13,32],validationFunc,function(choice){
+            Game.waitForInput([13/*enter*/,32/*space*/],validationFunc,function(choice){
 
               document.getElementById("game").innerHTML=
               `<div id="mattstore">
