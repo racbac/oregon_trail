@@ -16,21 +16,24 @@ var Game={
           '</p>'+
           '<div>What is you choice?<span id="input"></span></div>'+
         '</div>';
-      Game.waitForInput(document.getElementById("input"),function(input){
+        var validationFunc=function(input){
+          return input.length<2 && Number.isInteger(Number(input)) && Number(input)>0 &&Number(input)<4;
+        }
+      Game.waitForInput(null,validationFunc,function(input){
         if(input == 1){
           Game.scenes.chooseOccupation();
         }
         else if(input ==2){
           document.getElementById("game").innerHTML="<div>I will do this later. Enter to continue.</div>"
-          Game.waitForInput(null,Game.scenes.startScreen);
+          Game.waitForInput(null,null,Game.scenes.startScreen);
         }
         else if(input == 3){
           document.getElementById("game").innerHTML="<div> I will do this later. Enter to continue.</div>"
-          Game.waitForInput(null,Game.scenes.startScreen);
+          Game.waitForInput(null,null,Game.scenes.startScreen);
         }
         else if(input == 4){
           document.getElementById("game").innerHTML="<div>I will do this later. Enter to continue.</div>"
-          Game.waitForInput(null,Game.scenes.startScreen);
+          Game.waitForInput(null,null,Game.scenes.startScreen);
         }
         else{
           Game.scenes.startScreen();
@@ -49,7 +52,10 @@ var Game={
           </ol>
           <div>What is your choice?<span id="input"></span></div>
         </div>`;
-      Game.waitForInput(document.getElementById("input"),function(choice){
+      var validationFunc=function(input){
+        return Number.isInteger(+input) && +input>0 && +input<5;
+      }
+      Game.waitForInput(null,validationFunc,function(choice){
         if(choice == 1){
           //Caravan.occupation="banker";
 		  gameCaravan.money = 1600;
@@ -67,7 +73,7 @@ var Game={
             `<div id="choose_occupation">
               <p>insert helpful hint about choosing occupations here</p>
             </div>`;
-          Game.waitForInput(document.getElementById("input"),Game.scenes.chooseOccupation);
+          Game.waitForInput(null,null,Game.scenes.chooseOccupation);
           return;
         }
         else{
@@ -86,7 +92,8 @@ var Game={
             <span id="input"></span>
           </div>
         </div>`;
-      Game.waitForInput(document.getElementById("input"),function(leadername){
+
+      Game.waitForInput(null,null,function(leadername){
 
         // Add the leader to the caravan
 		var leader = new Person(leadername);
@@ -119,9 +126,9 @@ var Game={
               document.getElementById('mem'+(index-1)).innerHTML=inputEle.innerHTML;
               inputEle.innerHTML="_";
 
-              Game.waitForInput(inputEle,nameFunc);
+              Game.waitForInput(null,null,nameFunc);
             }
-            Game.waitForInput(document.getElementById("input"),nameFunc);
+            Game.waitForInput(null,null,nameFunc);
       });
     },
     chooseDepartureMonth:function(){
@@ -143,7 +150,10 @@ var Game={
         </div>
       </div>
       `;
-      Game.waitForInput(document.getElementById("input"),function(choice){
+      var validationFunc=function(input){
+        return Number.isInteger(+input) && +input>0 && +input<7;
+      }
+      Game.waitForInput(null,validationFunc,function(choice){
         if(choice==1){
           //set departure month to March
         }
@@ -171,13 +181,13 @@ var Game={
     },
     adviceDepartureMonth:function(){
       document.getElementById("game").innerHTML ="<div>advice for departure month will be placed here...later. Enter to continue.</div>";
-      Game.waitForInput(null,Game.scenes.chooseDepartureMonth);
+      Game.waitForInput(null,null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
       document.getElementById("game").innerHTML ="<div>This is Matt's store. It will show a few pages with information about the products. Press Enter to read through them.</div>";
-      Game.waitForInput(null,function(){
+      Game.waitForInput(null,null,function(){
         document.getElementById("game").innerHTML ="<div>store information page 1. press enter for next.</div>"
-        Game.waitForInput(null,function(){
+        Game.waitForInput(null,null,function(){
           document.getElementById("game").innerHTML ="<div>store information page2. press enter to shop.</div>"
           var storeFront=function(){
             document.getElementById("game").innerHTML =
@@ -200,7 +210,10 @@ var Game={
               <p>Which item would you like to buy?<span id="input"></span></p>
               <p>Press SPACE to leave store</p>
             </div>`;
-            Game.waitForInput(document.getElementById("input"),function(choice){
+            var validationFunc=function(input){
+              return +input&&+input>0&&+input<6;
+            }
+            Game.waitForInput([13,32],validationFunc,function(choice){
 
               document.getElementById("game").innerHTML=
               `<div id="mattstore">
@@ -219,10 +232,14 @@ var Game={
               document.getElementById("bill").innerHTML="0.00";
               var mattAdvice="";
               var mattFunc=null;
+              var validationFunc=null;
               if(choice == 1){
                 mattAdvice=
                   `There are 2 oxen in a yoke; I recommend at least 3 yokes. I charge $40 a yoke.
                   How many yoke do you want?`;
+                validationFunc=function(input){
+                  return input.length<2&&Number.isInteger(+input);
+                }
                 mattFunc=function(){
                   //add yokes to bill
                   storeFront();
@@ -230,6 +247,9 @@ var Game={
               }
               else if(choice ==2){
                 mattAdvice="How many pounds of food do you want?";
+                validationFunc=function(input){
+                  return input.length<5&&Number.isInteger(+input);
+                }
                 mattFunc=function(){
                   //add food to bill
                   storeFront();
@@ -237,6 +257,9 @@ var Game={
               }
               else if(choice == 3){
                 mattAdvice="How many sets of clothes do you want?";
+                validationFunc=function(input){
+                  return input.length<3&&Number.isInteger(+input);
+                }
                 mattFunc=function(){
                   //add clothes to bill
                   storeFront();
@@ -244,6 +267,9 @@ var Game={
               }
               else if(choice == 4){
                 mattAdvice="How many boxes do you want?";
+                validationFunc=function(input){
+                  return input.length<3&&Number.isInteger(+input);
+                }
                 mattFunc=function(){
                   //add boxes to bill
                   storeFront();
@@ -251,17 +277,20 @@ var Game={
               }
               else if(choice == 5){
                 mattAdvice="How many wagon wheels?"
+                validationFunc=function(input){
+                  return input.length<2&&Number.isInteger(+input);
+                }
                 mattFunc=function(){
                   //add wagon wheels to bill
 
                   mattAdvice="How many wagon axles?";
                   document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
-                  Game.waitForInput(document.getElementById("input"),function(){
+                  Game.waitForInput(null,validationFunc,function(){
                     //add wagon axles to bill
 
                     mattAdvice="How many wagon tongues?";
                     document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
-                    Game.waitForInput(document.getElementById("input"),function(){
+                    Game.waitForInput(null,validationFunc,function(){
                       //add wagon tongues to bill
                       storeFront();
                       return;
@@ -274,11 +303,11 @@ var Game={
                 return;
               }
               document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
-              Game.waitForInput(document.getElementById("input"),mattFunc);
+              Game.waitForInput(null,validationFunc,mattFunc);
             });
           };
-          Game.waitForInput(document.getElementById("input"),storeFront);
-        })
+          Game.waitForInput(null,null,storeFront);
+        });
       });
     },
     BuySupply:function(){
@@ -311,30 +340,34 @@ var Game={
 
     Game.scenes.startScreen();
   },
-  waitForInput: function(element,callback=function(){}){
+  waitForInput: function(enterKeys,validationFunc,callback=function(){}){
+    enterKeys=enterKeys||[13];
+    validationFunc=validationFunc||function(){return true};
     var input="";
-    element=element||{};
+    element=document.getElementById("input")||{};
     document.onkeypress=function(event){
       var x = event.charCode || event.keyCode;   // Get the Unicode value
       if(x==13){//ignore enter
         return;
       }
       var y = String.fromCharCode(x);
-      input=input+y;
-      element.innerHTML=input;
-
+      if(validationFunc(input+y)){
+        input=input+y;
+        element.innerHTML=input;
+      }
     }
     document.onkeydown=function(event){
       var x = event.charCode || event.keyCode;   // Get the Unicode value
-      if(x == 13)//enter key pressed
+      if(x==8)//backspace pressed
+      {
+        input=input.slice(0,-1);
+        element.innerHTML=input;
+      }
+      else if(x == 13||enterKeys.includes(x))//enter key pressed
       {
         document.onkeydown=null;
         document.onkeypress=null;
         callback(input);
-      }else if(x==8)//backspace pressed
-      {
-        input=input.slice(0,-1);
-        element.innerHTML=input;
       }
     };
   }
