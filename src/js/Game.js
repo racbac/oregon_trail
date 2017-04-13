@@ -1,4 +1,7 @@
+var gameCaravan = new Caravan();
+
 var Game={
+
   scenes: {
     startScreen: function(){
       document.getElementById("game").innerHTML=
@@ -49,12 +52,15 @@ var Game={
       Game.waitForInput(document.getElementById("input"),function(choice){
         if(choice == 1){
           //Caravan.occupation="banker";
+		  gameCaravan.money = 1600;
         }
         else if(choice ==2){
           //Caravan.occupation="carpenter";
+		  gameCaravan.money = 400;
         }
         else if(choice == 3){
           //Caravan.occupation="farmer";
+		  gameCaravan.money = 400;
         }
         else if(choice == 4){
           document.getElementById("game").innerHTML =
@@ -72,7 +78,7 @@ var Game={
       });
     },
     enterNames: function(){
-      //Caravan.family=[null,null,null,null,null];
+
       document.getElementById("game").innerHTML =
         `<div id="enterNames">
           <div>
@@ -81,7 +87,11 @@ var Game={
           </div>
         </div>`;
       Game.waitForInput(document.getElementById("input"),function(leadername){
-        //Caravan.family[0].name=leadername;
+
+        // Add the leader to the caravan
+		var leader = new Person(leadername);
+		gameCaravan.addPerson(leader);
+
         document.getElementById("enterNames").innerHTML =
           ` <div>
               What are the first names of the four other members in your party?
@@ -95,7 +105,11 @@ var Game={
             var nameFunc=function(name){
               var inputEle=document.getElementById("input");
               var index=+inputEle.parentNode.id[3];
-              //Caravan.family[index].name=name;
+
+			  // Add a new peron to the caravan for each input name
+			  var newPerson = new Person(name);
+			  gameCaravan.addPerson(newPerson);
+
               if(index==4){
                 Game.scenes.chooseDepartureMonth();
                 return;
@@ -160,13 +174,70 @@ var Game={
       Game.waitForInput(null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
-      document.getElementById("game").innerHTML ="Matt store not done yet"
+      document.getElementById("game").innerHTML ="This is Matt's store. It will show a few pages with information about the products. Press Enter to read through them.";
+      Game.waitForInput(null,function(){
+        document.getElementById("game").innerHTML ="store information page 1. press enter for next."
+        Game.waitForInput(null,function(){
+          document.getElementById("game").innerHTML ="store information page2. press enter to shop."
+          Game.waitForInput(null,function(){
+            document.getElementById("game").innerHTML =
+            `<div id="mattstore">
+              <div>
+                Matt's General Store<br>
+                Independence, Missouri<br>
+                date/data/date
+              </div>
+              <ol style="width: 500px">
+                <li>Oxen<span id="oxen_bill" style="float: right">$0.00</span></li>
+                <li>Food<span id="food_bill" style="float: right">$0.00</span></li>
+                <li>Clothing<span id="clothing_bill" style="float: right">$0.00</span></li>
+                <li>Ammo<span id="ammo_bill" style="float: right">$0.00</span></li>
+                <li>Spare Parts<span id="spare_bill" style="float: right">$0.00</span></li>
+              </ol>
+              <div>Total Bill: <span id="total_bill" style="float: right">$0.00</span></div>
+              <br>
+              <div>Amount you have:<span id="money" style="float: right">$0.00</span></div>
+              <p>Which item would you like to buy?<span id="input"></span></p>
+              <p>Press SPACE to leave store</p>
+            </div>`;
+            Game.waitForInput(document.getElementById("input"),function(choice){
+
+              document.getElementById("game").innerHTML=
+              `<div id="mattstore">
+                <div>
+                  Matt's General Store<br>
+                  Independence, Missouri<br>
+                </div>
+                <div id="matt_advice">
+                </div>
+                <div>
+                  Bill so far: $<span id="bill"></span>
+                </div>
+              </div>`;
+              document.getElementById("bill").innerHTML="0.00";
+
+            });
+          });
+        });
+      });
     },
     BuySupply:function(){
 
     },
     Journey:function(){
-
+      document.getElementById("game").innerHTML =
+        `<div id="journey">
+          <div>animation goes here</div>
+          <div>press ENTER to size up the situation</div>
+          <div>
+            Date:<br>
+            Weather:<br>
+            Health:<br>
+            Food:<br>
+            Next Landmark:<br>
+            Miles Traveled:<br>
+          </div>
+        </div>`;
     },
     Fishing: function(){
 
@@ -177,6 +248,7 @@ var Game={
   },
   gameDiv: document.getElementById("game"),
   start: function(){
+
     Game.scenes.startScreen();
   },
   waitForInput: function(element,callback=function(){}){
