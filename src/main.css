@@ -23,21 +23,21 @@
 }
 
 /* title screen */
-#title ul {
+#game ul {
     list-style-type: decimal;
 }
-#title div {
+#game div {
     color: white;
     font-family: 'Press Start 2P', monospace;
     font-size: 0.8em;
 }
-#title {
+#game {
     display: flex;
     justify-content: top;
     flex-direction: column;
     align-items: center;
 }
-#title h1 {
+#game h1 {
     color: rgb(255,199,166);
     font-family: Georgia, Serif;
     font-size: 2.7em;

@@ -21,15 +21,15 @@ var Game={
           Game.scenes.chooseOccupation();
         }
         else if(input ==2){
-          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          document.getElementById("game").innerHTML="<div>I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,Game.scenes.startScreen);
         }
         else if(input == 3){
-          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          document.getElementById("game").innerHTML="<div> I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,Game.scenes.startScreen);
         }
         else if(input == 4){
-          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          document.getElementById("game").innerHTML="<div>I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,Game.scenes.startScreen);
         }
         else{
@@ -170,16 +170,16 @@ var Game={
       });
     },
     adviceDepartureMonth:function(){
-      document.getElementById("game").innerHTML ="advice for departure month will be placed here...later. Enter to continue.";
+      document.getElementById("game").innerHTML ="<div>advice for departure month will be placed here...later. Enter to continue.</div>";
       Game.waitForInput(null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
-      document.getElementById("game").innerHTML ="This is Matt's store. It will show a few pages with information about the products. Press Enter to read through them.";
+      document.getElementById("game").innerHTML ="<div>This is Matt's store. It will show a few pages with information about the products. Press Enter to read through them.</div>";
       Game.waitForInput(null,function(){
-        document.getElementById("game").innerHTML ="store information page 1. press enter for next."
+        document.getElementById("game").innerHTML ="<div>store information page 1. press enter for next.</div>"
         Game.waitForInput(null,function(){
-          document.getElementById("game").innerHTML ="store information page2. press enter to shop."
-          Game.waitForInput(null,function(){
+          document.getElementById("game").innerHTML ="<div>store information page2. press enter to shop.</div>"
+          var storeFront=function(){
             document.getElementById("game").innerHTML =
             `<div id="mattstore">
               <div>
@@ -187,7 +187,7 @@ var Game={
                 Independence, Missouri<br>
                 date/data/date
               </div>
-              <ol style="width: 500px">
+              <ol>
                 <li>Oxen<span id="oxen_bill" style="float: right">$0.00</span></li>
                 <li>Food<span id="food_bill" style="float: right">$0.00</span></li>
                 <li>Clothing<span id="clothing_bill" style="float: right">$0.00</span></li>
@@ -208,17 +208,77 @@ var Game={
                   Matt's General Store<br>
                   Independence, Missouri<br>
                 </div>
+                <br>
                 <div id="matt_advice">
                 </div>
+                <br>
                 <div>
                   Bill so far: $<span id="bill"></span>
                 </div>
               </div>`;
               document.getElementById("bill").innerHTML="0.00";
+              var mattAdvice="";
+              var mattFunc=null;
+              if(choice == 1){
+                mattAdvice=
+                  `There are 2 oxen in a yoke; I recommend at least 3 yokes. I charge $40 a yoke.
+                  How many yoke do you want?`;
+                mattFunc=function(){
+                  //add yokes to bill
+                  storeFront();
+                }
+              }
+              else if(choice ==2){
+                mattAdvice="How many pounds of food do you want?";
+                mattFunc=function(){
+                  //add food to bill
+                  storeFront();
+                }
+              }
+              else if(choice == 3){
+                mattAdvice="How many sets of clothes do you want?";
+                mattFunc=function(){
+                  //add clothes to bill
+                  storeFront();
+                }
+              }
+              else if(choice == 4){
+                mattAdvice="How many boxes do you want?";
+                mattFunc=function(){
+                  //add boxes to bill
+                  storeFront();
+                }
+              }
+              else if(choice == 5){
+                mattAdvice="How many wagon wheels?"
+                mattFunc=function(){
+                  //add wagon wheels to bill
 
+                  mattAdvice="How many wagon axles?";
+                  document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+                  Game.waitForInput(document.getElementById("input"),function(){
+                    //add wagon axles to bill
+
+                    mattAdvice="How many wagon tongues?";
+                    document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+                    Game.waitForInput(document.getElementById("input"),function(){
+                      //add wagon tongues to bill
+                      storeFront();
+                      return;
+                    });
+                  });
+                }
+              }
+              else{
+                Game.scenes.Journey();
+                return;
+              }
+              document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+              Game.waitForInput(document.getElementById("input"),mattFunc);
             });
-          });
-        });
+          };
+          Game.waitForInput(document.getElementById("input"),storeFront);
+        })
       });
     },
     BuySupply:function(){

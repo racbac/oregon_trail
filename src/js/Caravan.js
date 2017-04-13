@@ -99,22 +99,22 @@ Caravan.prototype.purchase = function(item, cost, quantity) {
 
 // Return the average health
 Caravan.prototype.getHealth = function() {
-	
+
 	var familySize = this.family.length;
 	var totalHealth = 0;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		totalHealth += this.family[i].health;
 	}
-	
+
 	return totalHealth / familySize;
 }
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-	
+
 	var familySize = this.family.length;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		if (this.family[i].name == person.name) {
 			this.family.splice(i,1);
@@ -140,9 +140,9 @@ Caravan.prototype.removeFood = function(foodAmt) {
 Caravan.prototype.badWater = function() {
 
 }
-=======
+
 function Caravan() {
-	
+
 	this.family = [];
 	this.pace = 0;
 	this.rations = 0;
@@ -156,28 +156,28 @@ function Caravan() {
 
 // Return the average health
 Caravan.prototype.getHealth = function() {
-	
+
 	var familySize = this.family.length;
 	var totalHealth = 0;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		totalHealth += this.family[i].health;
 	}
-	
+
 	return totalHealth / familySize;
 }
 
 // Add a person to the family
 Caravan.prototype.addPerson = function(person) {
-	
+
 	this.family.push(person);
 }
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-	
+
 	var familySize = this.family.length;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		if (this.family[i].name == person.name) {
 			this.family.splice(i,1);
