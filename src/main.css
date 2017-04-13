@@ -1,3 +1,8 @@
+@media (max-width: 600px) {
+    body {
+        font-size: 0.7em;
+    }
+}
 
 .wrapper {
     max-width: 700px;
@@ -15,6 +20,7 @@
     position: absolute;
     border: solid 1px black;
     top: 0px; bottom: 0px; right: 0px; left: 0px;
+    padding: 30px;
 
     background-color: black;
     background-position: center center;
@@ -22,23 +28,37 @@
     background-size: contain;
 }
 
-/* title screen */
-#title ul {
+/* universal styling */
+#startscreen ul {
     list-style-type: decimal;
 }
-#title div {
+
+#startscreen h1 {
+    color: rgb(158,97,56);
+    font-family: "Goblin One", Serif;
+
+}
+
+#game p, #game ol, #game ul, #game h2 {
     color: white;
     font-family: 'Press Start 2P', monospace;
-    font-size: 0.8em;
 }
-#title {
+
+#game ul {
+    list-style-type: square;
+}
+
+#game ol {
+    margin-left: 30px;
+}
+
+#game > div {
     display: flex;
     justify-content: top;
     flex-direction: column;
     align-items: center;
 }
-#title h1 {
-    color: rgb(255,199,166);
-    font-family: Georgia, Serif;
-    font-size: 2.7em;
+
+#game p {
+    margin-top: 5px; margin-bottom: 5px;
 }

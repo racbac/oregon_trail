@@ -49,7 +49,7 @@ function Person(new_name) {
 // creates a new Caravan object
 function Caravan() {
     // members
-    this.family;
+    this.family = [];
     this.health = HEALTH.GOOD;
     this.pace = PACE.STEADY;
     this.occupation;
@@ -139,19 +139,6 @@ Caravan.prototype.removeFood = function(foodAmt) {
 }
 Caravan.prototype.badWater = function() {
 
-}
-=======
-function Caravan() {
-	
-	this.family = [];
-	this.pace = 0;
-	this.rations = 0;
-	this.money = 0.00;
-	this.boxes_ammo = 0;
-	this.tongues = 1;
-	this.wheels = 4;
-	this.axles = 1;
-	this.oxen = 0;
 }
 
 // Return the average health
