@@ -6,7 +6,7 @@ function Person(name) {
 }
 	
 // Reduce a person's health, return -1 if this kills the person
-Person.prototype.sicken : function(healthChange) {
+Person.prototype.sicken = function(healthChange) {
 	
 	this.health= this.health - healthChange;
 
@@ -19,7 +19,7 @@ Person.prototype.sicken : function(healthChange) {
 }
 	
 // Increase a person's health
-Person.prototype.heal : function(healthChange) {
+Person.prototype.heal = function(healthChange) {
 
 	this.health = this.health + healthChange;
 
