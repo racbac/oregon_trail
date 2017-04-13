@@ -160,28 +160,62 @@ var Game={
       Game.waitForInput(null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
-      document.getElementById("game").innerHTML ="Matt store is not done yet. Continue to journey for now.";
-      Game.waitForInput(null,Game.scenes.Journey);
+      document.getElementById("game").innerHTML ="This is Matt's store. It will show a few pages with information about the products. Press Enter to read through them.";
+      Game.waitForInput(null,function(){
+        document.getElementById("game").innerHTML ="store information page 1. press enter for next."
+        Game.waitForInput(null,function(){
+          document.getElementById("game").innerHTML ="store information page2. press enter to shop."
+          Game.waitForInput(null,function(){
+            document.getElementById("game").innerHTML =
+            `<div id="mattstore">
+              <div>
+                Matt's General Store<br>
+                Independence, Missouri<br>
+                date/data/date
+              </div>
+              <ol style="width: 500px">
+                <li>Oxen<span id="oxen_bill" style="float: right">$0.00</span></li>
+                <li>Food<span id="food_bill" style="float: right">$0.00</span></li>
+                <li>Clothing<span id="clothing_bill" style="float: right">$0.00</span></li>
+                <li>Ammo<span id="ammo_bill" style="float: right">$0.00</span></li>
+                <li>Spare Parts<span id="spare_bill" style="float: right">$0.00</span></li>
+              </ol>
+              <div>Total Bill: <span id="total_bill" style="float: right">$0.00</span></div>
+              <br>
+              <div>Amount you have:<span id="money" style="float: right">$0.00</span></div>
+              <p>Which item would you like to buy?<span id="input"></span></p>
+              <p>Press SPACE to leave store</p>
+            </div>`;
+            Game.waitForInput(document.getElementById("input"),function(choice){
+
+            });
+          });
+        });
+      });
     },
     BuySupply:function(){
 
     },
     Journey:function(){
-      //find out if current at a landmark
-      //travel for a day per second
-      setTimeOut(Jour,1000);
-      Game.scenes.LandMark();
+      document.getElementById("game").innerHTML =
+        `<div id="journey">
+          <div>animation goes here</div>
+          <div>press ENTER to size up the situation</div>
+          <div>
+            Date:<br>
+            Weather:<br>
+            Health:<br>
+            Food:<br>
+            Next Landmark:<br>
+            Miles Traveled:<br>
+          </div>
+        </div>`;
     },
     Fishing: function(){
 
     },
     LandMark: function(landmarkname){
-      //find out which landmark currently at, if any
-      var landmark=null;//Journey.getLandMark();
-      if(!landmark){
-        return;
-      }
-      document.getElementById("game").innerHTML ="Matt store not done yet";
+
     }
   },
   gameDiv: document.getElementById("game"),
