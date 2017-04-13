@@ -2,13 +2,20 @@
     <head>
         <title>Oregon Trail - web video game</title>
         <link rel="stylesheet" type="text/css" href="main.css" />
-        <script type="text/javascript" src="js/Game.js"></script>
-    </head>
-    <body>
-        <div id="game">
-        </div>
-        <script>
-          Game.start();
-        </script>
+        <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  </head>
+    <body onload = "Game.start()">
+        <main>
+            <h1>The Oregon Trail</h1>
+            <div class="wrapper">
+                <div class="content" id="game">
+
+                </div>
+            </div>
+        </main>
+		<script src="js/Person.js"></script>
+		<script src="js/Caravan.js"></script>
+        <script src="js/Game.js"></script>
+
     </body>
 </html>
