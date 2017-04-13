@@ -19,14 +19,25 @@
     background-position: center center;
     background-repeat: no-repeat;
     background-size: contain;
-    background-image: url(./original_screenshots/start_screen.jpg);
 }
 
-main * {
-    margin: auto;
-    text-align: center;
+/* title screen */
+#title ul {
+    list-style-type: decimal;
 }
-
-h1 {
-    font-family:  "Georgia";
+#title div {
+    color: white;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.8em;
+}
+#title {
+    display: flex;
+    justify-content: top;
+    flex-direction: column;
+    align-items: center;
+}
+#title h1 {
+    color: rgb(255,199,166);
+    font-family: Georgia, Serif;
+    font-size: 2.7em;
 }
