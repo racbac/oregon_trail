@@ -187,7 +187,19 @@ var Game={
               <p>Press SPACE to leave store</p>
             </div>`;
             Game.waitForInput(document.getElementById("input"),function(choice){
-
+              document.getElementById("game").innerHTML=
+              `<div id="mattstore">
+                <div>
+                  Matt's General Store<br>
+                  Independence, Missouri<br>
+                </div>
+                <div id="matt_advice">
+                </div>
+                <div>
+                  Bill so far: $<span id="bill"></span>
+                </div>
+              </div>`;
+              document.getElementById("bill").innerHTML="0.00";
             });
           });
         });
