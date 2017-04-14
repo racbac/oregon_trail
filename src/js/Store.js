@@ -9,3 +9,7 @@ function Store(location, ox, clothes, ammo, axle, wheel, tongue, food) {
     this.tongues = tongue || 10.00;
     this.food = food || 0.20;
 }
+Store.prototype.buyItem = function(itemName,caravan,amt){
+	caravan.itemName+=amt;
+	caravan.money-=this.itemName*amt;
+}
