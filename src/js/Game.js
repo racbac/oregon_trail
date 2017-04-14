@@ -97,12 +97,12 @@ var Game = {
           </p>
         </div>`;
 
-      Game.waitForInput(null,null,function(leadername){
-
+      Game.waitForInput(null,function(value) {return (value.length > 0)},function(leadername){
+        
         // Add the leader to the caravan
-		var leader = new Person(leadername);
-		Game.gameCaravan.addPerson(leader);
-
+        var leader = new Person(leadername);
+        Game.gameCaravan.addPerson(leader);
+        
         document.getElementById("enterNames").innerHTML =
           ` <div>
               <p>What are the first names of the four other members in your party?</p>
@@ -116,21 +116,30 @@ var Game = {
             var nameFunc=function(name){
               var inputEle=document.getElementById("input");
               var index=+inputEle.parentNode.id[3];
-
-			  // Add a new peron to the caravan for each input name
-			  var newPerson = new Person(name);
-			  Game.gameCaravan.addPerson(newPerson);
-
-              if(index==4){
+              
+              if (name == "") { // if they're done entering names, autofill
+                for (var i = index; i <= 4; i++) {
+                  Game.gameCaravan.addPerson(new Person(randomName()));
+                  document.getElementById('mem'+(i)).innerHTML=Game.gameCaravan.family[i].name;
+                }
+                Game.waitForInput(null, null, function() {Game.scenes.chooseDepartureMonth()});
+                return;
+              }
+              // Add a new peron to the caravan for each input name
+              var newPerson = new Person(name);
+              Game.gameCaravan.addPerson(newPerson);
+              
+              if(index==4){ // if they've entered all the names
                 Game.scenes.chooseDepartureMonth();
                 return;
-              };
-              index++;
-              document.getElementById('mem'+index).appendChild(document.getElementById('input'));
-              document.getElementById('mem'+(index-1)).innerHTML=inputEle.innerHTML;
-              inputEle.innerHTML="_";
+              } else { // they're still entering names
+                index++;
+                document.getElementById('mem'+index).appendChild(document.getElementById('input'));
+                document.getElementById('mem'+(index-1)).innerHTML=inputEle.innerHTML;
+                inputEle.innerHTML="_";
 
-              Game.waitForInput(null,null,nameFunc);
+                Game.waitForInput(null,null,nameFunc);
+              }
             }
             Game.waitForInput(null,null,nameFunc);
       });
@@ -383,19 +392,14 @@ var Game = {
       if(x==8)//backspace pressed
       {
         input=input.slice(0,-1);
-        element.innerHTML=input;
+        element.innerHTML=input + "_";
       }
-      else if(x == 13||enterKeys.includes(x))//enter key pressed
+      else if((x == 13||enterKeys.includes(x)) && validationFunc(input) )//enter key pressed
       {
         document.onkeydown=null;
         document.onkeypress=null;
         element.innerHTML = element.innerHTML.substring(0, element.innerHTML.length - 1);
         callback(input);
-      }else if(x==8)//backspace pressed
-      {
-        input=input.slice(0,-1);
-        element.innerHTML=input+"_";
-
       }
     };
   }

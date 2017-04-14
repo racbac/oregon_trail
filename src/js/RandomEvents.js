@@ -158,3 +158,13 @@ function wagonFire(caravan) {
 	// TODO - Destroy random supplies and make the message describe what was destroyed
 	return "A fire has destroyed some of your supplies";
 }
+
+function randomName() {
+	var names = ["Shawn","Grace","Alan","Ada","Mal","Wyatt","River","Chris","Richard","Zoe"];
+	return names[randrange(0, names.length - 1)];
+}
+
+function randrange(min, max) {
+    // add current time as fake random seed
+    return Math.floor((Math.random() + new Date().getTime() % 1) * (max - min + 1) + min);
+}
