@@ -21,15 +21,15 @@ var Game = {
           Game.scenes.chooseOccupation();
         }
         else if(input ==2){
-          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          document.getElementById("game").innerHTML="<div>I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,Game.scenes.startScreen);
         }
         else if(input == 3){
-          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          document.getElementById("game").innerHTML="<div> I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,Game.scenes.startScreen);
         }
         else if(input == 4){
-          document.getElementById("game").innerHTML="I will do this later. Enter to continue."
+          document.getElementById("game").innerHTML="<div>I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,Game.scenes.startScreen);
         }
         else{
@@ -176,14 +176,16 @@ var Game = {
       });
     },
     adviceDepartureMonth:function(){
-      document.getElementById("game").innerHTML ="advice for departure month will be placed here...later. Enter to continue.";
+      document.getElementById("game").innerHTML ="<div>advice for departure month will be placed here...later. Enter to continue.</div>";
       Game.waitForInput(null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
+
       document.getElementById("game").innerHTML ="<p>Before leaving Independence you should buy equipment and supplies. You have $" + Game.gameCaravan.occupation.cash + " in cash, but you don't have to spend it all now.</p>\n";
       Game.waitForInput(null,function(){
         document.getElementById("game").innerHTML ="<p>Hello, I'm Matt. So you're going to Oregon! I can fix you up with what you need:</p>\n<ul>\n<li>a team of oxen to pull your wagon</li>\n<li>clothing for both summer and winter</li>\n<li>plenty of food for the trip</li>\n<li>ammunition for your rifles</li>\n<li>spare parts for your wagon</li>\n</ul>\n";
           Game.waitForInput(null,function(){
+
             document.getElementById("game").innerHTML =
             `<div id="mattstore">
               <div>
@@ -214,14 +216,74 @@ var Game = {
                 <p id="matt_advice">
                 </p>
                 <p>
+
                   Bill so far: $<span id="bill"></span>
                 </p>
               </div>`;
               document.getElementById("bill").innerHTML="0.00";
+              var mattAdvice="";
+              var mattFunc=null;
+              if(choice == 1){
+                mattAdvice=
+                  `There are 2 oxen in a yoke; I recommend at least 3 yokes. I charge $40 a yoke.
+                  How many yoke do you want?`;
+                mattFunc=function(){
+                  //add yokes to bill
+                  storeFront();
+                }
+              }
+              else if(choice ==2){
+                mattAdvice="How many pounds of food do you want?";
+                mattFunc=function(){
+                  //add food to bill
+                  storeFront();
+                }
+              }
+              else if(choice == 3){
+                mattAdvice="How many sets of clothes do you want?";
+                mattFunc=function(){
+                  //add clothes to bill
+                  storeFront();
+                }
+              }
+              else if(choice == 4){
+                mattAdvice="How many boxes do you want?";
+                mattFunc=function(){
+                  //add boxes to bill
+                  storeFront();
+                }
+              }
+              else if(choice == 5){
+                mattAdvice="How many wagon wheels?"
+                mattFunc=function(){
+                  //add wagon wheels to bill
 
-            });
+                  mattAdvice="How many wagon axles?";
+                  document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+                  Game.waitForInput(document.getElementById("input"),function(){
+                    //add wagon axles to bill
+
+                    mattAdvice="How many wagon tongues?";
+                    document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+                    Game.waitForInput(document.getElementById("input"),function(){
+                      //add wagon tongues to bill
+                      storeFront();
+                      return;
+                    });
+                  });
+                }
+              }
+              else{
+                Game.scenes.Journey();
+                return;
+              }
+              document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+              Game.waitForInput(document.getElementById("input"),mattFunc);
           });
+
+          Game.waitForInput(document.getElementById("input"),storeFront);
         });
+      });
     },
     BuySupply:function(){
 
