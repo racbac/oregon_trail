@@ -68,7 +68,8 @@ var Game = {
         else if(choice == 4){
           document.getElementById("game").innerHTML =
             `<div id="choose_occupation">
-              <p>insert helpful hint about choosing occupations here</p>
+              <p>Traveling to Oregon isn't easy! But if you're a banker, you'll have more money for supplies and services than a carpenter or a farmer.</p>\n
+              <p>However, the harder you have to try, the more points you deserve! THerefore, the farmer earns the greatest number of points and the banker earns the least</p>\n
             </div>`;
           Game.waitForInput(document.getElementById("input"),Game.scenes.chooseOccupation);
           return;
