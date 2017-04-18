@@ -1,6 +1,7 @@
 var Game = {
   gameCaravan: new Caravan(),
   date: new Date(),
+  miles: 0,
   scenes: {
     startScreen: function(){
       document.getElementById("game").innerHTML=
@@ -340,17 +341,73 @@ var Game = {
     Journey:function(){
       document.getElementById("game").innerHTML =
         `<div id="journey">
-          <div>animation goes here</div>
+          <div id="animation">animation goes here</div>
           <p>press ENTER to size up the situation</p>
           <ul>
-            <li>Date:</li>
-            <li>Weather:</li>
-            <li>Health:</li>
-            <li>Food:</li>
-            <li>Next Landmark:</li>
-            <li>Miles Traveled:</li>
+            <li>Date: <span id="date"></span></li>
+            <li>Weather: <span id="weather"></span></li>
+            <li>Health: <span id="health"></span></li>
+            <li>Food: <span id="food"></span></li>
+            <li>Next Landmark: <span id="next_landmark"></span></li>
+            <li>Miles Traveled: <span id="miles"></span></li>
           </ul>
         </div>`;
+        document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+        document.getElementById("weather").innerHTML="weather";
+        document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+        document.getElementById("food").innerHTML=Game.gameCaravan.food;
+        document.getElementById("next_landmark").innerHTML='000';
+        document.getElementById("miles").innerHTML=Game.miles;
+        var timeOfDay=0;
+        var HoursPerDay=8;
+        var MPH=5;
+        var travelFunc=function(){//called once per game Hour
+          timeOfDay++;
+
+          if(timeOfDay==24){//once a day
+
+            Game.date.setDate(Game.date.getDate()+1);
+            timeOfDay=0;
+            /*generate the conditions for the day*/
+            var weather="warm";
+            var event=null;//randomEvent();
+            /*update food and health*/
+
+
+            /*update html for event*/
+            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+            document.getElementById("weather").innerHTML=weather;
+            document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+            document.getElementById("food").innerHTML=Game.gameCaravan.food;
+            document.getElementById("next_landmark").innerHTML='000';
+
+            if(event){
+              clearInterval(travelLoop);
+              waitForInput(null,null,game.scenes.EnterMenu);
+              return;
+            }
+          }
+          if(timeOfDay==5){//start traveling at 5am
+            /*set oxen animation to running and the background to scroll*/
+            document.getElementById("animation").innerHTML="<p>animation started</p>";
+          }
+          else if(timeOfDay== 5+HoursPerDay){
+            Game.miles+=MPH*HoursPerDay;
+            document.getElementById("miles").innerHTML=Game.miles;
+            /*set oxen animation to stopped and the background to stopped*/
+            document.getElementById("animation").innerHTML="<p>animation stopped</p>";
+          }
+
+        }
+        var travelLoop=setInterval(travelFunc,3000/24); /*call travelFunc once per game hour, 3 game day per second*/
+        Game.waitForInput(null,null,function(){
+          clearInterval(travelLoop);
+          Game.scenes.EnterMenu();
+        });
+    },
+    EnterMenu: function(){
+      document.getElementById("game").innerHTML="<p>menu will added here later. Enter to contunue.</p>";
+      Game.waitForInput(null,null,Game.scenes.Journey);
     },
     Fishing: function(){
 
@@ -389,7 +446,7 @@ var Game = {
         input=input.slice(0,-1);
         element.innerHTML=input;
       }
-      else if(x == 13||enterKeys.includes(x))//enter key pressed
+      else if(enterKeys.includes(x))//enter key pressed
       {
         document.onkeydown=null;
         document.onkeypress=null;
