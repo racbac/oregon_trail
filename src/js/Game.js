@@ -222,7 +222,7 @@ var Game = {
                 MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() + `</p>
               </div>
               <ol>
-                <li>Oxen<span id="oxen_bill" style="float: right">$0.00</span></li>
+                <li>Oxen<span id="oxen_bill" style="float: right">$'+0.00</span></li>
                 <li>Food<span id="food_bill" style="float: right">$0.00</span></li>
                 <li>Clothing<span id="clothing_bill" style="float: right">$0.00</span></li>
                 <li>Bait<span id="bait_bill" style="float: right">$0.00</span></li>
@@ -262,8 +262,9 @@ var Game = {
                 validationFunc=function(input){
                   return input.length<2&&Number.isInteger(+input);
                 }
-                mattFunc=function(){
+                mattFunc=function(numYoke){
                   //add yokes to bill
+                  cart.oxen=numYoke*2;
                   storeFront();
                 }
               }
@@ -329,7 +330,7 @@ var Game = {
           });
         };
           Game.waitForInput([13,32],null,storeFront);
-        
+
         });
       });
     },
