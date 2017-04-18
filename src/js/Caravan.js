@@ -64,6 +64,22 @@ function Caravan() {
     this.clothing = 0;
     this.food = 0;
     this.boxes_ammo = 0;
+	
+	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
+	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
+	"Mr Anderson"];
+}
+
+Caravan.prototype.generateRandomName = function() {
+	
+	// Pick a name from the list
+	var randomIndex = Math.floor(Math.random() * this.randomNames.length);
+	var chosenName = this.randomNames[randomIndex];
+	
+	// Remove the name from the array so there are no duplicates
+	this.randomNames.splice(randomIndex, 1);
+	
+	return chosenName;
 }
 
 // set_family
