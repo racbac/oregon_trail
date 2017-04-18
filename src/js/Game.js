@@ -205,6 +205,7 @@ var Game = {
                               <div>
                                 <p>Matt's General Store<br>
                                 Independence, Missouri<br>` +
+                                MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() + `</p>
                               </div>
                               <ol>
                                 <li>Oxen<span id="oxen_bill" style="float: right">$0.00</span></li>
