@@ -192,9 +192,9 @@ var Game = {
     MattStore:function(){
 
     document.getElementById("game").innerHTML ="<p>Before leaving Independence you should buy equipment and supplies. You have $" + Game.gameCaravan.occupation.cash + " in cash, but you don't have to spend it all now.</p>\n";
-      Game.waitForInput(null,null,function(){
+      Game.waitForInput([13,32],null,function(){
         document.getElementById("game").innerHTML ="<p>Hello, I'm Matt. So you're going to Oregon! I can fix you up with what you need:</p>\n<ul>\n<li>a team of oxen to pull your wagon</li>\n<li>clothing for both summer and winter</li>\n<li>plenty of food for the trip</li>\n<li>ammunition for your rifles</li>\n<li>spare parts for your wagon</li>\n</ul>\n";
-          Game.waitForInput(null,null,function(){
+          Game.waitForInput([13,32],null,function(){
             var price={
             oxen:40/2, //yoke = 2oxen
             food:0.2,
@@ -213,7 +213,8 @@ var Game = {
             axles:0,
             tongues:0
           };
-          var storeFront = function(){document.getElementById("game").innerHTML =
+          var storeFront = function(){
+            document.getElementById("game").innerHTML =
             `<div id="mattstore">
               <div>
                 <p>Matt's General Store<br>
@@ -325,9 +326,10 @@ var Game = {
               }
               document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
               Game.waitForInput(null,validationFunc,mattFunc);
-          };
-          Game.waitForInput(null,null,storeFront);
-
+          });
+        };
+          Game.waitForInput([13,32],null,storeFront);
+        
         });
       });
     },
