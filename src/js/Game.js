@@ -433,6 +433,16 @@ var Game = {
       }
     };
   }
+  fishingGame:function(){
+    var fish={"sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"}
+    var weights={50,10,27,27,40,12,1,20,26}
+    var chanceToCatch=Math.floor((Math.random()*10)+1);
+    var fishNum=Math.floor((Math.random()*9));
+    if (chanceToCatch>5){
+      document.getElementById("game").innerHTML="You got a"+fish[fishNum];
+    }
+  }
 };
+
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
