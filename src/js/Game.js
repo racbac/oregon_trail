@@ -360,7 +360,7 @@ var Game = {
         document.getElementById("miles").innerHTML=Game.miles;
         var timeOfDay=0;
         var HoursPerDay=8;
-        var MPH=5;
+        var MPH=3;
         var travelFunc=function(){//called once per game Hour
           timeOfDay++;
 
@@ -459,7 +459,7 @@ var Game = {
 
       }
     };
-  }
+  },
   fishingGame:function(){
     var fish={"sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"}
     var weights={50,10,27,27,40,12,1,20,26}
