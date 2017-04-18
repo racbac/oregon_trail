@@ -1,6 +1,6 @@
 @media (max-width: 600px) {
-    body {
-        font-size: 0.7em;
+    #game {
+        font-size: 0.5em;
     }
 }
 
@@ -29,14 +29,11 @@
 }
 
 /* universal styling */
-#startscreen ul {
-    list-style-type: decimal;
-}
 
-#startscreen h1 {
-    color: rgb(158,97,56);
-    font-family: "Goblin One", Serif;
-
+#game h1 {
+    color: rgb(255,200,170);
+    font-family: "Rye", Serif;
+    font-weight: lighter;
 }
 
 #game p, #game ol, #game ul, #game h2 {
@@ -49,16 +46,53 @@
 }
 
 #game ol {
+    list-style-type: decimal;
     margin-left: 30px;
 }
 
-#game > div {
+#game div.centered_content {
     display: flex;
-    justify-content: top;
+    justify-content: flex-start;
     flex-direction: column;
     align-items: center;
 }
 
 #game p {
     margin-top: 5px; margin-bottom: 5px;
+}
+
+#game .prompt {
+    position: absolute;
+    bottom: 15px;
+    text-align: center;
+    left: 0; right: 0;
+}
+
+#matt_intro {
+    display: flex;
+}
+
+#matt_img {
+    background-image: url("./img/mal.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex: 1;
+    image-rendering: pixelated;
+    height: 75%;
+}
+
+#matt_img + div {
+    flex: 3;
+}
+
+#mattstore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mattstore > div:nth-of-type(2) {
+    display: flex;
+    align-items: flex-start;
+    width:100%;
 }

@@ -160,7 +160,7 @@ function wagonFire(caravan) {
 }
 
 function randomName() {
-	var names = ["Shawn","Grace","Alan","Ada","Mal","Wyatt","River","Chris","Richard","Zoe"];
+	var names = ["Shawn","Grace","Alan","Ada","River","Zoe","Kaylee","Jayne","Simon"];
 	return names[randrange(0, names.length - 1)];
 }
 
