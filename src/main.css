@@ -1,3 +1,8 @@
+@media (max-width: 600px) {
+    #game {
+        font-size: 0.5em;
+    }
+}
 
 .wrapper {
     max-width: 700px;
@@ -15,6 +20,7 @@
     position: absolute;
     border: solid 1px black;
     top: 0px; bottom: 0px; right: 0px; left: 0px;
+    padding: 30px;
 
     background-color: black;
     background-position: center center;
@@ -22,23 +28,71 @@
     background-size: contain;
 }
 
-/* title screen */
-#game ul {
-    list-style-type: decimal;
+/* universal styling */
+
+#game h1 {
+    color: rgb(255,200,170);
+    font-family: "Rye", Serif;
+    font-weight: lighter;
 }
-#game div {
+
+#game p, #game ol, #game ul, #game h2 {
     color: white;
     font-family: 'Press Start 2P', monospace;
-    font-size: 0.8em;
 }
-#game {
+
+#game ul {
+    list-style-type: square;
+}
+
+#game ol {
+    list-style-type: decimal;
+    margin-left: 30px;
+}
+
+#game div.centered_content {
     display: flex;
-    justify-content: top;
+    justify-content: flex-start;
     flex-direction: column;
     align-items: center;
 }
-#game h1 {
-    color: rgb(255,199,166);
-    font-family: Georgia, Serif;
-    font-size: 2.7em;
+
+#game p {
+    margin-top: 5px; margin-bottom: 5px;
+}
+
+#game .prompt {
+    position: absolute;
+    bottom: 15px;
+    text-align: center;
+    left: 0; right: 0;
+}
+
+#matt_intro {
+    display: flex;
+}
+
+#matt_img {
+    background-image: url("./img/mal.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    flex: 1;
+    image-rendering: pixelated;
+    height: 75%;
+}
+
+#matt_img + div {
+    flex: 3;
+}
+
+#mattstore {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#mattstore > div:nth-of-type(2) {
+    display: flex;
+    align-items: flex-start;
+    width:100%;
 }
