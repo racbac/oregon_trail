@@ -33,7 +33,7 @@ var Map={
       '<svg id="map" width="643" height="402">'+svgContent+'</svg>';
   },
   landmarks:{
-  	"Independence":{miles: 0, coordinate:{x:580, y:295}, routes:{{"Kansas River Crossing":102}}},
+  	"Independence":{miles: 0, coordinate:{x:580, y:295}, next:"Kansas River Crossing", routes:{{"Kansas River Crossing":102}}},
   	"Kansas River Crossing":{miles: 102, coordinate:{x:553, y:288}, next:"Big Blue River Crossing"},
   	"Big Blue River Crossing":{miles: 185, coordinate:{x:535, y:275}, next:"Fort Kearney"},
   	"Fort Kearney": {miles:304,coordinate:{x:503, y:266},next:"Chimney Rock"},
