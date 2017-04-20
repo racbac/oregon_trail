@@ -99,7 +99,6 @@
     width:100%;
 }
 
-<<<<<<< HEAD
 #alertBox {
 	
 	position : absolute;
@@ -114,7 +113,7 @@
 	border-radius : 10px;
 	color : white;
 	background-color : black;
-=======
+
 #journey #animation {
     background-color: black;
     
@@ -143,5 +142,4 @@
 
 #journey #status ul {
     list-style-type: none;
->>>>>>> a0fe3e5f7c3475d2d8a4e7624fb0cc61b2f68860
 }
