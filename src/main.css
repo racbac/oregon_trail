@@ -36,7 +36,7 @@
     font-weight: lighter;
 }
 
-#game p, #game ol, #game ul, #game h2 {
+.white_black {
     color: white;
     font-family: 'Press Start 2P', monospace;
 }
@@ -55,6 +55,8 @@
     justify-content: flex-start;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    height: 100%;
 }
 
 #game p {
@@ -95,4 +97,34 @@
     display: flex;
     align-items: flex-start;
     width:100%;
+}
+
+#journey #animation {
+    background-color: black;
+    
+    background-image: url('./img/bg_grass.png');
+    background-repeat: no-repeat;
+    background-position-y: top;
+    height: 30%;
+}
+
+#journey div {
+    width: 100%;
+}
+
+#journey #ground {
+    background-color: #04B600;
+    height: 20%;
+}
+
+#journey #status {
+    background-color: white;
+    text-align: center;
+    color: black;
+    height: 50%;
+    list-style-type: none;
+}
+
+#journey #status ul {
+    list-style-type: none;
 }
