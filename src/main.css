@@ -101,7 +101,7 @@
 
 #journey #animation {
     background-color: black;
-    
+
     background-image: url('./img/bg_grass.png');
     background-repeat: no-repeat;
     background-position-y: top;
@@ -127,4 +127,8 @@
 
 #journey #status ul {
     list-style-type: none;
+}
+
+#map{
+  background-image: url("img/map.png");
 }

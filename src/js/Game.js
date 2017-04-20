@@ -1,6 +1,7 @@
 var Game = {
   gameCaravan: new Caravan(),
   date: new Date(),
+  miles: 0,
   scenes: {
     startScreen: function(){
       document.getElementById("game").innerHTML=
@@ -99,11 +100,11 @@ var Game = {
         </div>`;
 
       Game.waitForInput(null,function(value) {return (value.length > 0)},function(leadername){
-        
+
         // Add the leader to the caravan
         var leader = new Person(leadername);
         Game.gameCaravan.addPerson(leader);
-        
+
         document.getElementById("enterNames").innerHTML =
           ` <div class="white_black">\n
               <p>What are the first names of the four other members in your party?</p>\n
@@ -117,7 +118,7 @@ var Game = {
             var nameFunc=function(name){
               var inputEle=document.getElementById("input");
               var index=+inputEle.parentNode.id[3];
-              
+
               if (name == "") { // if they're done entering names, autofill
                 for (var i = index; i <= 4; i++) {
                   Game.gameCaravan.addPerson(new Person(randomName()));
@@ -130,7 +131,7 @@ var Game = {
               // Add a new peron to the caravan for each input name
               var newPerson = new Person(name);
               Game.gameCaravan.addPerson(newPerson);
-              
+
               if(index==4){ // if they've entered all the names
                 Game.scenes.chooseDepartureMonth();
                 return;
@@ -220,7 +221,7 @@ var Game = {
           </div>\n`;
         thestore = new Store(20, 10, 2, 10, 10, 10, 0.2);
         var storeFront = function(){
-          
+
           document.getElementById("game").innerHTML =
           `<div id="mattstore" class="white_black">\n
               <div>
@@ -420,15 +421,24 @@ var Game = {
           }
 
         }
-        var travelLoop=setInterval(travelFunc,3000/24); /*call travelFunc once per game hour, 3 game day per second*/
+        var travelLoop=setInterval(travelFunc,3000/24); /*call travelFunc once per game hour, 3 seconds per game day*/
         Game.waitForInput(null,null,function(){
           clearInterval(travelLoop);
-          Game.scenes.EnterMenu();
+          Game.scenes.TrailMenu();
         });
     },
-    EnterMenu: function(){
-      document.getElementById("game").innerHTML="<p>menu will added here later. Enter to contunue.</p>";
+    TrailMenu: function(){
+      document.getElementById("game").innerHTML=`
+        <div id=trail_menu>
+
+        </div>`;
       Game.waitForInput(null,null,Game.scenes.Journey);
+    },
+    CheckSupply: function(){
+
+    },
+    ShowMap: function(){
+
     },
     Fishing: function(){
 
