@@ -592,7 +592,7 @@ var Game = {
     var fishNum=Math.floor((Math.random()*9));
     if (chanceToCatch>5){
       document.getElementById("game").innerHTML="You got a"+fish[fishNum];
-      Caravan.food+=weights[fishNum];
+      gameCaravan.food+=weights[fishNum];
     }
   }
 };
