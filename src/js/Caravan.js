@@ -49,7 +49,7 @@ function Person(new_name) {
 // creates a new Caravan object
 function Caravan() {
     // members
-    this.family;
+    this.family = [];
     this.health = HEALTH.GOOD;
     this.pace = PACE.STEADY;
     this.occupation;
@@ -64,6 +64,22 @@ function Caravan() {
     this.clothing = 0;
     this.food = 0;
     this.boxes_ammo = 0;
+	
+	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
+	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
+	"Mr Anderson"];
+}
+
+Caravan.prototype.generateRandomName = function() {
+	
+	// Pick a name from the list
+	var randomIndex = Math.floor(Math.random() * this.randomNames.length);
+	var chosenName = this.randomNames[randomIndex];
+	
+	// Remove the name from the array so there are no duplicates
+	this.randomNames.splice(randomIndex, 1);
+	
+	return chosenName;
 }
 
 // set_family
@@ -99,22 +115,22 @@ Caravan.prototype.purchase = function(item, cost, quantity) {
 
 // Return the average health
 Caravan.prototype.getHealth = function() {
-	
+
 	var familySize = this.family.length;
 	var totalHealth = 0;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		totalHealth += this.family[i].health;
 	}
-	
+
 	return totalHealth / familySize;
 }
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-	
+
 	var familySize = this.family.length;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		if (this.family[i].name == person.name) {
 			this.family.splice(i,1);
@@ -140,44 +156,31 @@ Caravan.prototype.removeFood = function(foodAmt) {
 Caravan.prototype.badWater = function() {
 
 }
-=======
-function Caravan() {
-	
-	this.family = [];
-	this.pace = 0;
-	this.rations = 0;
-	this.money = 0.00;
-	this.boxes_ammo = 0;
-	this.tongues = 1;
-	this.wheels = 4;
-	this.axles = 1;
-	this.oxen = 0;
-}
 
 // Return the average health
 Caravan.prototype.getHealth = function() {
-	
+
 	var familySize = this.family.length;
 	var totalHealth = 0;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		totalHealth += this.family[i].health;
 	}
-	
+
 	return totalHealth / familySize;
 }
 
 // Add a person to the family
 Caravan.prototype.addPerson = function(person) {
-	
+
 	this.family.push(person);
 }
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-	
+
 	var familySize = this.family.length;
-	
+
 	for (var i = 0; i < familySize; i++) {
 		if (this.family[i].name == person.name) {
 			this.family.splice(i,1);
