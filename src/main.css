@@ -99,6 +99,21 @@
     width:100%;
 }
 
+#alertBox {
+	
+	position : absolute;
+	left:0px;
+	top:0px;
+	font-family: 'Press Start 2P', monospace;
+	word-wrap: break-word;
+	z-index : 1;
+	width : 100%;
+	display : block;
+	border: 10px solid white;
+	border-radius : 10px;
+	color : white;
+	background-color : black;
+
 #journey #animation {
     background-color: black;
     

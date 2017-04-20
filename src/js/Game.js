@@ -356,6 +356,88 @@ var Game = {
         Game.waitForInput(null,null,storeFront);
       });
     },
+  
+    BuySupply:function(){
+
+    },
+	CrossRiver:function(width, depth) {
+		
+		var message = "You must cross the river in order to continue. The river at this point is currently " + width +
+			" feet wide and " + depth + " feet deep in the middle."
+		
+		document.getElementById("game").innerHTML =
+        `<div id="cross_river_message">
+          <p>' + message + '</p>
+          <p class="prompt">Press ENTER to continue</p>\n
+        </div>`;
+		
+		Game.waitForInput(null, null, null);
+		
+		
+		
+		
+		
+		
+		document.getElementById("game").innerHTML =
+        `<div id="cross_river">
+		  <p>Weather: </p>
+		  <p>River width: ' + width + '</p>
+		  <p>River depth: ' + depth + '</p>
+
+          <p>You may:</p>
+          <ol>
+            <li>attempt to ford the river</li>
+            <li>caulk the wagon and float it accross</li>
+            <li>take a ferry accross</li>
+            <li>wait to see if conditions improve</li>
+			<li>get more information</li>
+          </ol>
+          <p>What is your choice? <span id="input"></span></p>
+        </div>`;
+      var validationFunc=function(input){
+        return Number.isInteger(+input) && +input>0 && +input<5;
+      }
+      Game.waitForInput(null,validationFunc,function(choice){
+		  
+		// Ford the river
+        if(choice == 1){
+		  
+		  // A depth of more than 2.5 feet is where risk starts
+		  if (depth > 2.5) {
+
+			  // Every 10th of a foot adds a 5% chance of disaster
+			  var accidentChance = (depth - 2.5) * 50;
+			  var chance = randRange(1, 100);
+			  if (chance < accidentChance) {
+				  
+				  // TODO: Display the message to the screen, showing what was lost
+				  Game.alertBox(wagonTipOver(gameCaravan));  
+				  }
+			}
+          }
+		}
+		
+		//Float accross the river
+        else if(choice ==2){
+          //play an animation?
+		  var chance = randRange(1, 100);
+		  if (chance < 10) {
+
+		  }
+		  
+        }
+        else if(choice == 3){
+          //take the ferry
+        }
+		else if(choice == 4) {
+			//let a day pass and change the width/depth slightly
+		}
+		else if(choice == 5) {
+			//show information
+		}
+	  },
+		
+	
     Journey:function(){
       document.getElementById("game").innerHTML =
 
@@ -430,13 +512,14 @@ var Game = {
       document.getElementById("game").innerHTML="<p>menu will added here later. Enter to contunue.</p>";
       Game.waitForInput(null,null,Game.scenes.Journey);
     },
+	
     Fishing: function(){
 
     },
     LandMark: function(landmarkname){
 
-    }
-  },
+    },
+
   gameDiv: document.getElementById("game"),
   start: function(){
     Game.scenes.startScreen();
@@ -481,6 +564,27 @@ var Game = {
       }
     };
   },
+  
+  alertBox : function(message) {
+	  
+	if (message == undefined) {
+		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
+		"I think I just broke my leg and caught Ebola!";
+	}
+	
+    var alertBox = document.createElement("alertBox");
+	alertBox.setAttribute('id', 'AlertBox');
+	alertBox.innerHTML = message;
+    document.getElementById("game").appendChild(alertBox);
+	
+	Game.waitForInput(null,null,Game.removeAlertBox);
+  },
+  
+  removeAlertBox : function() {
+	  
+    document.getElementById("AlertBox").remove();
+  },
+  
   fishingGame:function(){
     var fish=["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
     var weights=[50,10,27,27,40,12,1,20,26];
