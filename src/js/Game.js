@@ -6,7 +6,7 @@ var Game = {
       document.getElementById("game").innerHTML=
         '<div class=\"centered_content\">'+
           '<h1>The Oregon Trail</h1>'+
-          '<div>'+
+          '<div class="white_black">'+
           '<p>You may:</p>'+
           '<ol>'+
             '<li>Travel the trail</li>'+
@@ -41,7 +41,7 @@ var Game = {
     },
     chooseOccupation: function(){
       document.getElementById("game").innerHTML =
-        `<div id="choose_occupation">
+        `<div id="choose_occupation" class="white_black">
           <p>Many kinds of people made the trip to Oregon.</p>
           <p>You may:</p>
           <ol>
@@ -73,7 +73,7 @@ var Game = {
         }
         else if(choice == 4){
           document.getElementById("game").innerHTML =
-            `<div id="choose_occupation" class=\"centered_content\">
+            `<div id="choose_occupation" class=\"centered_content white_black\">
               <p>Traveling to Oregon isn't easy! But if you're a banker, you'll have more money for supplies and services than a carpenter or a farmer.</p>\n
               <p>However, the harder you have to try, the more points you deserve! Therefore, the farmer earns the greatest number of points and the banker earns the least</p>\n
               <p class="prompt">Press ENTER to continue</p>\n
@@ -91,7 +91,7 @@ var Game = {
     enterNames: function(){
 
       document.getElementById("game").innerHTML =
-        `<div id="enterNames">
+        `<div id="enterNames" class="white_black">
           <p>
             What is the first name of the wagon leader?
             <span id="input"></span>
@@ -105,7 +105,7 @@ var Game = {
         Game.gameCaravan.addPerson(leader);
         
         document.getElementById("enterNames").innerHTML =
-          ` <div>\n
+          ` <div class="white_black">\n
               <p>What are the first names of the four other members in your party?</p>\n
               <ol>\n`
                 +'<li>'+leadername+'</li>\n'+
@@ -148,7 +148,7 @@ var Game = {
     },
     chooseDepartureMonth:function(){
       document.getElementById("game").innerHTML =
-      `<div id="chooseMonth"><div>
+      `<div id="chooseMonth" class="white_black"><div>
         <p>It is 1848. Your jumping off place for Oregon is Independence, Missouri. You must decide which month to leave Independence.</p>
         <ol>
           <li>March</li>
@@ -198,16 +198,16 @@ var Game = {
       });
     },
     adviceDepartureMonth:function(){
-      document.getElementById("game").innerHTML ="<div>\n<p>You attend a public meeting held for \"folks with the California - Oregon fever.\" You're told:<br><br>\nIf you leave too early, there won't be any grass for your oxen to eat. If you leave too late, you may not get to Oregon before winter comes. If you leave at just the right time, there will be green grass and the weather will still be cool.</p>\n<p class=\"prompt\">Press ENTER to continue</p>\n</div>\n";
+      document.getElementById("game").innerHTML ="<div class='white_black'>\n<p>You attend a public meeting held for \"folks with the California - Oregon fever.\" You're told:<br><br>\nIf you leave too early, there won't be any grass for your oxen to eat. If you leave too late, you may not get to Oregon before winter comes. If you leave at just the right time, there will be green grass and the weather will still be cool.</p>\n<p class=\"prompt\">Press ENTER to continue</p>\n</div>\n";
       Game.waitForInput(null,null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
-      document.getElementById("game").innerHTML ="<div>\n<p>Before leaving Independence you should buy equipment and supplies. You have $" + Game.gameCaravan.occupation.cash + " in cash, but you don't have to spend it all now.</p>\n<p class=\"prompt\">Press ENTER to continue</p>\n</div>\n";
+      document.getElementById("game").innerHTML ="<div class='white_black'>\n<p>Before leaving Independence you should buy equipment and supplies. You have $" + Game.gameCaravan.occupation.cash + " in cash, but you don't have to spend it all now.</p>\n<p class=\"prompt\">Press ENTER to continue</p>\n</div>\n";
       Game.waitForInput(null,null,function(){
         document.getElementById("game").innerHTML =
           `<div id="matt_intro">\n
             <div id="matt_img"></div>\n
-              <div>\n
+              <div class="white_black">\n
                 <p>Hello, I'm Mal. So you're going to Oregon! I can fix you up with what you need:</p>\n
                 <ul>\n<li>a team of oxen to pull your wagon</li>\n
                   <li>clothing for both summer and winter</li>\n
@@ -218,30 +218,11 @@ var Game = {
               </div>
             <p class=\"prompt\">Press ENTER to continue</p>\n
           </div>\n`;
-        
-        /* var price={
-          oxen:40/2, //yoke = 2oxen
-          food:0.2,
-          clothing:10,
-          baits:2/20, //box = 20 baits
-          wheels:10,
-          axles:10,
-          tongues:10
-        };
-        var cart={
-          oxen:0,
-          food:0,
-          clothing:0,
-          baits:0,
-          wheels:0,
-          axles:0,
-          tongues:0
-        }; */
         thestore = new Store(20, 10, 2, 10, 10, 10, 0.2);
         var storeFront = function(){
           
           document.getElementById("game").innerHTML =
-          `<div id="mattstore">\n
+          `<div id="mattstore" class="white_black">\n
               <div>
                 <p>Mal's General Store<br>\n
                 Independence, Missouri<br>\n` +
@@ -265,11 +246,11 @@ var Game = {
             </div>
           </div>\n`;
           var validationFunc=function(input){
-            return +input&&+input>0&&+input<6;
+            return input==""||(+input&&+input>0&&+input<6);
           }
           Game.waitForInput([13/*enter*/,32/*space*/],validationFunc,function(choice){
             document.getElementById("game").innerHTML=
-            `<div id="mattstore">
+            `<div id="mattstore" class="white_black">
               <p>
                 Matt's General Store<br>
                 Independence, Missouri<br>
@@ -287,10 +268,10 @@ var Game = {
             var validationFunc=null;
             if(choice == 1){
               mattAdvice=
-                `There are 2 oxen in a yoke; I recommend at least 3 yoke. I charge $40 a yoke.<br>\n
+                `There are 2 oxen in a yoke. I recommend at least 3 yoke, but you need as least one yoke. I charge $40 a yoke.<br>\n
                 How many yoke do you want? `;
               validationFunc=function(input){
-                return input.length<2&&Number.isInteger(+input)&&input<=10;
+                return Number.isInteger(+input)&&input<=10&&input>=1;
               }
               mattFunc=function(input){
                 //add yokes to bill
@@ -332,21 +313,21 @@ var Game = {
               }
             }
             else if(choice == 5){
-              mattAdvice="How many wagon wheels?"
+              mattAdvice="You can carry 3 wagon wheels.<br>\nHow many wagon wheels?"
               validationFunc=function(input){
-                return input.length<2&&Number.isInteger(+input);
+                return input.length<2&&Number.isInteger(+input)&&input<=3;
               }
               mattFunc=function(input){
                 //add wagon wheels to bill
                 thestore.adjust_bill("wheels", input);
 
-                mattAdvice="How many wagon axles?";
+                mattAdvice="You can carry 3 wagon axles.<br>\nHow many wagon axles?";
                 document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
                 Game.waitForInput(null,validationFunc,function(input){
                   //add wagon axles to bill
                   thestore.adjust_bill("axles", input);
 
-                  mattAdvice="How many wagon tongues?";
+                  mattAdvice="You can carry three wagon tongues.<br>\nHow many wagon tongues?";
                   document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
                   Game.waitForInput(null,validationFunc,function(input){
                     //add wagon tongues to bill
@@ -358,6 +339,13 @@ var Game = {
               }
             }
             else{
+              Game.gameCaravan.purchase("oxen", thestore.oxen.price, thestore.oxen.amt);
+              Game.gameCaravan.purchase("axles", thestore.axles.price, thestore.axles.amt);
+              Game.gameCaravan.purchase("clothing", thestore.clothing.price, thestore.clothing.amt);
+              Game.gameCaravan.purchase("wheels", thestore.wheels.price, thestore.wheels.amt);
+              Game.gameCaravan.purchase("tongues", thestore.tongues.price, thestore.tongues.amt);
+              Game.gameCaravan.purchase("food", thestore.food.price, thestore.food.amt);
+              Game.gameCaravan.purchase("bait", thestore.bait.price, thestore.bait.amt);
               Game.scenes.Journey();
               return;
             }
@@ -452,18 +440,77 @@ var Game = {
 	
     Journey:function(){
       document.getElementById("game").innerHTML =
-        `<div id="journey">
-          <div>animation goes here</div>
-          <p>press ENTER to size up the situation</p>
-          <ul>
-            <li>Date:</li>
-            <li>Weather:</li>
-            <li>Health:</li>
-            <li>Food:</li>
-            <li>Next Landmark:</li>
-            <li>Miles Traveled:</li>
+
+        `<div id="journey" class="centered_content white_black">
+          <div id="animation"></div>
+          <div id="ground"></div>
+          <div id="status">
+            <p>press ENTER to size up the situation</p>
+            <ul>
+            <li>Date: <span id="date"></span></li>
+            <li>Weather: <span id="weather"></span></li>
+            <li>Health: <span id="health"></span></li>
+            <li>Food: <span id="food"></span></li>
+            <li>Next Landmark: <span id="next_landmark"></span></li>
+            <li>Miles Traveled: <span id="miles"></span></li>
           </ul>
         </div>`;
+        document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+        document.getElementById("weather").innerHTML="weather";
+        document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+        document.getElementById("food").innerHTML=Game.gameCaravan.food;
+        document.getElementById("next_landmark").innerHTML='000';
+        document.getElementById("miles").innerHTML=Game.miles;
+        var timeOfDay=0;
+        var HoursPerDay=8;
+        var MPH=3;
+        var travelFunc=function(){//called once per game Hour
+          timeOfDay++;
+
+          if(timeOfDay==24){//once a day
+
+            Game.date.setDate(Game.date.getDate()+1);
+            timeOfDay=0;
+            /*generate the conditions for the day*/
+            var weather="warm";
+            var event=null;//randomEvent();
+            /*update food and health*/
+
+
+            /*update html for event*/
+            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+            document.getElementById("weather").innerHTML=weather;
+            document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+            document.getElementById("food").innerHTML=Game.gameCaravan.food;
+            document.getElementById("next_landmark").innerHTML='000';
+
+            if(event){
+              clearInterval(travelLoop);
+              waitForInput(null,null,game.scenes.EnterMenu);
+              return;
+            }
+          }
+          if(timeOfDay==5){//start traveling at 5am
+            /*set oxen animation to running and the background to scroll*/
+            document.getElementById("animation").innerHTML="<p>animation started</p>";
+          }
+          else if(timeOfDay== 5+HoursPerDay){
+            Game.miles+=MPH*HoursPerDay;
+            document.getElementById("miles").innerHTML=Game.miles;
+            /*set oxen animation to stopped and the background to stopped*/
+            document.getElementById("animation").innerHTML="<p>animation stopped</p>";
+          }
+
+        }
+        var travelLoop=setInterval(travelFunc,3000/24); /*call travelFunc once per game hour, 3 game day per second*/
+        Game.waitForInput(null,null,function(){
+          clearInterval(travelLoop);
+          Game.scenes.EnterMenu();
+        });
+    },
+    EnterMenu: function(){
+      document.getElementById("game").innerHTML="<p>menu will added here later. Enter to contunue.</p>";
+      Game.waitForInput(null,null,Game.scenes.Journey);
     },
 	
     Fishing: function(){
@@ -501,14 +548,19 @@ var Game = {
       if(x==8)//backspace pressed
       {
         input=input.slice(0,-1);
-        element.innerHTML=input + "_";
+        element.innerHTML=input;
       }
-      else if((x == 13||enterKeys.includes(x)) && validationFunc(input) )//enter key pressed
+      else if((x == 13||enterKeys.includes(x)) && validationFunc(input) )//enter key pressed and input valid
       {
         document.onkeydown=null;
         document.onkeypress=null;
         element.innerHTML = element.innerHTML.substring(0, element.innerHTML.length - 1);
         callback(input);
+      }else if(x==8)//backspace pressed
+      {
+        input=input.slice(0,-1);
+        element.innerHTML=input+"_";
+
       }
     };
   },
@@ -531,6 +583,17 @@ var Game = {
   removeAlertBox : function() {
 	  
     document.getElementById("AlertBox").remove();
+  },
+  
+  fishingGame:function(){
+    var fish=["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
+    var weights=[50,10,27,27,40,12,1,20,26];
+    var chanceToCatch=Math.floor((Math.random()*10)+1);
+    var fishNum=Math.floor((Math.random()*9));
+    if (chanceToCatch>5){
+      document.getElementById("game").innerHTML="You got a"+fish[fishNum];
+      Caravan.food+=weights[fishNum];
+    }
   }
 };
 
