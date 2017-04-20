@@ -18,15 +18,15 @@ var landmarkNames=["Independence",
 "The Dalles",
 "the Willamette Valley",
 "Oregon City"]
-function Landmarks(){
+function Landmark(){
 	this.name="Independence";
 	this.distance=0;
 	this.branch=0;
 	this.image=0;
 }
-Landmarks.prototype.changeLandmark = function(new_landmark) {
+Landmark.prototype.changeLandmark = function(new_landmark) {
 	this.name=new_landmark;
 }
-Landmarks.prototype.changeDistance= function(){
+Landmark.prototype.changeDistance= function(){
 	this.distance+=Caravan.pace;
 }
