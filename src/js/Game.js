@@ -375,63 +375,62 @@ var Game = {
 		Game.waitForInput(null, null, null);
 
 		document.getElementById("game").innerHTML =
-        `<div id="cross_river">
-		  <p>Weather: </p>
-		  <p>River width: ' + width + '</p>
-		  <p>River depth: ' + depth + '</p>
+      `<div id="cross_river">
+        <p>Weather: </p>
+        <p>River width: ' + width + '</p>
+        <p>River depth: ' + depth + '</p>
+        <p>You may:</p>
+        <ol>
+          <li>attempt to ford the river</li>
+          <li>caulk the wagon and float it accross</li>
+          <li>take a ferry accross</li>
+          <li>wait to see if conditions improve</li>
+          <li>get more information</li>
+        </ol>
+        <p>What is your choice? <span id="input"></span></p>
+      </div>`;
+    var validationFunc=function(input){
+      return Number.isInteger(+input) && +input>0 && +input<5;
+    }
+    Game.waitForInput(null,validationFunc,function(choice){
+		  
+      // Ford the river
+      if(choice == 1){
+        
+        // A depth of more than 2.5 feet is where risk starts
+        if (depth > 2.5) {
 
-          <p>You may:</p>
-          <ol>
-            <li>attempt to ford the river</li>
-            <li>caulk the wagon and float it accross</li>
-            <li>take a ferry accross</li>
-            <li>wait to see if conditions improve</li>
-			<li>get more information</li>
-          </ol>
-          <p>What is your choice? <span id="input"></span></p>
-        </div>`;
-      var validationFunc=function(input){
-        return Number.isInteger(+input) && +input>0 && +input<5;
+          // Every 10th of a foot adds a 5% chance of disaster
+          var accidentChance = (depth - 2.5) * 50;
+          var chance = randRange(1, 100);
+          if (chance < accidentChance) {
+            
+            // TODO: Display the message to the screen, showing what was lost
+            Game.alertBox(wagonTipOver(gameCaravan));  
+            }
+        }
       }
-      Game.waitForInput(null,validationFunc,function(choice){
-		  
-		// Ford the river
-        if(choice == 1){
-		  
-		  // A depth of more than 2.5 feet is where risk starts
-		  if (depth > 2.5) {
+      
+      //Float accross the river
+      else if(choice ==2){
+        //play an animation?
+        var chance = randRange(1, 100);
+        if (chance < 10) {
 
-			  // Every 10th of a foot adds a 5% chance of disaster
-			  var accidentChance = (depth - 2.5) * 50;
-			  var chance = randRange(1, 100);
-			  if (chance < accidentChance) {
-				  
-				  // TODO: Display the message to the screen, showing what was lost
-				  Game.alertBox(wagonTipOver(gameCaravan));  
-				  }
-			}
-          }
-		}
-		
-		//Float accross the river
-        else if(choice ==2){
-          //play an animation?
-		  var chance = randRange(1, 100);
-		  if (chance < 10) {
-
-		  }
-		  
         }
-        else if(choice == 3){
-          //take the ferry
-        }
-		else if(choice == 4) {
-			//let a day pass and change the width/depth slightly
-		}
-		else if(choice == 5) {
-			//show information
-		}
-	  },
+        
+      }
+      else if(choice == 3){
+        //take the ferry
+      }
+      else if(choice == 4) {
+        //let a day pass and change the width/depth slightly
+      }
+      else if(choice == 5) {
+        //show information
+      }
+    });
+  },
 		
 	
     Journey:function(){
