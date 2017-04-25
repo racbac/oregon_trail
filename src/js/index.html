@@ -7,11 +7,29 @@ canvas {
     border: 1px solid #d3d3d3;
 
 }
+ #water,#canvas {
+    width: 480px;
+    height: 270px;
+    position: relative;
+    display: block;
+}
+#canvas {
+    margin-top: -300px;
+}
+/*
+#waterbckg{
+	width: 699px;
+	height: 499px;
+	background-image: "../img/water.gif";
+}*/
+
+
 </style>
 	<title></title>
 </head>
 <body onload="startGame()">
  <script src="RiverCrossingGame.js"></script> 
-
+<img id="water" src="../img/water.gif">
+ <div id="waterbckg"><canvas id="canvas"></canvas></div>
 </body>
 </html>

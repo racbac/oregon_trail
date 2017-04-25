@@ -2,6 +2,7 @@ var myGamePiece;
 function startGame() {
     
     //myGamePiece=new component(30,30,"wagonOnRiver.gif",10,120,"image");
+    
     myGameArea.start();
     myGamePiece=new component(70,30,"../img/wagonOnRiver.gif",10,120,"image");
     myGamePiece.update();
@@ -9,21 +10,17 @@ function startGame() {
 }
 
 var myGameArea = {
-    canvas : document.createElement("canvas"),
+    canvas : document.getElementById("canvas"),
     start : function() {
-        this.canvas.width = 480;
-        this.canvas.height = 270;
-        this.context = this.canvas.getContext("2d");
-        var ctx= this.canvas.getContext("2d");
-        var background = new Image();
-        background.src ="../img/water.gif";
-        ctx.drawImage(background,0,0);  
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-    	this.frameNo = 0;
+        //this.canvas.width = 480;
+        //this.canvas.height = 270;
+        context = canvas.getContext("2d");
+        document.body.insertBefore(canvas, document.body.childNodes[0]);
+    	  this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         },
     clear : function() {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        context.clearRect(myGamePiece.x, myGamePiece.y, myGamePiece.width, myGamePiece.height);
     },
     stop : function() {
         clearInterval(this.interval);
@@ -43,7 +40,8 @@ function component(width, height, color, x, y, type) {
   this.x = x;
   this.y = y;
   this.update = function() {
-    ctx = myGameArea.context;
+    ctx = canvas.getContext("2d");
+
     if (type == "image") {
       ctx.drawImage(this.image,
         this.x,
@@ -61,6 +59,7 @@ function component(width, height, color, x, y, type) {
 }
 function updateGameArea() {
     myGameArea.clear();
+    myGamePiece.x += 1;
     myGamePiece.newPos();
     myGamePiece.update();
 }
