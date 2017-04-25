@@ -120,6 +120,13 @@ main > div {
 
 #journey #animation {
     background-color: black;
+<<<<<<< HEAD
+=======
+
+    background-image: url('./img/bg_grass.png');
+    background-repeat: no-repeat;
+    background-position-y: top;
+>>>>>>> refs/remotes/origin/Chen
     height: 30%;
     position: relative;
 }
@@ -150,6 +157,7 @@ main > div {
     list-style-type: none;
 }
 
+<<<<<<< HEAD
 
 #oxen {
     position: absolute;
@@ -158,3 +166,8 @@ main > div {
     height: 55%;
 }
 
+=======
+#map{
+  background-image: url("img/map.png");
+}
+>>>>>>> refs/remotes/origin/Chen
