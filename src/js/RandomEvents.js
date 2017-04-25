@@ -1,5 +1,29 @@
 var supplyList = ["Wheel", "Tongue", "Axle", "Bait", "Clothing", "Food"];
 
+function getWeather(month) {
+
+	var weather = ["snowy", "cold", "cool", "rainy", "warm", "hot"];
+	switch (month) {
+		// Dec - Feb are 20 snowy, 50 cold, 30 cool
+		case 11: case 0: case 1:
+			return weather[weightedRand({1: 0.5, 2: 0.3, 0: 0.2})];
+			break;
+		// Mar - May are 20 rainy, 50 cool, 30 warm
+		case 2: case 3: case 4:
+			return weather[weightedRand({2: 0.5, 4: 0.3, 3: 0.2})];
+			break;
+		// Jun - Aug are 30 hot, 70 warm
+		case 5: case 6: case 7:
+			return weather[weightedRand({4: 0.6, 5: 0.4})];
+			break;
+		// Sep - Nov are 30 cold, 70 cool
+		case 8: case 9: case 10:
+			return weather[weightedRand({2: 0.7, 1: 0.3})];
+			break;
+	}
+
+}
+
 function randomEvent(caravan) {
 	
 	// There are 12 events, so generate a random number between 1 and 12
@@ -485,4 +509,13 @@ function destroyRandomSupplies(caravan) {
 function randrange(min, max) {
     // add current time as fake random seed
     return Math.floor((Math.random() + new Date().getTime() % 1) * (max - min + 1) + min);
+}
+
+// takes object where keys are possible variables, and values are probabilities
+function weightedRand(specs) {
+	var i; var num = Math.random(); var sum = 0;
+	for (i in specs) {
+		sum += specs[i];
+		if (num <= sum) { return i; }
+	}
 }
