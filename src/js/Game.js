@@ -613,52 +613,53 @@ var Game = {
    },
 
     animateRiver: function(method, success) {
-    // setup
-    Game.gameDiv.innerHTML = `<div>\n<div id="river_crossing" class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>`;
-    var canvas = document.getElementById("river_animation");
-    var ctx = canvas.getContext("2d");
-    canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
+      // setup
+      Game.gameDiv.innerHTML = `<div>\n<div id="river_crossing" class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>`;
+      var canvas = document.getElementById("river_animation");
+      var ctx = canvas.getContext("2d");
+      canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
 
-    var grd; var bank1 = -40; var bank2 = 75; 
-    var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
-    const BLUE = "#42B2FF"; const TAN = "#F6B68E";
+      var grd; var bank1 = -40; var bank2 = 75; 
+      var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
+      const BLUE = "#42B2FF"; const TAN = "#F6B68E";
 
-    // drawing  the river at different stages in crossing
-    var drawRiver = function(pct1, pct2) {
-      grd = ctx.createLinearGradient(0,0, hypo / 2, hypo * 0.866);
-      grd.addColorStop(0, TAN);
-      grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
-      grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
-      grd.addColorStop(1, TAN);
-      ctx.fillStyle = grd; 
-      ctx.fillRect(0,0,width, height);
-    };
+      // drawing  the river at different stages in crossing
+      var drawRiver = function(pct1, pct2) {
+        grd = ctx.createLinearGradient(0,0, hypo / 2, hypo * 0.866);
+        grd.addColorStop(0, TAN);
+        grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
+        grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
+        grd.addColorStop(1, TAN);
+        ctx.fillStyle = grd; 
+        ctx.fillRect(0,0,width, height);
+      };
 
-    // set and draw graphic for method of travel
-    var imageObj = new Image();
-    if (method == "ford") {
-      imageObj.src = './img/wagon_ford.png';
-    } else if (method == "caulk") {
-      imageObj.src = './img/wagon_caulk.png';
-    } else if (method == "ferry") {
-      imageObj.src = './img/wagon_ferry.png';
-    }
+      // set and draw graphic for method of travel
+      var imageObj = new Image();
+      if (method == "ford") {
+        imageObj.src = './img/wagon_ford.png';
+      } else if (method == "caulk") {
+        imageObj.src = './img/wagon_caulk.png';
+      } else if (method == "ferry") {
+        imageObj.src = './img/wagon_ferry.png';
+      }
 
-    //  draw the wagon going across the river
-    imageObj.onload = function() {
-      drawRiver(bank1, bank2);
-      ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377 );
-      setTimeout(function() { // wait a second before moving
-        var progress = setInterval(function() { // go across the river until mostly across
-          if (bank1 == 25) {
-              clearInterval(progress);
-          } else {
-              drawRiver(bank1, bank2);
-              ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
-              bank1++, bank2++;
-          }
-        }, 60);
-      }, 1000);
+      //  draw the wagon going across the river
+      imageObj.onload = function() {
+        drawRiver(bank1, bank2);
+        ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377 );
+        setTimeout(function() { // wait a second before moving
+          var progress = setInterval(function() { // go across the river until mostly across
+            if (bank1 == 25) {
+                clearInterval(progress);
+            } else {
+                drawRiver(bank1, bank2);
+                ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
+                bank1++, bank2++;
+            }
+          }, 60);
+        }, 1000);
+      }
     }
   },
   
