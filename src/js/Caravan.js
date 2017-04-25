@@ -145,17 +145,6 @@ Caravan.prototype.removeOx = function(oxenNum) {
 		this.oxen=0;
 	}
 }
-Caravan.prototype.removeWagonTongue = function() {
-	this.tongues=this.tongues-1;
-}
-Caravan.prototype.removeFood = function(foodAmt) {
-	for(var i=0; i<foodAmt;i++){
-		this.food= this.food - 1;
-	}
-}
-Caravan.prototype.badWater = function() {
-
-}
 
 // Return the average health
 Caravan.prototype.getHealth = function() {
