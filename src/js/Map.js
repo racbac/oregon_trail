@@ -33,31 +33,31 @@ var Map={
       '<svg id="map" width="643" height="402">'+svgContent+'</svg>';
   },
   landmarks:{
-  	"Independence":{miles: 0, coordinate:{x:580, y:295}, next:"Kansas River Crossing", routes:{"Kansas River Crossing":102}},
-  	"Kansas River Crossing":{miles: 102, coordinate:{x:553, y:288}, next:"Big Blue River Crossing", routes:{"Big Blue River Crossing",185-102}},
-  	"Big Blue River Crossing":{miles: 185, coordinate:{x:535, y:275}, next:"Fort Kearney", routes:{"Fort Kearney", 304-185}},
-  	"Fort Kearney": {miles:304,coordinate:{x:503, y:266},next:"Chimney Rock", routes:{"Chimney Rock",554-304}},
-  	"Chimney Rock": {miles:554,coordinate:{x:460, y:260},next:"Fort Laramie", routes:{"Fort Laramie": 640-554}},
-  	"Fort Laramie": {miles:640,coordinate:{x:415, y:245},next:"Independence Rock", routes:{"Independence Rock", 830-640}},
-  	"Independence Rock": {miles:830,coordinate:{x:373, y:223},next:"South Pass/Trail Splits", routes:{"South Pass/Trail Splits",932-830}},
-  	"South Pass/Trail Splits": {miles: 932,coordinate:{x:339, y:234},next:"Green River Crossing", routes:{"Green River Crossing",}},
+  	"Independence":{miles: 0, coordinate:{x:580, y:295}, routes:{"Kansas River Crossing":102}},
+  	"Kansas River Crossing":{miles: 102, coordinate:{x:553, y:288}, routes:{"Big Blue River Crossing":185-102}},
+  	"Big Blue River Crossing":{miles: 185, coordinate:{x:535, y:275},routes:{"Fort Kearney": 304-185}},
+  	"Fort Kearney": {miles:304,coordinate:{x:503, y:266}, routes:{"Chimney Rock":554-304}},
+  	"Chimney Rock": {miles:554,coordinate:{x:460, y:260}, routes:{"Fort Laramie": 640-554}},
+  	"Fort Laramie": {miles:640,coordinate:{x:415, y:245}, routes:{"Independence Rock": 830-640}},
+  	"Independence Rock": {miles:830,coordinate:{x:373, y:223}, routes:{"South Pass/Trail Splits":932-830}},
+  	"South Pass/Trail Splits": {miles: 932,coordinate:{x:339, y:234}, routes:{"Green River Crossing":989-932, "Fort Bridger":}},
   	"Fort Bridger": {miles: 989,coordinate:{x:306, y:272}},
-  	"Green River Crossing": {miles: 989, coordinate:{x:310, y:244},next:"Soda Springs"},
+  	"Green River Crossing": {miles: 989, coordinate:{x:310, y:244},routes:{"Soda Springs":1133-989}},
   		//Green River Shortcut: 1,057??
   		//Trail to Bridger: 1,151??
-  	"Soda Springs": {miles: 1133, coordinate:{x:293, y:232},next:"Fort Hall"},
+  	"Soda Springs": {miles: 1133, coordinate:{x:293, y:232},routes:{"Fort Hall":1190-1133}},
   			//Green River Shortcut: 1,133
   			//Trail to Bridger: 1,295??
-  	"Fort Hall": {miles: 1190, coordinate:{x:257, y:215},next:"Snake River Crossing"},
+  	"Fort Hall": {miles: 1190, coordinate:{x:257, y:215},routes:{"Snake River Crossing":1372-1190}},
   		//Green River Shortcut: 1,190
   		//Trail to Bridger: 1,395??
-  	"Snake River Crossing": {miles: 1372, coordinate:{x:213, y:200},next:"Fort Boise"},
+  	"Snake River Crossing": {miles: 1372, coordinate:{x:213, y:200},routes:{"Fort Boise":1486-1372}},
   		//Green River Shortcut: 1,372
   		//Trail to Bridger: 1,534??
-  	"Fort Boise": {miles: 1486, coordinate:{x:197, y:171},next:"Blue Mountains/trail splits"},
+  	"Fort Boise": {miles: 1486, coordinate:{x:197, y:171},routes:{"Blue Mountains/trail splits":1646-1486}),
    			//Green River Shortcut: 1,486 Miles Traveled
    			//Trail to Bridger: 1,648??
-  	"Blue Mountains/trail splits": {miles: 1646, coordinate:{x:169, y:145},next:"The Dalles/trail splits"},
+  	"Blue Mountains/trail splits": {miles: 1646, coordinate:{x:169, y:145}, routes:{"The Dalles/trail splits": 1771-1646}},
   		//Green River Shortcut: 1,646 Miles Traveled.
   		//Trail to Bridger: 1,808??
   	"The Dalles/trail splits": {miles: 1771, coordinate:{x:141, y:127}},
