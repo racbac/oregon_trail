@@ -151,9 +151,6 @@ main > div {
     list-style-type: none;
 }
 
-#map{
-  background-image: url("img/map.png");
-}
 
 
 #oxen {
@@ -161,4 +158,9 @@ main > div {
     right: 7%;
     bottom: 0px;
     height: 55%;
+}
+
+
+#map{
+  background-image: url("img/map.png");
 }
