@@ -269,9 +269,10 @@ var Game = {
             <p class=\"prompt\">Press ENTER to continue</p>\n
           </div>\n`;
         thestore = new Store(20, 10, 2, 10, 10, 10, 0.2);
-        var storeFront = function(){
 
-          document.getElementById("game").innerHTML =
+        var storeFront = function(){ // start storeFront()
+          Game.gameDiv.innerHTML =
+
           `<div id="mattstore" class="white_black">\n
               <div>\n
                 <p>Mal's General Store<br>\n
@@ -296,26 +297,13 @@ var Game = {
             </div>\n
           </div>\n`;
           var validationFunc=function(input){
-            return input==""||(+input&&+input>0&&+input<6);
+            return (input==""||(+input&&+input>0&&+input<6));
           }
           Game.waitForInput([13/*enter*/,32/*space*/],validationFunc,function(choice){
-            Game.gameDiv.innerHTML=
-            `<div id="mattstore" class="white_black">\n
-              <p>\n
-                Matt's General Store<br>\n
-                Independence, Missouri<br>\n
-              </p>\n
-              <p id="matt_advice">\n
-              </p>\n
-              <p>\n
-
-                Bill so far: $<span id="bill"></span>\n
-              </p>\n
-            </div>`;
-            document.getElementById("bill").innerHTML="0.00";
             var mattAdvice="";
             var mattFunc=null;
             var validationFunc=null;
+            Game.waitForInput(null,validationFunc,mattFunc);
             if(choice == 1){
               mattAdvice=
                 `There are 2 oxen in a yoke. I recommend at least 3 yoke, but you need as least one yoke. I charge $40 a yoke.<br>\n
@@ -388,21 +376,39 @@ var Game = {
                 });
               }
             }
-            else{
-              Game.gameCaravan.purchase("oxen", thestore.oxen.price, thestore.oxen.amt);
-              Game.gameCaravan.purchase("axles", thestore.axles.price, thestore.axles.amt);
-              Game.gameCaravan.purchase("clothing", thestore.clothing.price, thestore.clothing.amt);
-              Game.gameCaravan.purchase("wheels", thestore.wheels.price, thestore.wheels.amt);
-              Game.gameCaravan.purchase("tongues", thestore.tongues.price, thestore.tongues.amt);
-              Game.gameCaravan.purchase("food", thestore.food.price, thestore.food.amt);
-              Game.gameCaravan.purchase("bait", thestore.bait.price, thestore.bait.amt);
-              Game.scenes.Journey();
-              return;
+            else{ // checkout
+              if (thestore.oxen.amt > 0) { // they must have purchased oxen to leave the store
+                Game.gameCaravan.purchase("oxen", thestore.oxen.price, thestore.oxen.amt);
+                Game.gameCaravan.purchase("axles", thestore.axles.price, thestore.axles.amt);
+                Game.gameCaravan.purchase("clothing", thestore.clothing.price, thestore.clothing.amt);
+                Game.gameCaravan.purchase("wheels", thestore.wheels.price, thestore.wheels.amt);
+                Game.gameCaravan.purchase("tongues", thestore.tongues.price, thestore.tongues.amt);
+                Game.gameCaravan.purchase("food", thestore.food.price, thestore.food.amt);
+                Game.gameCaravan.purchase("bait", thestore.bait.price, thestore.bait.amt);
+                Game.scenes.Journey();
+                return;
+              } else {
+                Game.alertBox("You must have at least one ox to pull your wagon.", storeFront); return;
+              }
             }
+            Game.gameDiv.innerHTML=
+            `<div id="mattstore" class="white_black">\n
+              <p>\n
+                Matt's General Store<br>\n
+                Independence, Missouri<br>\n
+              </p>\n
+              <p id="matt_advice">\n
+              </p>\n
+              <p>\n
+
+                Bill so far: $<span id="bill"></span>\n
+              </p>\n
+            </div>`;
+            document.getElementById("bill").innerHTML="0.00";
             document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
             Game.waitForInput(null,validationFunc,mattFunc);
-          });
-        };
+          }); // end waitForInput(choice)
+        }; // end storeFront()
         Game.waitForInput(null,null,storeFront);
       });
     },
@@ -503,7 +509,7 @@ var Game = {
           </ul>\n
         </div>`;
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-        document.getElementById("weather").innerHTML="weather";
+        document.getElementById("weather").innerHTML="Weather";
         document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
         document.getElementById("next_landmark").innerHTML='000';
@@ -519,23 +525,42 @@ var Game = {
             Game.date.setDate(Game.date.getDate()+1);
             timeOfDay=0;
             /*generate the conditions for the day*/
-            var weather="warm";
-            var event=null;//randomEvent();
-            /*update food and health*/
+            var weather=getWeather(Game.date.getMonth());
+            //var event=null;//randomEvent();
+		    
+			var eventChance = (Math.random() * 10);
+			console.log("Rolling the dice and getting " + eventChance);
 
+			// 50% chance of event occurring each day
+			if (eventChance < 5) {
+				
+			  var eventResult = randomEvent(Game.gameCaravan);
 
-            /*update html for event*/
-            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-            document.getElementById("weather").innerHTML=weather;
-            document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
-            document.getElementById("food").innerHTML=Game.gameCaravan.food;
-            document.getElementById("next_landmark").innerHTML='000';
+			  // Random event will return null if nothing happened
+			  if (eventResult != null) {
 
+			  /*update html for event*/
+                document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+                document.getElementById("weather").innerHTML=weather;
+                document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+                document.getElementById("food").innerHTML=Game.gameCaravan.food;
+                document.getElementById("next_landmark").innerHTML='000';
+
+				Game.alertBox(eventResult, Game.scenes.Journey);
+				
+				clearInterval(travelLoop);
+                Game.waitForInput(null,null,Game.scenes.Journey);
+                return;
+			  }
+			}
+			/**
+			
             if(event){
               clearInterval(travelLoop);
               waitForInput(null,null,game.scenes.TrailMenu);
               return;
             }
+			*/
           }
           if(timeOfDay==5){//start traveling at 5am
             /*set oxen animation to running and the background to scroll*/
@@ -601,76 +626,86 @@ var Game = {
       Map.display(Game.miles);
       Game.waitForInput(null,null,Game.scenes.TrailMenu);
     },
-    Fishing: function(){
-
-    },
-
 
     LandMark: function(landmarkname){
 
-
-
    },
 
+    animateRiver: function(method, success) {
+      // setup
+      Game.gameDiv.innerHTML = `<div>\n<div id="river_crossing" class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>`;
+      var canvas = document.getElementById("river_animation");
+      var ctx = canvas.getContext("2d");
+      canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
 
+      var grd; var bank1 = -40; var bank2 = 75; 
+      var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
+      const BLUE = "#42B2FF"; const TAN = "#F6B68E";
 
-  crossRiver: function(method, success) {
-    // setup
-    Game.gameDiv.innerHTML = `<div id="river_crossing" class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>`;
-    var canvas = document.getElementById("river_animation");
-    var ctx = canvas.getContext("2d");
-    var grd; var bank1 = -40; var bank2 = 60;
-    // draw the river at different stages in crossing
-    var drawRiver = function(pct1, pct2) {
-      grd = ctx.createLinearGradient(0,0,canvas.clientWidth / 2,canvas.clientWidth);
-      grd.addColorStop(0, TAN);
-      grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
-      grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
-      grd.addColorStop(1, TAN);
-      ctx.fillStyle = grd; ctx.fillRect(0,0,canvas.clientWidth, canvas.clientHeight);
-    };
+      // drawing  the river at different stages in crossing
+      var drawRiver = function(pct1, pct2) {
+        grd = ctx.createLinearGradient(0,0, hypo / 2, hypo * 0.866);
+        grd.addColorStop(0, TAN);
+        grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
+        grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
+        grd.addColorStop(1, TAN);
+        ctx.fillStyle = grd; 
+        ctx.fillRect(0,0,width, height);
+      };
 
-    // set graphic for method of travel
-    if (method == "ford") {
+      // set and draw graphic for method of travel
+      var imageObj = new Image();
+      if (method == "ford") {
+        imageObj.src = './img/wagon_ford.png';
+      } else if (method == "caulk") {
+        imageObj.src = './img/wagon_caulk.png';
+      } else if (method == "ferry") {
+        imageObj.src = './img/wagon_ferry.png';
+      }
 
-    } else if (method == "caulk") {
-
-    } else if (method == "ferry") {
-
+      //  draw the wagon going across the river
+      imageObj.onload = function() {
+        drawRiver(bank1, bank2);
+        ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377 );
+        setTimeout(function() { // wait a second before moving
+          var progress = setInterval(function() { // go across the river until mostly across
+            if (bank1 == 25) {
+                clearInterval(progress);
+            } else {
+                drawRiver(bank1, bank2);
+                ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
+                bank1++, bank2++;
+            }
+          }, 60);
+        }, 1000);
+      }
     }
-
-    drawRiver(bank1, bank2);
-    setTimeout(function() { // wait a second before moving
-      var progress = setInterval(function() { // go across the river until mostly across
-        if (bank1 == 25) {
-            clearInterval(progress);
-        } else {
-            drawRiver(bank1, bank2);
-            bank1++, bank2++;
-        }
-      }, 60);
-    }, 1000);
   },
-
-  alertBox : function(message) {
-
-	if (message == undefined) {
+  
+  alertBox : function(message, returnScene) {
+	  
+	if (message == null) {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
 	}
-
-    var alertBox = document.createElement("alertBox");
-	alertBox.setAttribute('id', 'AlertBox');
-	alertBox.innerHTML = message;
-    document.getElementById("game").appendChild(alertBox);
-
-	Game.waitForInput(null,null,Game.removeAlertBox);
+	Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">` + message + `</p>\n`;
+	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
   },
 
   removeAlertBox : function() {
 
     document.getElementById("AlertBox").remove();
   },
+  
+  dialogBox : function(dialog, returnScene) {
+    Game.gameDiv.innerHTML += `<p id="DialogBox" class="white_black">` + dialog + `</p>\n`;
+	Game.waitForInput(null,null,function() {Game.removeDialogBox(); returnScene() || null;}); 
+  },
+  
+  removeDialogBox : function() {
+    document.getElementById("DialogBox").remove();
+  },
+  
   fishingGame:function(){
     var fish=["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
     var weights=[50,10,27,27,40,12,1,20,26];
@@ -680,7 +715,6 @@ var Game = {
       Game.gameDiv.innerHTML="You got a"+fish[fishNum];
       Game.gameCaravan.food+=weights[fishNum];
 
-    }
   }
 };
 
