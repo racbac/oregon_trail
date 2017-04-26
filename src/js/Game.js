@@ -526,22 +526,41 @@ var Game = {
             timeOfDay=0;
             /*generate the conditions for the day*/
             var weather=getWeather(Game.date.getMonth());
-            var event=null;//randomEvent();
-            /*update food and health*/
+            //var event=null;//randomEvent();
+		    
+			var eventChance = (Math.random() * 10);
+			console.log("Rolling the dice and getting " + eventChance);
 
+			// 50% chance of event occurring each day
+			if (eventChance < 5) {
+				
+			  var eventResult = randomEvent(Game.gameCaravan);
 
-            /*update html for event*/
-            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-            document.getElementById("weather").innerHTML=weather;
-            document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
-            document.getElementById("food").innerHTML=Game.gameCaravan.food;
-            document.getElementById("next_landmark").innerHTML='000';
+			  // Random event will return null if nothing happened
+			  if (eventResult != null) {
 
+			  /*update html for event*/
+                document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+                document.getElementById("weather").innerHTML=weather;
+                document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+                document.getElementById("food").innerHTML=Game.gameCaravan.food;
+                document.getElementById("next_landmark").innerHTML='000';
+
+				Game.alertBox(eventResult, Game.scenes.Journey);
+				
+				clearInterval(travelLoop);
+                Game.waitForInput(null,null,Game.scenes.Journey);
+                return;
+			  }
+			}
+			/**
+			
             if(event){
               clearInterval(travelLoop);
               waitForInput(null,null,game.scenes.TrailMenu);
               return;
             }
+			*/
           }
           if(timeOfDay==5){//start traveling at 5am
             /*set oxen animation to running and the background to scroll*/
@@ -677,6 +696,16 @@ var Game = {
 
     document.getElementById("AlertBox").remove();
   },
+  
+  dialogBox : function(dialog, returnScene) {
+    Game.gameDiv.innerHTML += `<p id="DialogBox" class="white_black">` + dialog + `</p>\n`;
+	Game.waitForInput(null,null,function() {Game.removeDialogBox(); returnScene() || null;}); 
+  },
+  
+  removeDialogBox : function() {
+    document.getElementById("DialogBox").remove();
+  },
+  
   fishingGame:function(){
     var fish=["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
     var weights=[50,10,27,27,40,12,1,20,26];

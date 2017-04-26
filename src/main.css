@@ -119,6 +119,20 @@ main > div {
 	background-color : black;
 }
 
+#DialogBox {
+	position: relative;
+    word-wrap: break-word;
+    z-index: 1;
+    height: 95%;
+    width: 95%;
+    top: -100%;
+    padding: 0.2em;
+    margin: auto;
+    border: 0.6em solid white;
+    border-radius: 10px;
+    background-color: black;
+}
+
 #journey #animation {
     background-color: black;
     height: 30%;
