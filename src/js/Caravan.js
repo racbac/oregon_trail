@@ -38,12 +38,6 @@ const MAXIMUM = {
     AMMO: 10000
 }
 
-// Person object lets us track each family member's health
-function Person(new_name) {
-    this.name = new_name;
-    this.health = HEALTH.GOOD;
-}
-
 // Caravan constructor
 // Takes in array of Person objects to set as the family
 // creates a new Caravan object
