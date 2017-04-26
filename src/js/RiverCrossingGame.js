@@ -5,7 +5,7 @@ function startGame() {
     //myGamePiece=new component(30,30,"wagonOnRiver.gif",10,120,"image");
     
     myGameArea.start();
-    myGamePiece=new component(90,30,"../img/wagonOnRiver.gif",20,70,"image");
+    myGamePiece=new component(80,30,"../img/wagonOnRiver.gif",20,70,"image");
     //myObstacle  = new component(20, 10, "../img/rock.gif", 200, 100,"image");   
     myGamePiece.update();
     //myGamePiece = new component(30, 30, "red", 10, 120);
