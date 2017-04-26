@@ -529,7 +529,6 @@ var Game = {
             //var event=null;//randomEvent();
 		    
 			var eventChance = (Math.random() * 10);
-			console.log("Rolling the dice and getting " + eventChance);
 
 			// 50% chance of event occurring each day
 			if (eventChance < 5) {
@@ -707,15 +706,36 @@ var Game = {
   },
   
   fishingGame:function(){
-    var fish=["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
-    var weights=[50,10,27,27,40,12,1,20,26];
-    var chanceToCatch=Math.floor((Math.random()*10)+1);
-    var fishNum=Math.floor((Math.random()*9));
-
-      Game.gameDiv.innerHTML="You got a"+fish[fishNum];
-      Game.gameCaravan.food+=weights[fishNum];
-
-  }
+    if (Game.gameCaravan.bait == 0) {
+	  
+	  Game.alertBox("You have no bait to fish with", Game.scenes.journey);
+	  return;
+	}
+	
+    var fish = ["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
+    var weights = [50,10,27,27,40,12,1,20,26];
+	
+    var chanceToCatch = Math.floor((Math.random()*10)+1);
+	var fishNum = Math.floor((Math.random()*9));
+	
+	if (chanceToCatch < 6) {
+	  Game.gameCaravan.bait--;
+	  Game.gameCaravan.food += weights[fishNum];
+	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
+	  return;
+	}
+	
+	else if (chanceToCatch < 8) {
+	  Game.gameCaravan.bait--;
+	  Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
+	  return;
+	}
+	
+	else {
+	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
+	  return;
+    }
+  },
 };
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
