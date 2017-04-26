@@ -1,9 +1,9 @@
-var supplyList = ["Wheel", "Tongue", "Axle", "Bait", "Clothing"];
+var supplyList = ["Wheel", "Tongue", "Axle", "Bait", "Clothing", "Food"];
 
 function randomEvent(caravan) {
 	
 	// There are 12 events, so generate a random number between 1 and 12
-	var eventNum = Math.floor((Math.random() * 18) + 1);
+	var eventNum = Math.floor((Math.random() * 14) + 1);
 	
 	switch(eventNum) {
 		case 1:
@@ -33,7 +33,7 @@ function randomEvent(caravan) {
 		case 13:
 			return snakeBite(caravan);
 		case 14:
-			return caughtDisease(caravan);
+			return getDisease(caravan);
 	}
 }
 
@@ -45,11 +45,19 @@ function wrongTrail() {
 
 function wagonWheelBreak(caravan) {
 	
+	if (caravan.wheels - 1 < 0) {
+		return null;
+	}
+	
 	caravan.wheels -= 1;
 	return "A wagon wheel broke";
 }
 
 function wagonTongueBreak(caravan) {
+	
+	if (caravan.tongues - 1 < 0) {
+		return null;
+	}
 	
 	caravan.tongues -= 1;
 	return "Your wagon tongue broke";
@@ -57,6 +65,9 @@ function wagonTongueBreak(caravan) {
 
 function wagonAxleBreak(caravan) {
 	
+	if (caravan.axles - 1 < 0) {
+		return null;
+	}
 	  caravan.axles -= 1;
 	  return "Your wagon axle broke";
 }
@@ -104,7 +115,7 @@ function badWater(caravan) {
 	
 	for (var i = 0; i < familySize; i++) {
 		
-		family[i].health -= 5;
+		family[i].sicken(5);
 	}
 	
 	return "Drank bad water";
@@ -112,11 +123,24 @@ function badWater(caravan) {
 			
 function foodSpoiled(caravan) {
 	
+	if (caravan.food == 0) {
+		return null;
+	}	
+	
+	if (caravan.food < 20) {
+		caravan.food = 0;
+		return "The last of your food has spoiled";
+	}
+	
 	caravan.food -= 20;
 	return "Lost 20 pounds of food due to spoilage";
 }	
 
 function oxenWanderedOff(caravan) {
+	
+	if (caravan.oxen == 0) {
+		return null;
+	}
 	
 	caravan.oxen -= 1;
 	return "One of your oxen wandered off and was lost";
@@ -130,88 +154,26 @@ function oxenSick(caravan) {
 
 function suppliesStolen(caravan) {
 	
-	// Randomly determine which kind of supplies were stolen
-	var supplyStolen = Math.floor((Math.random() * 5) + 1);
+	var messageStart = "A group of bandits have stolen ";
+	var messageEnd = destroyRandomSupplies(caravan);
 	
-	switch(supplyStolen) {
-		
-		case 1:
-			caravan.wheels -= 1;
-			return "A thief has stolen a wagon wheel";
-		
-		case 2:
-			caravan.tongues -= 1;
-			return "A thief has stolen a wagon tongue";
-			
-		case 3:
-			caravan.axles -= 1;
-			return "A thief has stolen a wagon axle";
-			
-		case 4:
-			caravan.bait -= 5;
-			return "A thief has stolen 5 pieces of fishing bait";
-			
-		case 5:
-			caravan.clothes -= 3;
-			return "A thief has stolen 3 sets of clothing";
+	if (messageEnd == null) {
+		return null;
 	}
+	
+	return messageStart + messageEnd;
 }
 
-// Randomly destroys a portion of up to 3 supply types		
 function wagonFire(caravan) {
 	
-	var messageString = "A fire has destroyed";
-
-	var supplyArray = [];
+	var messageStart = "A fire in the wagon has destroyed ";
+	var messageEnd = destroyRandomSupplies(caravan);
 	
-	for (var i = 0; i < 3; i++) {
-		supplyArray.push(Math.floor((Math.random() * 5) + 1));
+	if (messageEnd == null) {
+		return null;
 	}
-	
-	// Use a set to eliminate duplicates
-	var supplySet = new Set(supplyArray);
-	
-	for (var j = 0; l < supplySet.length; j++) {
-		
-		switch(supplySet[j]) {
-		
-		case 1:
-			caravan.wheels -= 1;
-			messageString += " 1 wagon wheel";
-			break;
-		
-		case 2:
-			caravan.tongues -= 1;
-			messageString += " 1 wagon tongue";
-			break;
-			
-		case 3:
-			caravan.axles -= 1;
-			messageString += " 1 wagon axle";
-			break;
-			
-		case 4:
-			caravan.bait -= 5;
-			messageString +=  " 5 pieces of fishing bait";
-			break;
-			
-		case 5:
-			caravan.clothes -= 3;
-			messageString += " 3 sets of clothing";
-			break;
-		}
-		
-		// Add commas / "and" to the message depending on remaining length
-		if (j != supplySet.length - 1) {
-			messageString += ",";
-		}
-		
-		if (j == supplySet.length - 2) {
-			messageString += "and";
-		}
 	
 	return messageString;
-	}
 }
 
 function snakeBite(caravan) {
@@ -285,9 +247,239 @@ function getDisease(caravan) {
 	}
 }
 
+// This function is used whenever the caravan tips over when crossing a river
+function wagonTipOver(caravan) {
+	
+	var disasterChance = Math.floor((Math.random() * 10) + 1);
+	
+	// 10% chance of someone drowning
+	if (disasterChance == 1) {
+		
+		var family = caravan.family;
+		var familySize = caravan.family.length;
+	
+		// Pick a random drowning victim
+		var victimIndex = Math.floor(Math.random() * familySize);	
+		var victim = family[victimIndex];
+		
+		// Remove that person from the caravan
+		caravan.removePerson(victim);
+		
+		return "The wagon tipped over and " + victime.name + " has drowned";
+	}
+	
+	// 10% chance of losing oxen
+	else if (disasterChance == 2) {
+		
+		var oxenLost = randrange(1,2);
+		
+		if (oxenLost > caravan.oxen) {
+			oxenLost = caravan.oxen;
+		}
+		
+		caravan.oxen -= oxenLost;
+		return "The current was strong and " + oxenLost + " oxen were swept away and lost";
+	}
+	
+	// 80% chance of losing supplies
+	else {
+		
+		var messageEnd = destroyRandomSupplies(caravan);
+		
+		if (messageEnd == null) {
+			
+			return "The wagon tipped over, but you didn't lose any supplies";
+		}
+		
+		return "The wagon tipped over and you lost" + messageEnd;
+	}		
+}
+
 function randomName() {
 	var names = ["Shawn","Grace","Alan","Ada","River","Zoe","Kaylee","Jayne","Simon"];
 	return names[randrange(0, names.length - 1)];
+}
+
+// Randomly remove supplies from the caravan, and return a message saying what was removed
+// Message should be appended to description of what destroyed the supplies
+function destroyRandomSupplies(caravan) {
+
+
+	// Between 2 and 6 supply types are reduced
+	var numLost = randrange(2,6);
+	var supplyList = ["Wheel", "Tongue", "Axle", "Bait", "Clothing", "Food"];
+	var lostSupplies = [];
+	var messageList = []
+	var message = "";
+
+	for (var i = 0; i < numLost; i++) {
+		
+		// Pick a random supply from the supply list and add it to the list of lost supplies
+		var randomIndex = Math.floor(Math.random() * supplyList.length);	
+		var chosenSupplies = supplyList[randomIndex];
+		lostSupplies.push(chosenSupplies);
+		
+		// Remove the supply from the array so the same supply type isn't picked twice
+		supplyList.splice(randomIndex, 1);
+	}
+
+	// Go through the list of lost supplies and remove individual amounts
+	for (var j = 0; j < numLost; j++) {
+		
+		var removed;
+		var messageFragment = "";
+
+		switch(lostSupplies[j]) {
+			
+			case "Wheel":
+			
+				// Nothing to remove if the supply is at 0
+				if (caravan.wheels == 0) {
+					break;
+				}
+			
+				removed = randrange(1, 3);
+				
+				// Don't go below 0
+				if (removed > caravan.wheels) {
+					removed = caravan.wheels;
+				}
+				caravan.wheels -= removed;
+				messageFragment += removed + " wagon wheel";
+				
+				// Add an 's' to the message if more than one was removed
+				if (removed > 1) {
+					messageFragment += "s";
+				}
+				
+				// Add the fragment to the list, which will be used to format the final message
+				messageList.push(messageFragment);
+				break;
+				
+			case "Tongue":
+			
+				if (caravan.tongues == 0) {
+					break;
+				}
+			
+				removed = randrange(1, 2);
+				
+				if (removed > caravan.tongues) {
+					removed = caravan.tongues;
+				}
+				caravan.tongues -= removed;
+				messageFragment += removed + " wagon tongue";
+		
+				if (removed > 1) {
+					messageFragment += "s";
+				}
+				messageList.push(messageFragment);
+				break;
+				
+			case "Axle":
+			
+				if (caravan.axles == 0) {
+					break;
+				}
+			
+				removed = randrange(1, 2);
+				
+				if (removed > caravan.axles) {
+					removed = caravan.axles;
+				}
+				caravan.axles -= removed;
+				messageFragment += removed + " wagon axle";
+				
+				if (removed > 1) {
+					messageFragment += "s";
+				}
+				messageList.push(messageFragment);
+				break;
+				
+			case "Bait":
+			
+				if (caravan.bait == 0) {
+					break;
+				}
+			
+				removed = randrange(1, 5);
+				
+				if (removed > caravan.bait) {
+					removed = caravan.bait;
+				}
+				caravan.bait -= removed;
+				messageFragment += removed + " box";
+				
+				// Say 'boxes' when more than 1 is lost
+				if (removed > 1) {
+					messageFragment += "es";
+				}
+				messageFragment += " of bait";
+				messageList.push(messageFragment);
+				break;
+				
+			case "Clothing":
+			
+				if (caravan.clothing == 0) {
+					break;
+				}
+			
+				removed = randrange(1, 5);
+				
+				if (removed > caravan.clothing) {
+					removed = caravan.clothing;
+				}
+				caravan.clothing -= removed;
+				messageFragment += removed + " set"
+				
+				if (removed > 1) {
+					messageFragment += "s";
+				}
+				messageFragment += " of clothing";
+				messageList.push(messageFragment);
+				break;
+				
+			case "Food":
+			
+				if (caravan.food == 0) {
+					break;
+				}
+				
+				removed = randrange(20, 300);
+				
+				if (removed > caravan.food) {
+					removed = caravan.food;
+				}
+				caravan.food -= removed;
+				messageFragment += removed + " pound";
+				if (removed > 1) {
+					messageFragment += "s";
+				}
+				messageFragment += " of food";
+				messageList.push(messageFragment);
+				break;
+		}
+	}
+	
+	// If nothing was successfully removed (because all randomly selected supplies were at 0), return null
+	if (messageList.length == 0) {
+		return null;
+	}
+	
+	// Format the message with commas and an 'and' depending on length
+	for (var k = 0; k < messageList.length; k++) {
+		
+		message += messageList[k];
+		if (k == messageList.length - 2) {
+			
+			message += " and ";
+		}
+		else if (k < messageList.length - 2) {
+			message += ", ";
+		}
+	}
+	
+	return message;
 }
 
 function randrange(min, max) {
