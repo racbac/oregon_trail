@@ -588,7 +588,6 @@ var Game = {
           What is your choice?<span id="input"></span>
         </div>`;
       var validationFunc=function(input){
-        console.log(input)
         return  +input>0 && +input<9;
       }
       Game.waitForInput(null,validationFunc,function(input){

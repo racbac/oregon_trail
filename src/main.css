@@ -121,6 +121,7 @@ main > div {
 
 #journey #animation {
     background-color: black;
+
     height: 30%;
     position: relative;
 }
@@ -152,12 +153,14 @@ main > div {
 }
 
 
+
 #oxen {
     position: absolute;
     right: 7%;
     bottom: 0px;
     height: 55%;
 }
+
 
 
 #river_crossing {
