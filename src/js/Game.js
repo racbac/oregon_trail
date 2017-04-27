@@ -593,9 +593,10 @@ var Game = {
             <li>Miles Traveled: <span id="miles"></span></li>\n
           </ul>\n
         </div>`;
+        // get current status
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-        document.getElementById("weather").innerHTML = Game.weather = getWeather(Game.date.getMonth());
-        document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+        document.getElementById("weather").innerHTML = Game.weather;
+        document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
         document.getElementById("next_landmark").innerHTML='000';
         document.getElementById("miles").innerHTML=Game.miles;
@@ -604,52 +605,58 @@ var Game = {
           timeOfDay++;
 
           if(timeOfDay==24){//once a day
-
+            /*generate the conditions for the day*/
             Game.date.setDate(Game.date.getDate()+1);
             timeOfDay=0;
 
-            /*generate the conditions for the day*/
-            var weather=getWeather(Game.date.getMonth());
-            //var event=null;//randomEvent();
-		    
-			var eventChance = (Math.random() * 10);
+            var weather=getWeather(Game.date.getMonth());  
 
-			// 50% chance of event occurring each day
-			if (eventChance < 5) {
-				
-			  var eventResult = randomEvent(Game.gameCaravan);
+            /*update status and html*/
+            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+            document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
+            document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
+            document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
+            document.getElementById("next_landmark").innerHTML='000';
+            document.getElementById("miles").innerHTML =  Game.miles += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
 
-			  // Random event will return null if nothing happened
-			  if (eventResult != null) {
+            // see if random event happened (50% chance)
+            var eventChance = (Math.random() * 10);
+            if (eventChance < 5) {
+              var eventResult = randomEvent(Game.gameCaravan);
 
-			    /*update html for event*/
-			    document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-			    document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
-			    document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
-			    document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
-			    document.getElementById("next_landmark").innerHTML='000';
-
-				Game.alertBox(eventResult, Game.scenes.Journey);
-				
-				clearInterval(travelLoop);
-                Game.waitForInput(null,null,Game.scenes.Journey);
-                return;
-			  }
-			}
+              // Random event will return null if event was inapplicable
+              if (eventResult != null) {
+                clearInterval(travelLoop);
+                Game.alertBox(eventResult, function() {
+                  if (eventResult == "Took the wrong trail, lose 3 days") {
+                    var losedays = setInterval(function(){
+                      Game.date.setDate(Game.date.getDate()+1);
+                      document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+                      document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
+                      document.getElementById("food").innerHTML = Game.gameCaravan.updateFood();
+                    }, 800);
+                    setTimeout(function() {
+                      clearInterval(losedays);
+                      Game.scenes.Journey();
+                    }, 2400);
+                  } else {
+                    Game.scenes.Journey();
+                  }
+                });
+              }
+			      }
           }
           if(timeOfDay==5){//start traveling at 5am
             /*set oxen animation to running*/
             document.getElementById("oxen").src="./img/oxen_walking.gif";
           }
           else if(timeOfDay== 5+Game.gameCaravan.pace.rate){
-            Game.miles+=Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate;
-            document.getElementById("miles").innerHTML=Game.miles;
             /*set oxen animation to stopped*/
             document.getElementById("oxen").src = "./img/oxen_standing.png";
           }
 
         }
-        var travelLoop=setInterval(travelFunc,3000/24); /*call travelFunc once per game hour, 3 seconds per game day*/
+        var travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
         Game.waitForInput(null,null,function(){
           clearInterval(travelLoop);
           Game.scenes.TrailMenu();
@@ -780,7 +787,9 @@ var Game = {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
 	}
-	Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">` + message + `</p>\n`;
+  var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message)); 
+  alert.setAttribute("id", "AlertBox"); alert.setAttribute("class", "white_black");
+	Game.gameDiv.appendChild(alert);
 	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
   },
 
