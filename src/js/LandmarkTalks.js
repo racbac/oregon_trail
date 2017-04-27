@@ -162,7 +162,7 @@ crossing the mountains too late in the year has gotten snowbound and died!
 }
 ];
 
-landmarks.IndependeceRock.talks=[
+landmarks.IndependenceRock.talks=[
   {
     speaker:"A young boy",
     speech:
@@ -479,6 +479,7 @@ Columbia.  Now with Mr. Barlow's new road, you can drive your wagon right into
 Oregon City!
 `}
 ];
+landmarks.Unknown=landmarks.Unknown||{}; //I do not know where this talks belong to
 landmarks.Unknown.talks=[
   {
     speaker:"unknown",

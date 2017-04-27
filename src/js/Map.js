@@ -107,3 +107,28 @@ var Map={
   landmarks.TheDalles.routes={"WillametteValley":100};
 
   landmarks.WillametteValley.coordinate={x:110, y:115};
+
+  landmarks.getNextLandMark=function(miles,branchOption1,branchOption2,leavingLandmark){
+    var milesTraveled=0;
+    var landmarktraveled="Independence";
+    while(miles>milesTraveled||(leavingLandmark&&miles==milesTraveled)){
+      var routes=landmarks[landmarktraveled].routes;
+      if(!routes)
+        break;
+      var routeNames=Object.keys(routes);
+      var nextlandmark;
+      if(routeNames.length>1){
+        if(landmarktraveled=="SouthPass")
+          nextlandmark= branchOption1?"FortBridger":"GreenRiverCrossing";
+        else if(landmarktraveled=="BlueMountains")
+          nextlandmark= branchOption2?"TheDalles":"FortWallaWalla";
+      }
+      else{
+        nextlandmark=routeNames[0];
+      }
+      var milesToNext=routes[nextlandmark];
+      landmarktraveled=nextlandmark;
+      milesTraveled+=milesToNext;
+    }
+    return {nextLandmark: landmarktraveled, milesToNext: milesTraveled-miles};
+  }
