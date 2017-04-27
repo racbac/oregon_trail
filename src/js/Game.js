@@ -748,6 +748,30 @@ var Game = {
 	  return;
     }
   },
+trading:function(){
+    var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
+    var items=[tongues,wheels,axles,clothing,oxen,food,bait];
+    var upItems=[TONGUES,WHEELS,AXLES,CLOTHING,OXEN,FOOD,BAIT];
+    var randomIndex1= Math.floor(Math.random() * items.length);
+    var randomIndex2= Math.floor(Math.random() * items.length);
+    while(randomIndex1==randomIndex2){
+      randomIndex2=Math.floor(Math.random() * items.length);
+    }
+    var amtwanted=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex1])+1;
+    var amttrade=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex2])+1;
+    if(amtwanted>Game.gameCaravan.items[randomIndex1]){
+      Game.gameDiv.innerHTML="You meet a trader who wants"+
+      amtwanted+" "+itemNames[randomIndex1]+
+      ". You don't have this.";
+    }else{
+      Game.gameDiv.innerHTML="You meet a trader who wants"+
+      amtwanted+" "+Game.gameCaravan.items[randomIndex1]+
+      ". He will trade you"+amttrade+" "+itemNames[randomIndex2]+".";
+      var item1=items[randomIndex1];
+      var item2=items[randomIndex2];
+      Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
+    }
+  }
 };
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
