@@ -43,7 +43,6 @@ main > div {
 }
 
 #game ul {
-    list-style-type: square;
     margin-left: 0px;
     padding-left: 1.5em;
 }
@@ -105,6 +104,9 @@ main > div {
     width:100%;
 }
 
+#mattstore ol span, #check_supplies ul span {
+    float: right; margin-left: 2em;
+}
 
 #AlertBox {
 	position: relative;
@@ -158,12 +160,9 @@ main > div {
     text-align: center;
     color: black;
     height: 50%;
-    list-style-type: none;
 }
 
-#journey #status ul {
-    list-style-type: none;
-}
+ul.plain_list { list-style-type: none; }
 
 
 #oxen {
@@ -174,8 +173,9 @@ main > div {
 }
 
 
-#river_crossing {
+#river_crossing > div {
     width: 50%;
+    margin-top: 11%;
 }
 
 #map{
