@@ -43,7 +43,6 @@ main > div {
 }
 
 #game ul {
-    list-style-type: square;
     margin-left: 0px;
     padding-left: 1.5em;
 }
@@ -105,6 +104,9 @@ main > div {
     width:100%;
 }
 
+#mattstore ol span, #check_supplies ul span {
+    float: right; margin-left: 2em;
+}
 
 #AlertBox {
 	position: relative;
@@ -117,6 +119,20 @@ main > div {
 	border: 0.6em solid white;
 	border-radius : 10px;
 	background-color : black;
+}
+
+#DialogBox {
+	position: relative;
+    word-wrap: break-word;
+    z-index: 1;
+    height: 95%;
+    width: 95%;
+    top: -100%;
+    padding: 0.2em;
+    margin: auto;
+    border: 0.6em solid white;
+    border-radius: 10px;
+    background-color: black;
 }
 
 #journey #animation {
@@ -145,12 +161,9 @@ main > div {
     text-align: center;
     color: black;
     height: 50%;
-    list-style-type: none;
 }
 
-#journey #status ul {
-    list-style-type: none;
-}
+ul.plain_list { list-style-type: none; }
 
 
 
@@ -163,8 +176,10 @@ main > div {
 
 
 
-#river_crossing {
+#river_crossing > div {
+
     width: 50%;
+    margin-top: 11%;
 }
 
 #map{

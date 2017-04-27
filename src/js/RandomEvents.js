@@ -197,7 +197,7 @@ function wagonFire(caravan) {
 		return null;
 	}
 	
-	return messageString;
+	return messageStart + messageEnd;
 }
 
 function snakeBite(caravan) {
