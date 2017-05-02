@@ -3,8 +3,8 @@
 const PACE = {
 
     STEADY: {rate: 8, chance: 0, string: "steady", description: "You travel about 8 hours a day, taking frequent rests. You take care not to get too tired."},
-    STRENUOUS: {rate: 12, chance: 20, string: "strenuous", description: "You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset. You stop to rest only when necessary. You finish each day feeling very tired."},
-    GRUELING: {rate: 16, chance: 40, string: "grueling", description: "You travel about 16 hours a day, starting before sunrise and continuing until dark. You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely exhausted, and your health suffers."}
+    STRENUOUS: {rate: 12, chance: 0.2, string: "strenuous", description: "You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset. You stop to rest only when necessary. You finish each day feeling very tired."},
+    GRUELING: {rate: 16, chance: 0.4, string: "grueling", description: "You travel about 16 hours a day, starting before sunrise and continuing until dark. You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely exhausted, and your health suffers."}
 }
 
 const OCCUPATION = {
@@ -15,8 +15,8 @@ const OCCUPATION = {
 
 const RATIONS = {
     FILLING: {pounds: 3, chance: 0, string: "filling", description: "meals are large and generous."},
-    MEAGER: {pounds: 2, chance: 20, string: "meager", description: "meals are small, but adequate."},
-    BAREBONES: {pounds: 1, chance: 40, string: "bare bones", description: "meals are very small; everyone stays hungry."}
+    MEAGER: {pounds: 2, chance: 0.2, string: "meager", description: "meals are small, but adequate."},
+    BAREBONES: {pounds: 1, chance: 0.4, string: "bare bones", description: "meals are very small; everyone stays hungry."}
 }
 
 // maximum amount of each item allowed to carry
@@ -182,4 +182,21 @@ Caravan.prototype.trade=function(take,takeamt,give,giveamt){
         this.give+=amt;
     }
     this.take-=takeamt;
+}
+
+Caravan.prototype.updateHealth = function() {
+    // percentage that each person will sicken or heal
+    var factor = this.pace.chance + (this.food > 0 ? this.rations.chance : 0.6);
+    var died = [];
+    for (var i = 0; i < this.family.length; i++) { 
+        // random amount to sicken/heal, modified by healing rate
+        this.family[i].heal(randrange(10,30) * (1 - factor));
+        var dead = this.family[i].sicken(randrange(10,30) * factor);
+        // did this person die?
+        if (dead == -1) {
+            died.push(this.family[i].name);
+            this.family.splice(i, 1);
+        }
+    }
+    return died;
 }
