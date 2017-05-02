@@ -1,27 +1,28 @@
-var landmarkNames=["Independence",
-"the Kansas River Crossing",
-"the Big Blue River Crossing",
-"Fort Kearney",
-"Chimney Rock",
-"Fort Laramie",
-"Independence Rock",
-"South Pass",
-"Fort Bridger",
-"the Green River Crossing",
-"Soda Springs",
-"Fort Hall",
-"the Snake River Crossing",
-"Fort Boise",
-"Grande Ronde in the Blue Mountains",
-"Blue Mountains",
-"Fort Walla Walla",
-"The Dalles",
-"the Willamette Valley",
-"Oregon City"]
-function Landmark(){
-	this.name="Independence";
-	this.distance=0;
-	this.branch=0;
+var landmarks=
+{
+Independence:{name:"Independence"},
+KansasRiverCrossing:{name:"Kansas River Crossing"},
+BigBlueRiverCrossing:{name:"Big Blue River Crossing"},
+FortKearney:{name:"Fort Kearney"},
+ChimneyRock:{name:"Chimney Rock"},
+FortLaramie:{name:"Fort Laramie"},
+IndependenceRock:{name:"Independence Rock"},
+SouthPass:{name:"South Pass"},
+FortBridger:{name: "Fort Bridger"},
+GreenRiverCrossing:{name: "Green River Crossing"},
+SodaSprings:{name: "Soda Springs"},
+FortHall:{name: "Fort Hall"},
+SnakeRiverCrossing:{name: "Snake River Crossing"},
+FortBoise:{name:"Fort Boise"},
+//GrandeRonde in the Blue Mountains:{},
+BlueMountains:{name: "Blue Mountains"},
+FortWallaWalla:{name: "Fort Walla Walla"},
+TheDalles:{name:"The Dalles"},
+WillametteValley:{name: "Willamette Valley"}
+//Oregon City:{}
+};
+function Landmark(name,image){
+	this.name=Independence;
 	this.image=0;
 }
 Landmark.prototype.changeLandmark = function(new_landmark) {
