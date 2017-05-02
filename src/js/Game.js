@@ -424,8 +424,42 @@ var Game = {
       });
     },
 
-    BuySupply:function(){
-
+    BuySupply:function(landmark){
+      var store=landmark.store;
+      Game.gameDiv.innerHTML=`<div id="buy_supply" class="centered_content white_black">\n
+       <div>
+         `+landmark.name+`
+       </div>
+        <div id="date" >\n
+`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
+        <div class="centered_content white_black">\n
+          You May Buy:
+          <ol id="options">\n
+            <li>Oxen</li>\n
+            <li>Clothing</li>\n
+            <li>Baits</li>\n
+            <li>Wagon Wheels</li>\n
+            <li>Wagon Axles</li>\n
+            <li>Wagon Tongues</li>\n
+            <li>Food</li>\n
+            <li>Leave Store</li>\n
+          </ol>\n
+        </div>\n
+        <p>You have $<span id="money"></span> to spend.</p>\n
+        <p>Which number?<span id="input"></span></p>\n
+      </div>\n`;
+      var validationFunc=function(input){
+        input=+input;
+        return Number.isInteger(input)&&input>0&&input<=8;
+      };
+      Game.waitForInput(null,validationFunc,function(input){
+        if(input==8){
+          Game.scenes.LandmarkMenu(landmark);
+        }
+        else{
+          Game.scenes.BuySupply(landmark);
+        }
+      })
     },
 
 	// Arrive at the river and show the width and depth
@@ -731,7 +765,7 @@ var Game = {
         else if (input==2)
           Game.scenes.CheckSupply();
         else if(input==3)
-          Game.scenes.ShowMap();
+          Game.scenes.ShowMap(Game.scenes.TrailMenu);
         else
           Game.scenes.TrailMenu();
       });
@@ -754,9 +788,9 @@ var Game = {
       </div>\n`;
       Game.waitForInput(null, null, Game.scenes.TrailMenu);
     },
-    ShowMap: function(){
+    ShowMap: function(returnScene){
       Map.display(Game.miles);
-      Game.waitForInput(null,null,Game.scenes.TrailMenu);
+      Game.waitForInput(null,null,returnScene);
     },
 
     Landmark: function(landmark){
@@ -764,8 +798,75 @@ var Game = {
         <div id="landmark" class="centered_content white_black">
           You are now at `+landmark.name+`
         </div>`;
-      Game.waitForInput(null,null,function(){Game.scenes.Journey(true)});
+      Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
    },
+
+   LandmarkMenu: function(landmark){
+     document.getElementById("game").innerHTML=`
+       <div id="landmark_menu" class="centered_content white_black">\n
+        <div>
+          `+landmark.name+`
+        </div>
+         <div id="date" >\n
+`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
+         <div id="conditions" class="white_black centered_content">\n
+           Weather: `+ Game.weather +`<br>\n
+           Health: `+ Game.gameCaravan.health.string +`<br>\n
+           Pace: `+ Game.gameCaravan.pace.string +`<br>\n
+           Rations: `+ Game.gameCaravan.rations.string +`<br>\n
+         </div>\n
+         <div class="centered_content white_black">\n
+           You May:
+           <ol id="options">\n
+             <li>Continue on trail</li>\n
+             <li>Check supplies</li>\n
+             <li>Look at map</li>\n
+             <li>Change pace</li>\n
+             <li>Change food rations</li>\n
+             <li>Stop to rest</li>\n
+             <li>Attempt to trade</li>\n
+             <li>Talk to People</li>\n
+             <li id="buy_supply">Buy Supplies</li>\n
+           </ol>\n
+         </div>\n
+         <p class="centered_content white_black">What is your choice?<span id="input"></span></p>\n
+       </div>\n`;
+       if(!landmark.store){
+         document.getElementById("buy_supply").style.display="none";
+       }
+       var validationFunc=function(input){
+         if(!Number.isInteger(+input)||+input<0){console.log(input);
+           return false;
+         }
+         if(landmark.store){
+           return +input<=9 ;
+         }else{
+           return +input <9 ;
+         }
+       }
+       Game.waitForInput(null,validationFunc,function(input){
+         if(input==1)
+           Game.scenes.Journey(true);
+         else if (input==2)
+           Game.scenes.CheckSupply();
+         else if(input==3)
+           Game.scenes.ShowMap(function(){Game.scenes.LandmarkMenu(landmark)});
+         else if(input==8)
+           Game.scenes.LandmarkTalk(landmark);
+        else if(input==9)
+          Game.scenes.BuySupply(landmark);
+         else{
+            Game.scenes.LandmarkMenu(landmark);
+         }
+       });//waitForInput
+   },
+    LandmarkTalk: function(landmark){
+      var talk=landmark.talks[landmark.talkIndex];
+      landmark.talkIndex=landmark.talkIndex==2?0:landmark.talkIndex+1;
+      Game.gameDiv.innerHTML="";
+      var message=talk.speaker+' tells you:</br></br>"'+talk.speech+'"';
+      Game.dialogBox(message,function(){Game.scenes.LandmarkMenu(landmark)});
+    },
 
     animateRiver: function(method, success) {
       // setup

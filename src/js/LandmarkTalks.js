@@ -1,3 +1,7 @@
+for(landmark in landmarks){
+	landmarks[landmark].talkIndex=0;
+}
+
 landmarks.Independence.talks=[
 	{
 		speaker: "A trader named Jim",
