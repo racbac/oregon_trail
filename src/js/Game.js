@@ -612,17 +612,17 @@ var Game = {
             /*generate the conditions for the day*/
             Game.date.setDate(Game.date.getDate()+1);
             timeOfDay=0;
-
-            var weather=getWeather(Game.date.getMonth());  
+ 
+            var deaths = Game.gameCaravan.updateHealth();
 
             /*update status and html*/
             document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
             document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
-            document.getElementById("health").innerHTML=Game.gameCaravan.updateHealth();
+            document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
             document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
             document.getElementById("next_landmark").innerHTML='000';
             document.getElementById("miles").innerHTML =  Game.miles += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
-
+            
             // see if random event happened (50% chance)
             var eventChance = (Math.random() * 10);
             if (eventChance < 5) {
@@ -649,6 +649,16 @@ var Game = {
                 });
               }
 			      }
+
+            // see if anyone died
+            for (var i in deaths) {
+              clearInterval(travelLoop);
+              Game.alertBox(deaths[i] + " has died.", Game.scenes.Journey);
+            }
+            // see if everyone's dead
+            if (Game.gameCaravan.family.length == 0) {
+              Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+            }
           }
           if(timeOfDay==5){//start traveling at 5am
             /*set oxen animation to running*/
@@ -659,7 +669,7 @@ var Game = {
             document.getElementById("oxen").src = "./img/oxen_standing.png";
           }
 
-        }
+        } // travelFunc
         var travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
         Game.waitForInput(null,null,function(){
           clearInterval(travelLoop);
@@ -672,7 +682,7 @@ var Game = {
         <div id=trail_menu>\n
           <div id="date" class="centered_content white_black">\n
 `+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
-          <div id="conditions" class="white_black">\n
+          <div id="conditions" class="white_black centered_content">\n
             Weather: `+ Game.weather +`<br>\n
             Health: `+ Game.gameCaravan.health.string +`<br>\n
             Pace: `+ Game.gameCaravan.pace.string +`<br>\n

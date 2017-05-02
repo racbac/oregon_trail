@@ -186,10 +186,17 @@ Caravan.prototype.trade=function(take,takeamt,give,giveamt){
 
 Caravan.prototype.updateHealth = function() {
     // percentage that each person will sicken or heal
-    var factor = this.pace.chance + this.rations.chance;
-    for (person in this.family) { 
+    var factor = this.pace.chance + (this.food > 0 ? this.rations.chance : 0.6);
+    var died = [];
+    for (var i = 0; i < this.family.length; i++) { 
         // random amount to sicken/heal, modified by healing rate
-        person.sicken(randrange(10,30) * factor);
-        person.heal(randrange(10,30) * (1 - factor));
+        this.family[i].heal(randrange(10,30) * (1 - factor));
+        var dead = this.family[i].sicken(randrange(10,30) * factor);
+        // did this person die?
+        if (dead == -1) {
+            died.push(this.family[i].name);
+            this.family.splice(i, 1);
+        }
     }
+    return died;
 }
