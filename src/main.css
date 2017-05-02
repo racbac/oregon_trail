@@ -163,7 +163,12 @@ main > div {
 
 
 
+<<<<<<< HEAD
 #river_crossing {
+=======
+#river_crossing > div {
+
+>>>>>>> refs/remotes/origin/Chen
     width: 50%;
 }
 

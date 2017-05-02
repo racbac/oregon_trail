@@ -3,6 +3,7 @@ var Game = {
   date: new Date(),
 
   miles: 0,
+  branch:[null,null],
 
   gameDiv: document.getElementById("game"),
 
@@ -377,15 +378,14 @@ var Game = {
               }
             }
             else{ // checkout
-              if (thestore.oxen.amt > 0) { // they must have purchased oxen to leave the store
-                Game.gameCaravan.purchase("oxen", thestore.oxen.price, thestore.oxen.amt);
-                Game.gameCaravan.purchase("axles", thestore.axles.price, thestore.axles.amt);
-                Game.gameCaravan.purchase("clothing", thestore.clothing.price, thestore.clothing.amt);
-                Game.gameCaravan.purchase("wheels", thestore.wheels.price, thestore.wheels.amt);
-                Game.gameCaravan.purchase("tongues", thestore.tongues.price, thestore.tongues.amt);
-                Game.gameCaravan.purchase("food", thestore.food.price, thestore.food.amt);
-                Game.gameCaravan.purchase("bait", thestore.bait.price, thestore.bait.amt);
-                Game.scenes.Journey();
+
+              if (thestore.oxen.quantity > 0) { // they must have purchased oxen to leave the store
+                if (Game.gameCaravan.purchaseItems(thestore.generate_bill())) { // make sure they have enough money
+                  Game.scenes.Landmark(landmarks.Independence);
+                } else {
+                  Game.alertBox("You don't have enough money to pay your bill.", storeFront); return;
+                }
+
                 return;
               } else {
                 Game.alertBox("You must have at least one ox to pull your wagon.", storeFront); return;
@@ -488,7 +488,7 @@ var Game = {
   },
 
 
-    Journey:function(){
+    Journey:function(leavingLandmark){
       Game.gameDiv.innerHTML =
 
         `<div id="journey" class="centered_content white_black">\n
@@ -508,11 +508,12 @@ var Game = {
             <li>Miles Traveled: <span id="miles"></span></li>\n
           </ul>\n
         </div>`;
+        var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
         document.getElementById("weather").innerHTML="Weather";
         document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
-        document.getElementById("next_landmark").innerHTML='000';
+        document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         document.getElementById("miles").innerHTML=Game.miles;
         var timeOfDay=0;
         var HoursPerDay=8;
@@ -526,16 +527,34 @@ var Game = {
             timeOfDay=0;
             /*generate the conditions for the day*/
             var weather=getWeather(Game.date.getMonth());
-            var event=null;//randomEvent();
-            /*update food and health*/
+
+            //var event=null;//randomEvent();
+
+			var eventChance = (Math.random() * 10);
+
+			// 50% chance of event occurring each day
+			if (eventChance < 5) {
+
+			  var eventResult = randomEvent(Game.gameCaravan);
 
 
-            /*update html for event*/
-            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-            document.getElementById("weather").innerHTML=weather;
-            document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
-            document.getElementById("food").innerHTML=Game.gameCaravan.food;
-            document.getElementById("next_landmark").innerHTML='000';
+
+        /*update html for event*/
+
+        document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+        document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
+        document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+        document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
+        document.getElementById("next_landmark").innerHTML='000';
+
+				Game.alertBox(eventResult, Game.scenes.Journey);
+
+				clearInterval(travelLoop);
+                Game.waitForInput(null,null,Game.scenes.Journey);
+                return;
+			  }
+			}
+
 
             if(event){
               clearInterval(travelLoop);
@@ -543,14 +562,27 @@ var Game = {
               return;
             }
           }
-          if(timeOfDay==5){//start traveling at 5am
-            /*set oxen animation to running and the background to scroll*/
+
+          else if(timeOfDay==5){//start traveling at 5am
+            /*set oxen animation to running*/
             document.getElementById("oxen").src="./img/oxen_walking.gif";
           }
-          else if(timeOfDay== 5+HoursPerDay){
-            Game.miles+=MPH*HoursPerDay;
+          else if(timeOfDay== 5+Game.gameCaravan.pace.rate){
+            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
+
+            Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
             document.getElementById("miles").innerHTML=Game.miles;
-            /*set oxen animation to stopped and the background to stopped*/
+            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+
+            document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
+            if(nextLandmark.milesToNext==0){
+              Game.alertBox("You are now at "+landmarks[nextLandmark.nextLandmark].name+". Would you like to look around?");
+              clearInterval(travelLoop);
+              Game.waitForInput(null,null,function(){Game.scenes.Landmark(landmarks[nextLandmark.nextLandmark])});
+              return;
+            }
+            /*set oxen animation to stopped*/
+
             document.getElementById("oxen").src = "./img/oxen_standing.png";
           }
 
@@ -601,14 +633,32 @@ var Game = {
     },
     CheckSupply: function(){
 
+      Game.gameDiv.innerHTML =
+      `<div id="check_supplies" class="centered_content white_black">\n
+        <p>Your Supplies</p>\n
+        <ul>\n
+          <li>oxen<span>`+ Game.gameCaravan.oxen +`</span></li>\n
+          <li>sets of clothing<span>`+ Game.gameCaravan.clothing +`</span></li>\n
+          <li>bait<span>`+ Game.gameCaravan.bait +`</span></li>\n
+          <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
+          <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
+          <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
+          <li>pounds of food<span`+ Game.gameCaravan.food +`></span></li>\n
+          <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
+        </ul>\n
+        <p class="prompt">Press ENTER to continue</p>
+      </div>`;
+      Game.waitForInput(null, null, Game.scenes.TrailMenu);
+
     },
     ShowMap: function(){
       Map.display(Game.miles);
       Game.waitForInput(null,null,Game.scenes.TrailMenu);
     },
 
-    LandMark: function(landmarkname){
-
+    Landmark: function(landmark){
+      Game.gameDiv.innerHTML=`<div id="landmark" class="centered_content white_black">You are now at `+landmark.name+`</div>`;
+      Game.waitForInput(null,null,function(){Game.scenes.Journey(true)});
    },
 
     animateRiver: function(method, success) {
@@ -618,7 +668,7 @@ var Game = {
       var ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
 
-      var grd; var bank1 = -40; var bank2 = 75; 
+      var grd; var bank1 = -40; var bank2 = 75;
       var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
       const BLUE = "#42B2FF"; const TAN = "#F6B68E";
 
@@ -629,7 +679,7 @@ var Game = {
         grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
         grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
         grd.addColorStop(1, TAN);
-        ctx.fillStyle = grd; 
+        ctx.fillStyle = grd;
         ctx.fillRect(0,0,width, height);
       };
 
@@ -661,9 +711,9 @@ var Game = {
       }
     }
   },
-  
+
   alertBox : function(message, returnScene) {
-	  
+
 	if (message == null) {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
@@ -676,15 +726,47 @@ var Game = {
 
     document.getElementById("AlertBox").remove();
   },
+
+
+  dialogBox : function(dialog, returnScene) {
+    Game.gameDiv.innerHTML += `<p id="DialogBox" class="white_black">` + dialog + `</p>\n`;
+	Game.waitForInput(null,null,function() {Game.removeDialogBox(); returnScene() || null;});
+  },
+
+  removeDialogBox : function() {
+    document.getElementById("DialogBox").remove();
+  },
+
   fishingGame:function(){
-    var fish=["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
-    var weights=[50,10,27,27,40,12,1,20,26];
-    var chanceToCatch=Math.floor((Math.random()*10)+1);
-    var fishNum=Math.floor((Math.random()*9));
+    if (Game.gameCaravan.bait == 0) {
 
-      Game.gameDiv.innerHTML="You got a"+fish[fishNum];
-      Game.gameCaravan.food+=weights[fishNum];
+	  Game.alertBox("You have no bait to fish with", Game.scenes.journey);
+	  return;
+	}
 
+    var fish = ["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
+    var weights = [50,10,27,27,40,12,1,20,26];
+
+    var chanceToCatch = Math.floor((Math.random()*10)+1);
+	var fishNum = Math.floor((Math.random()*9));
+
+	if (chanceToCatch < 6) {
+	  Game.gameCaravan.bait--;
+	  Game.gameCaravan.food += weights[fishNum];
+	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
+	  return;
+	}
+
+	else if (chanceToCatch < 8) {
+	  Game.gameCaravan.bait--;
+	  Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
+	  return;
+	}
+
+	else {
+	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
+	  return;
+    }
   }
 };
 
