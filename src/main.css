@@ -181,3 +181,6 @@ ul.plain_list { list-style-type: none; }
 #map{
   background-image: url("img/map.png");
 }
+#trading{
+    top: -50px;
+}

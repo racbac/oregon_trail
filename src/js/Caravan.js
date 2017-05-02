@@ -191,11 +191,11 @@ Caravan.prototype.getMph = function() {
     return (mph > 40) ?  40 : mph;
 }
 Caravan.prototype.trade=function(take,takeamt,give,giveamt){
-    if (giveamt+this.give<=MAXIMUM.give){
-        this.give+=giveamt;
+    if (giveamt+this[give]<=MAXIMUM[give]){
+        this[give]+=giveamt;
     }else{
-        var amt=MAXIMUM.give-this.give;
-        this.give+=amt;
+        var amt=MAXIMUM[give]-this[give];
+        this[give]+=amt;
     }
-    this.take-=takeamt;
+    this[take]-=takeamt;
 }

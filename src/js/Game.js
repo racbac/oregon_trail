@@ -749,28 +749,66 @@ var Game = {
     }
   },
 trading:function(){
+
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
-    var items=[tongues,wheels,axles,clothing,oxen,food,bait];
-    var upItems=[TONGUES,WHEELS,AXLES,CLOTHING,OXEN,FOOD,BAIT];
-    var randomIndex1= Math.floor(Math.random() * items.length);
-    var randomIndex2= Math.floor(Math.random() * items.length);
+      Game.gameDiv.innerHTML = 
+      `<div id="supplies" class="centered_content white_black">\n
+        <p>Your Supplies</p>\n
+        <ul>\n
+          <li>oxen<span>`+ Game.gameCaravan.oxen +`</span></li>\n
+          <li>sets of clothing<span>`+ Game.gameCaravan.clothing +`</span></li>\n
+          <li>bait<span>`+ Game.gameCaravan.bait +`</span></li>\n
+          <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
+          <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
+          <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
+          <li>pounds of food<span`+ Game.gameCaravan.food +`></span></li>\n
+          <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
+        </ul>\n
+        <p class="prompt">Press ENTER to continue</p>
+      </div>`;
+    var randomIndex1= Math.floor(Math.random() * (itemNames.length - 1));
+    var randomIndex2= Math.floor(Math.random() * (itemNames.length-1));
     while(randomIndex1==randomIndex2){
-      randomIndex2=Math.floor(Math.random() * items.length);
+      randomIndex2=Math.floor(Math.random() * (itemNames.length-1));
     }
-    var amtwanted=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex1])+1;
-    var amttrade=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex2])+1;
-    if(amtwanted>Game.gameCaravan.items[randomIndex1]){
-      Game.gameDiv.innerHTML="You meet a trader who wants"+
+    var amtwanted=randrange(1, MAXIMUM[itemNames[randomIndex1].toUpperCase()]);
+    var amttrade=Math.floor(Math.random() * MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1;
+    Game.gameDiv.innerHTML=`<div id='sup' class ='white_black'><p>Your Supplies</p>\n
+        <ul>\n
+          <li>oxen<span>`+ Game.gameCaravan.oxen +`</span></li>\n
+          <li>sets of clothing<span>`+ Game.gameCaravan.clothing +`</span></li>\n
+          <li>bait<span>`+ Game.gameCaravan.bait +`</span></li>\n
+          <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
+          <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
+          <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
+          <li>pounds of food<span`+ Game.gameCaravan.food +`></span></li>\n
+          <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
+        </ul>\n
+        <div id='trading' class ='white_black'></div></div>`;
+    if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
+      document.getElementById("trading").innerHTML = "You meet a trader who wants "+
       amtwanted+" "+itemNames[randomIndex1]+
-      ". You don't have this.";
+      ". You don't have this.\n Press Enter.";
+       Game.waitForInput(null, null, Game.scenes.TrailMenu);
     }else{
-      Game.gameDiv.innerHTML="You meet a trader who wants"+
-      amtwanted+" "+Game.gameCaravan.items[randomIndex1]+
-      ". He will trade you"+amttrade+" "+itemNames[randomIndex2]+".";
-      var item1=items[randomIndex1];
-      var item2=items[randomIndex2];
-      Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
-    }
+       document.getElementById("trading").innerHTML="You meet a trader who wants "+
+      amtwanted+" "+itemNames[randomIndex1]+
+      ". He will trade you "+amttrade+" "+itemNames[randomIndex2]+". \n<p>What is your choice? <span id='input'></span></p>";
+      var item1=itemNames[randomIndex1];
+      var item2=itemNames[randomIndex2];
+      var validationFunc=function(input){
+        return  input=="y" || input=="n";
+     }
+      Game.waitForInput(null,validationFunc,function(choice){
+          if(choice =="y"){
+            Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
+            Game.scenes.TrailMenu();
+          }
+          else{
+            Game.scenes.TrailMenu();
+          }
+      }
+    )}
   }
 };
 
