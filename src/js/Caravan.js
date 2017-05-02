@@ -170,3 +170,23 @@ Caravan.prototype.removePerson = function(person) {
 		}
 	}
 }
+
+
+Caravan.prototype.getMph = function() {
+    var mph;
+    if (this.oxen > 0) {
+        mph = Math.floor(this.oxen * 0.625 + this.injured_oxen * 0.5); 
+    } else {
+        mph = 3;
+    }
+    return (mph > 40) ?  40 : mph;
+}
+Caravan.prototype.trade=function(take,takeamt,give,giveamt){
+    if (giveamt+this[give]<=MAXIMUM[give]){
+        this[give]+=giveamt;
+    }else{
+        var amt=MAXIMUM[give]-this[give];
+        this[give]+=amt;
+    }
+    this[take]-=takeamt;
+}

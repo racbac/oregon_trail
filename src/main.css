@@ -175,3 +175,6 @@ main > div {
 #map{
   background-image: url("img/map.png");
 }
+#trading{
+    top: -50px;
+}
