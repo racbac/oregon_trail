@@ -661,8 +661,8 @@ var Game = {
         <div id=trail_menu class="centered_content white_black">\n
           <div id="date">`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
           <div id="conditions">\n
-            Weather: `+ Game.weather +`<br>\n
-            Health: `+ Game.gameCaravan.health.string +`<br>\n
+            Weather: <span id = conditions_weather>`+ Game.weather +`</span><br>\n
+            Health: <span id = conditions_health>` + Game.gameCaravan.health.string +`</span><br>\n
             Pace: `+ Game.gameCaravan.pace.string +`<br>\n
             Rations: `+ Game.gameCaravan.rations.string +`<br>\n
           </div>\n
@@ -672,10 +672,10 @@ var Game = {
               <li>Continue on trail</li>\n
               <li>Check supplies</li>\n
               <li>Look at map</li>\n
-              <li></li>\n
-              <li></li>\n
-              <li></li>\n
-              <li></li>\n
+              <li>Change Pace</li>\n
+              <li>Change Food Rations</li>\n
+              <li>Stop to Rest</li>\n
+              <li>Attempt to Trade</li>\n
               <li></li>\n
             </ol>\n
           </div>\n
@@ -692,8 +692,14 @@ var Game = {
           Game.scenes.CheckSupply();
         else if(input==3)
           Game.scenes.ShowMap();
-        else
-          Game.scenes.TrailMenu();
+        else if(input==4)
+          Game.scenes.ChangePace();
+		else if(input == 5)
+		  Game.scenes.ChangeRations();
+		else if(input == 6)
+		  Game.scenes.StopToRest();
+	    else if(input == 7)
+		  Game.trading();
       });
     },
     CheckSupply: function(){
@@ -718,10 +724,157 @@ var Game = {
       Map.display(Game.miles);
       Game.waitForInput(null,null,Game.scenes.TrailMenu);
     },
+	
+	// Change the pace that the caravan is travelling at
+	ChangePace: function() {
+	  Game.gameDiv.innerHTML = 
+	  `<div id="check_supplies" class="centered_content white_black">\n
+	    <p>Change Pace\n
+		(currently "` + Game.gameCaravan.pace + `")</p>
+		<p>The pace at which you travel can change. Your choices are:</p>
+		<ol>\n
+		  <li>A steady pace</li>
+		  <li>A strenuous pace</li>
+		  <li>A grueling pace</li>
+		  <li>Find out what these different paces mean</li>
+		</ol>
+		<p>What is your choice? <span id="input"></span></p>\n
+      </div>`;
+	  
+	  var validationFunc=function(input){
+        return Number.isInteger(+input) && +input>0 && +input<5;
+      }
+	
+      Game.waitForInput(null,validationFunc,function(choice){
+	
+	    if (choice == 1) {
+	  
+	      Game.gameCaravan.pace = PACE.STEADY;
+		  Game.scenes.TrailMenu();
+	    }
+	    else if (choice == 2) {
+		
+		  Game.gameCaravan.pace = PACE.STRENUOUS;
+		  Game.scenes.TrailMenu();
+	    }
+	    else if (choice == 3) {
+		
+		  Game.gameCaravan.pace = PACE.GRUELING;
+		  Game.scenes.TrailMenu();
+	    }
+		else if (choice == 4) {
+		  Game.scenes.PaceInfo();
+		}
+	  });
+	},
+	
+	// Display the information about caravan pace options
+	PaceInfo: function() {
+	  Game.gameDiv.innerHTML = 
+	  `<div id="pace_info" class="centered_content white_black">\n
+	    <p>Steady - You travel about 8 hours a day, taking frequent rests. You take care not to get too tired.</p>
+		<br>
+		<p>Strenuous - You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset.` +
+		`You stop to rest only when necessary. You finish each day feeling very tired.</p>
+		<br>
+		<p>Grueling - You travel about 16 hours a day, starting before sunrise and continuing until dark.` + 
+		`You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely` + `
+		exhausted, and your health suffers.
+		<p class=\"prompt\">Press SPACE to continue</p>\n
+      </div>`;	
+	  
+	  Game.waitForInput(null, null, Game.scenes.ChangePace);;
+	  return;
+	},
 
+	// Change the amount of rations
+	ChangeRations: function() {
+		
+	  Game.gameDiv.innerHTML = 
+	  `<div id="check_supplies" class="centered_content white_black">\n
+	    <p>Change Food Rations\n
+		(currently "` + Game.gameCaravan.rations + `")</p>
+		<p>The amount of food the people in your party eat each day can change. Your choices are:</p>
+		<ol>\n
+		  <li>Filling - meals are large and generous.</li>
+		  <li>Meager - meals are small, but adwquate.</li>
+		  <li>Bare bones - meals are very small; everyone stays hungry.</li>
+		</ol>
+		<p>What is your choice? <span id="input"></span></p>\n
+      </div>`;
+	  
+	  var validationFunc=function(input){
+        return Number.isInteger(+input) && +input>0 && +input<4;
+      }
+	  
+	  Game.waitForInput(null,validationFunc,function(choice){
+	
+	    if (choice == 1) {
+	  
+	      Game.gameCaravan.rations = RATIONS.FILLING;
+		  Game.scenes.TrailMenu();
+	    }
+	    else if (choice == 2) {
+		
+		  Game.gameCaravan.rations = RATIONS.MEAGER;
+		  Game.scenes.TrailMenu();
+	    }
+	    else if (choice == 3) {
+		
+		  Game.gameCaravan.rations = RATIONS.BAREBONES;
+		  Game.scenes.TrailMenu();
+	    }
+	  });
+	},
+	
+	// Ask the player how many days to rest
+	StopToRest: function() {
+	
+	  document.getElementById("input").remove();
+	  Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">How many days would you like to rest? <span id="input"></span></p>\n`;
+	  
+	  var validationFunc=function(input){
+        return Number.isInteger(+input) && +input>0 && +input<20;
+      }
+	  
+	  Game.waitForInput(null,validationFunc,function(choice){
+		  
+		var i = 1;
+
+		function restADay () {
+			
+		  setTimeout(function () {
+				
+			Game.date.setDate(Game.date.getDate()+1);
+			document.getElementById("date").innerHTML = MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear()
+			document.getElementById("conditions_weather").innerHTML = Game.weather = getWeather(Game.date.getMonth());
+			document.getElementById("conditions_health").innerHTML = Game.gameCaravan.health.string;
+			Game.gameCaravan.updateFood();
+			  
+			var family = Game.gameCaravan.family;
+			  
+			for (var j = 0; j < family.length; j++) {
+				  
+			  family[j].heal(10);
+			}
+			  
+			i++;
+			  
+			if (i < choice) {
+			  restADay();
+			}
+			
+		  }, 1000)}
+
+		restADay();
+		
+		Game.scenes.TrailMenu();
+	  })
+	},
+	
     LandMark: function(landmarkname){
 
-   },
+    },
 
     animateRiver: function(method, success) {
       // setup
