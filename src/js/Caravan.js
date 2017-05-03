@@ -10,9 +10,9 @@ const HEALTH = {
 // Pace object enables access to each pace level's numerical and string values
 // rate is the percentage of maximum distance per day that pace corresponds to. max distance depends on how many oxen you have, with a max of 40 mi/day
 const PACE = {
-    STEADY: {rate: 8, string: "steady", description: "You travel about 8 hours a day, taking frequent rests. You take care not to get too tired."},
-    STRENUOUS: {rate: 12, string: "strenuous", description: "You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset. You stop to rest only when necessary. You finish each day feeling very tired."},
-    GRUELING: {rate: 16, string: "grueling", description: "You travel about 16 hours a day, starting before sunrise and continuing until dark. You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely exhausted, and your health suffers."}
+    STEADY: {rate: 0.5, string: "steady", description: "You travel about 8 hours a day, taking frequent rests. You take care not to get too tired."},
+    STRENUOUS: {rate: 0.75, string: "strenuous", description: "You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset. You stop to rest only when necessary. You finish each day feeling very tired."},
+    GRUELING: {rate: 1, string: "grueling", description: "You travel about 16 hours a day, starting before sunrise and continuing until dark. You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely exhausted, and your health suffers."}
 }
 
 const OCCUPATION = {
@@ -57,21 +57,11 @@ function Caravan() {
     this.injured_oxen = 0;
     this.clothing = 0;
     this.food = 0;
-    this.bait = 0;
+    this.boxes_ammo = 0;
 	
 	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
 	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
 	"Mr Anderson"];
-}
-
-Caravan.prototype.updateFood = function() {
-    var eaten = this.rations.pounds * this.family.length;
-    if (this.food >= eaten) {
-        this.food -= this.rations.pounds * this.family.length;
-    } else { 
-        this.food = 0;
-    }
-    return this.food;
 }
 
 Caravan.prototype.generateRandomName = function() {
@@ -103,18 +93,18 @@ Caravan.prototype.set_pace = function(new_pace) {
 // purchase
 // takes in name of the item as a string, item's cost as a float, and how many of the item to purchase as an int
 // If the purchase isn't too expensive or quantity too much, subtracts from the Caravan's money and adds to its supplies
-Caravan.prototype.purchaseItems = function(purchases) {
+Caravan.prototype.purchase = function(item, cost, quantity) {
     // costs more than we have
-    var total = 0.00;
-    for (var i = 0; i < purchases.length; i++) { // make sure they can make the purchase.quantity;
-        total += purchases[i].quantity * purchases[i].cost;
-        if (total > this.money) { return false; }
+    if (cost * quantity > this.money) {
+        return 0;
+    } else if (quantity + this[item] > MAXIMUM[item.toUpperCase()]) {
+        // cannot carry that many of that item
+        return 0;
+    } else {
+        // add item to supplies
+        this[item] += quantity;
+        this.money -= quantity * cost;
     }
-    for (var j = 0; j < purchases.length; j++) { // make the purchases
-        this[purchases[j].item] += purchases[j].quantity;
-    }
-    this.money -= total;
-    return true;
 }
 
 // Return the average health
@@ -181,6 +171,7 @@ Caravan.prototype.removePerson = function(person) {
 	}
 }
 
+
 Caravan.prototype.getMph = function() {
     var mph;
     if (this.oxen > 0) {
@@ -191,11 +182,11 @@ Caravan.prototype.getMph = function() {
     return (mph > 40) ?  40 : mph;
 }
 Caravan.prototype.trade=function(take,takeamt,give,giveamt){
-    if (giveamt+this.give<=MAXIMUM.give){
-        this.give+=giveamt;
+    if (giveamt+this[give]<=MAXIMUM[give]){
+        this[give]+=giveamt;
     }else{
-        var amt=MAXIMUM.give-this.give;
-        this.give+=amt;
+        var amt=MAXIMUM[give]-this[give];
+        this[give]+=amt;
     }
-    this.take-=takeamt;
+    this[take]-=takeamt;
 }
