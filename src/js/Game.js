@@ -497,8 +497,8 @@ var Game = {
           <li>wait to see if conditions improve</li>\n
           <li>get more information</li>\n
         </ol>\n
-        <p>What is your choice? <span id="input"></span></p>\n
-      </div>\n`;
+		<p>What is your choice? <span id="input"></span></p>\n
+      </div>`;
     
     var validationFunc=function(input){
       return Number.isInteger(+input) && +input>0 && +input<5;
@@ -772,6 +772,8 @@ var Game = {
 	    	  Game.scenes.StopToRest();
 	      else if(input == 7)
 	    	  Game.trading();
+		  else if(input == 8)
+			  Game.fishingGame();
         else
           Game.scenes.TrailMenu();
       });
@@ -781,14 +783,14 @@ var Game = {
       `<div id="check_supplies" class="centered_content white_black">\n
         <p>Your Supplies</p>\n
         <ul>\n
-          <li>oxen<span>`+ Game.gameCaravan.oxen +`</span></li>\n
-          <li>sets of clothing<span>`+ Game.gameCaravan.clothing +`</span></li>\n
-          <li>bait<span>`+ Game.gameCaravan.bait +`</span></li>\n
-          <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
-          <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
-          <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
-          <li>pounds of food<span>`+ Game.gameCaravan.food +`</span></li>\n
-          <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
+          <li>oxen: <span>`+ Game.gameCaravan.oxen +`</span></li>\n
+          <li>sets of clothing: <span>`+ Game.gameCaravan.clothing +`</span></li>\n
+          <li>bait: <span>`+ Game.gameCaravan.bait +`</span></li>\n
+          <li>wagon wheels: <span>`+ Game.gameCaravan.wheels +`</span></li>\n
+          <li>wagon axles: <span>`+ Game.gameCaravan.axles +`</span></li>\n
+          <li>wagon tongues: <span>`+ Game.gameCaravan.tongues +`</span></li>\n
+          <li>pounds of food: <span>`+ Game.gameCaravan.food +`</span></li>\n
+          <li>money left: <span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
         </ul>\n
         <p class="prompt" class="white_black">Press ENTER to continue</p>\n
       </div>\n`;
@@ -854,7 +856,7 @@ var Game = {
 		<p>Grueling - You travel about 16 hours a day, starting before sunrise and continuing until dark.` + 
 		`You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely` + `
 		exhausted, and your health suffers.
-		<p class=\"prompt\">Press SPACE to continue</p>\n
+		<p class=\"prompt\">Press ENTER to continue</p>\n
       </div>`;	
 	  
 	  Game.waitForInput(null, null, Game.scenes.ChangePace);;
@@ -1094,7 +1096,6 @@ var Game = {
   fishingGame:function(){
     if (Game.gameCaravan.bait == 0) {
 
-	  Game.alertBox("You have no bait to fish with", Game.scenes.journey);
 	  return;
 	}
 
@@ -1107,18 +1108,15 @@ var Game = {
 	if (chanceToCatch < 6) {
 	  Game.gameCaravan.bait--;
 	  Game.gameCaravan.food += weights[fishNum];
-	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
 	  return;
 	}
 
 	else if (chanceToCatch < 8) {
 	  Game.gameCaravan.bait--;
-	  Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
 	  return;
 	}
 
 	else {
-	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
 	  return;
     }
   },
