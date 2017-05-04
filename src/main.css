@@ -148,11 +148,7 @@ main > div {
     list-style-type: none;
 }
 
-#journey #status ul {
-    list-style-type: none;
-}
-
-
+ul.plain_list { list-style-type: none; }
 
 #oxen {
     position: absolute;
