@@ -14,34 +14,34 @@ var Map={
     var milesTraveled=0;
     var landmarktraveled="Independence";
     while(miles>milesTraveled){
-      var routes=landmarks[landmarktraveled].routes;
+      var routes=Map.landmarks[landmarktraveled].routes;
       if(!routes)
         break;
       var routeNames=Object.keys(routes);
       var nextlandmark;
       if(routeNames.length>1){
-        if(landmarktraveled=="SouthPass")
-          nextlandmark= branchOption1?"FortBridger":"GreenRiverCrossing";
-        else if(landmarktraveled=="BlueMountains")
-          nextlandmark= branchOption2?"TheDalles":"FortWallaWalla";
+        if(landmarktraveled=="South Pass/Trail Splits")
+          nextlandmark= branchOption1?"Fort Bridger":"Green River Crossing";
+        else if(landmarktraveled=="Blue Mountains/trail splits")
+          nextlandmark= branchOption2?"The Dalles/trail splits":"Fort Walla Walla";
       }
       else{
         nextlandmark=routeNames[0];
       }
 
-      var x1=landmarks[landmarktraveled].coordinate.x;
-      var y1=landmarks[landmarktraveled].coordinate.y;
+      var x1=Map.landmarks[landmarktraveled].coordinate.x;
+      var y1=Map.landmarks[landmarktraveled].coordinate.y;
       var x2;
       var y2;
       var milesToNext=routes[nextlandmark];
       if(miles>milesTraveled+milesToNext){
-        x2=landmarks[nextlandmark].coordinate.x;
-        y2=landmarks[nextlandmark].coordinate.y;
+        x2=Map.landmarks[nextlandmark].coordinate.x;
+        y2=Map.landmarks[nextlandmark].coordinate.y;
       }
       else{
         var percentage=(miles-milesTraveled)/milesToNext;
-        var coordNextX = landmarks[nextlandmark].coordinate.x;
-        var coordNextY=landmarks[nextlandmark].coordinate.y;
+        var coordNextX = Map.landmarks[nextlandmark].coordinate.x;
+        var coordNextY=Map.landmarks[nextlandmark].coordinate.y;
         var x2=x1+(coordNextX-x1)*percentage;
         var y2=y1+(coordNextY-y1)*percentage;
       }
@@ -53,82 +53,35 @@ var Map={
     document.getElementById("game").innerHTML=
       '<svg id="map" width="643" height="402">'+svgContent+'</svg>';
   },
-};
+  landmarks:{
+  	"Independence":{coordinate:{x:580, y:295}, routes:{"Kansas River Crossing":102}},
+  	"Kansas River Crossing":{coordinate:{x:553, y:288}, routes:{"Big Blue River Crossing":185-102}},
+  	"Big Blue River Crossing":{coordinate:{x:535, y:275},routes:{"Fort Kearney": 304-185}},
+  	"Fort Kearney": {coordinate:{x:503, y:266}, routes:{"Chimney Rock":554-304}},
+  	"Chimney Rock": {coordinate:{x:460, y:260}, routes:{"Fort Laramie": 640-554}},
+  	"Fort Laramie": {coordinate:{x:415, y:245}, routes:{"Independence Rock": 830-640}},
+  	"Independence Rock": {coordinate:{x:373, y:223}, routes:{"South Pass/Trail Splits":932-830}},
+  	"South Pass/Trail Splits": {coordinate:{x:339, y:234}, routes:{"Green River Crossing":989-932, "Fort Bridger":1057-932}},
+  	"Fort Bridger": {coordinate:{x:306, y:272}, routes:{"Soda Springs":1219-1057}},
+  	"Green River Crossing": {coordinate:{x:310, y:244},routes:{"Soda Springs":1133-989}},
 
-  landmarks.Independence.coordinate={x:580, y:295};
-  landmarks.Independence.routes={"KansasRiverCrossing":102};
+  	"Soda Springs": {coordinate:{x:293, y:232},routes:{"Fort Hall":1190-1133}},
 
-  landmarks.KansasRiverCrossing.coordinate={x:553, y:288};
-  landmarks.KansasRiverCrossing.routes={"BigBlueRiverCrossing":185-102};
+  	"Fort Hall": {coordinate:{x:257, y:215},routes:{"Snake River Crossing":1372-1190}},
 
-  landmarks.BigBlueRiverCrossing.coordinate={x:535, y:275};
-  landmarks.BigBlueRiverCrossing.routes={"FortKearney": 304-185};
+  	"Snake River Crossing": {coordinate:{x:213, y:200},routes:{"Fort Boise":1486-1372}},
 
-  landmarks.FortKearney.coordinate={x:503, y:266};
-  landmarks.FortKearney.routes={"ChimneyRock":554-304};
+  	"Fort Boise": {coordinate:{x:197, y:171},routes:{"Blue Mountains/trail splits":1646-1486}},
 
-  landmarks.ChimneyRock.coordinate={x:460, y:260};
-  landmarks.ChimneyRock.routes={"FortLaramie": 640-554};
+  	"Blue Mountains/trail splits": {coordinate:{x:169, y:145}, routes:{"Fort Walla Walla": 55,"The Dalles/trail splits": 1771-1646}},
 
-  landmarks.FortLaramie.coordinate={x:415, y:245};
-  landmarks.FortLaramie.routes={"IndependenceRock": 830-640};
+    "Fort Walla Walla": {coordinate:{x:162, y:115},routes:{"The Dalles/trail splits":120}},
 
-  landmarks.IndependenceRock.coordinate={x:373, y:223};
-  landmarks.IndependenceRock.routes={"SouthPass":932-830};
+  	"The Dalles/trail splits": {coordinate:{x:141, y:127}, routes:{"Willamette Valley":100}},
 
-  landmarks.SouthPass.coordinate={x:339, y:234};
-  landmarks.SouthPass.routes={"GreenRiverCrossing":989-932, "FortBridger":1057-932};
+    "Willamette Valley": {coordinate:{x:110, y:115}}
 
-  landmarks.FortBridger.coordinate={x:306, y:272};
-  landmarks.FortBridger.routes={"SodaSprings":1219-1057};
 
-  landmarks.GreenRiverCrossing.coordinate={x:310, y:244};
-  landmarks.GreenRiverCrossing.routes={"SodaSprings":1133-989};
-
-  landmarks.SodaSprings.coordinate={x:293, y:232};
-  landmarks.SodaSprings.routes={"FortHall":1190-1133};
-
-  landmarks.FortHall.coordinate={x:257, y:215};
-  landmarks.FortHall.routes={"SnakeRiverCrossing":1372-1190};
-
-  landmarks.SnakeRiverCrossing.coordinate={x:213, y:200};
-  landmarks.SnakeRiverCrossing.routes={"FortBoise":1486-1372};
-
-  landmarks.FortBoise.coordinate={x:197, y:171};
-  landmarks.FortBoise.routes={"BlueMountains":1646-1486};
-
-  landmarks.BlueMountains.coordinate={x:169, y:145}
-  landmarks.BlueMountains.routes={"FortWallaWalla": 55,"TheDalles": 1771-1646};
-
-  landmarks.FortWallaWalla.coordinate={x:162, y:115};
-  landmarks.FortWallaWalla.routes={"TheDalles":120};
-
-  landmarks.TheDalles.coordinate={x:141, y:127};
-  landmarks.TheDalles.routes={"WillametteValley":100};
-
-  landmarks.WillametteValley.coordinate={x:110, y:115};
-
-  landmarks.getNextLandMark=function(miles,branchOption1,branchOption2,leavingLandmark){
-    var milesTraveled=0;
-    var landmarktraveled="Independence";
-    while(miles>milesTraveled||(leavingLandmark&&miles==milesTraveled)){
-      var routes=landmarks[landmarktraveled].routes;
-      if(!routes)
-        break;
-      var routeNames=Object.keys(routes);
-      var nextlandmark;
-      if(routeNames.length>1){
-        if(landmarktraveled=="SouthPass")
-          nextlandmark= branchOption1?"FortBridger":"GreenRiverCrossing";
-        else if(landmarktraveled=="BlueMountains")
-          nextlandmark= branchOption2?"TheDalles":"FortWallaWalla";
-      }
-      else{
-        nextlandmark=routeNames[0];
-      }
-      var milesToNext=routes[nextlandmark];
-      landmarktraveled=nextlandmark;
-      milesTraveled+=milesToNext;
-    }
-    return {nextLandmark: landmarktraveled, milesToNext: milesTraveled-miles};
   }
+
+};

@@ -1,8 +1,8 @@
 // Class constructor
 function Person(name) {
-
 	this.name = name;
 	this.health = 100;
+	this.disease = "";
 }
 	
 // Reduce a person's health, return -1 if this kills the person
@@ -21,8 +21,7 @@ Person.prototype.sicken = function(healthChange) {
 // Increase a person's health
 Person.prototype.heal = function(healthChange) {
 
-	this.health = this.health + healthChange;
-
+	this.health += healthChange;
 	// Don't increase health above maximum
 	if (this.health > 100) {
 		this.health = 100;
