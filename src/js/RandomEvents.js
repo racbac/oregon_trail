@@ -21,7 +21,6 @@ function getWeather(month) {
 			return weather[weightedRand({2: 0.7, 1: 0.3})];
 			break;
 	}
-
 }
 
 function randomEvent(caravan) {
@@ -64,6 +63,7 @@ function randomEvent(caravan) {
 function wrongTrail() {
 	
 	//Delay the caravan for 3 days
+	Game.passDays(3);
 	return "Took the wrong trail, lose 3 days";
 }
 
@@ -172,8 +172,13 @@ function oxenWanderedOff(caravan) {
 
 function oxenSick(caravan) {
 	
-	//TODO - Make an oxen get sick
-	return "One of your oxen has gotten sick";
+	if ((caravan.oxen > 0) && (carava.injured_oxen != caravan.oxen)) {
+		
+		caravan.injured_oxen++;
+		return "One of your oxen has gotten sick";
+	}
+	
+	return null;
 }
 
 function suppliesStolen(caravan) {
@@ -197,7 +202,7 @@ function wagonFire(caravan) {
 		return null;
 	}
 	
-	return messageString;
+	return messageStart + messageEnd;
 }
 
 function snakeBite(caravan) {
