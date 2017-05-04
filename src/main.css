@@ -27,6 +27,8 @@ main > div {
     width: 100%;
     height: 100%;
     image-rendering: pixelated;
+    position: relative;
+    overflow: hidden;
 }
 
 /* universal styling */
@@ -37,10 +39,9 @@ main > div {
     font-weight: lighter;
 }
 
-.white_black {
-    color: white;
-    font-family: 'Press Start 2P', monospace;
-}
+.white_black { color: white; background-color: black; }
+
+.black_white { color: black; background-color: white; }
 
 #game ul {
     list-style-type: square;
@@ -50,8 +51,16 @@ main > div {
 
 #game ol {
     list-style-type: decimal;
-    margin-left: 13%;
-    padding-left: 0px;
+    margin-left: 0px;
+    padding-left: 4em;
+}
+
+ul.plain_list { list-style-type: none; }
+ul.square_list { list-style-type: square; }
+
+ol.col2 span, ul.col2 span {
+    float: right;
+    margin-left: 2em;
 }
 
 #game div.centered_content {
@@ -59,26 +68,20 @@ main > div {
     justify-content: flex-start;
     flex-direction: column;
     align-items: center;
-    width: 100%;
-    height: 100%;
 }
 
-#game p {
-    margin-top: 5px; margin-bottom: 5px;
-}
+#game * { font-family: 'Press Start 2P', monospace; }
 
 #game .prompt {
     position: absolute;
-    bottom: 5%;
     text-align: center;
-    left: 0; right: 0;
-    font-family: 'Press Start 2P', monospace;
-    color: white;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    margin: 0;
 }
 
-#matt_intro {
-    display: flex;
-}
+#matt_intro { display: flex; }
 
 #matt_img {
     background-image: url("./img/mal.png");
@@ -89,9 +92,7 @@ main > div {
     align-self: center;
 }
 
-#matt_img + div {
-    flex: 3;
-}
+#matt_img + div { flex: 3; }
 
 #mattstore {
     display: flex;
@@ -131,9 +132,7 @@ main > div {
     width: 100%;
 }
 
-#journey div {
-    width: 100%;
-}
+#journey div { width: 100%; }
 
 #journey #ground {
     background-color: #04B600;
@@ -141,17 +140,10 @@ main > div {
 }
 
 #journey #status {
-    background-color: white;
     text-align: center;
-    color: black;
     height: 50%;
     list-style-type: none;
 }
-
-#journey #status ul {
-    list-style-type: none;
-}
-
 
 
 #oxen {
@@ -161,20 +153,6 @@ main > div {
     height: 55%;
 }
 
+#river_crossing { width: 50%; }
 
-
-<<<<<<< HEAD
-#river_crossing {
-=======
-#river_crossing > div {
-
->>>>>>> refs/remotes/origin/Chen
-    width: 50%;
-}
-
-#map{
-  background-image: url("img/map.png");
-}
-#trading{
-    top: -50px;
-}
+#map { background-image: url("img/map.png"); }
