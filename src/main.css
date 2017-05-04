@@ -44,15 +44,22 @@ main > div {
 .black_white { color: black; background-color: white; }
 
 #game ul {
-    list-style-type: square;
     margin-left: 0px;
     padding-left: 1.5em;
 }
 
 #game ol {
     list-style-type: decimal;
-    margin-left: 13%;
-    padding-left: 0px;
+    margin-left: 0px;
+    padding-left: 4em;
+}
+
+ul.plain_list { list-style-type: none; }
+ul.square_list { list-style-type: square; }
+
+ol.col2 span, ul.col2 span {
+    float: right;
+    margin-left: 2em;
 }
 
 #game div.centered_content {
@@ -136,9 +143,6 @@ main > div {
     height: 50%;
     list-style-type: none;
 }
-
-ul.plain_list { list-style-type: none; }
-ul.square_list { list-style-type: square; }
 
 #oxen {
     position: absolute;

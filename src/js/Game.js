@@ -295,7 +295,7 @@ var Game = {
               <div>\n
                 <div id="matt_img"></div>\n
                 <div>\n
-                  <ol>\n
+                  <ol class="col2">\n
                     <li>Oxen<span id="oxen_bill">$`+thestore.item_bill("oxen").toFixed(2)+`</span></li>\n
                     <li>Food<span id="food_bill">$`+thestore.item_bill("food").toFixed(2)+`</span></li>\n
                     <li>Clothing<span id="clothing_bill">$`+thestore.item_bill("clothing").toFixed(2)+`</span></li>\n
@@ -445,7 +445,7 @@ var Game = {
             <li>Leave Store</li>\n
           </ol>\n
         </div>\n
-        <p>You have $<span id="money"></span> to spend.</p>\n
+        <p>You have $<span id="money">`+ Game.gameCaravan.money +`</span> to spend.</p>\n
         <p>Which number?<span id="input"></span></p>\n
       </div>\n`;
       var validationFunc=function(input){
@@ -733,13 +733,13 @@ var Game = {
       document.getElementById("game").innerHTML=`
         <div id="trail_menu" class="centered_content white_black">\n
           <div id="date" >`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
-          <div id="conditions" class="white_black centered_content">\n
+          <div id="conditions">\n
             Weather: `+ Game.weather +`<br>\n
             Health: `+ Game.gameCaravan.health.string +`<br>\n
             Pace: `+ Game.gameCaravan.pace.string +`<br>\n
             Rations: `+ Game.gameCaravan.rations.string +`<br>\n
           </div>\n
-          <div id="options" class="centered_content white_black">\n
+          <div id="options">\n
             You May:
             <ol>\n
               <li>Continue on trail</li>\n
@@ -752,7 +752,7 @@ var Game = {
               <li>Fish for food</li>\n
             </ol>\n
           </div>\n
-          <p class="centered_content white_black">What is your choice?<span id="input"></span></p>\n
+          <p>What is your choice?<span id="input"></span></p>\n
         </div>\n`;
       var validationFunc=function(input){
         return  +input>0 && +input<9;
@@ -951,13 +951,13 @@ var Game = {
           `+landmark.name+`
         </div>
          <div id="date" >`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
-         <div id="conditions" class="white_black centered_content">\n
+         <div id="conditions">\n
            Weather: `+ Game.weather +`<br>\n
            Health: `+ Game.gameCaravan.health.string +`<br>\n
            Pace: `+ Game.gameCaravan.pace.string +`<br>\n
            Rations: `+ Game.gameCaravan.rations.string +`<br>\n
          </div>\n
-         <div class="centered_content white_black">\n
+         <div>\n
            You May:
            <ol id="options">\n
              <li>Continue on trail</li>\n
@@ -971,7 +971,7 @@ var Game = {
              <li id="buy_supply">Buy Supplies</li>\n
            </ol>\n
          </div>\n
-         <p class="centered_content white_black">What is your choice?<span id="input"></span></p>\n
+         <p>What is your choice?<span id="input"></span></p>\n
        </div>\n`;
        if(!landmark.store){
          document.getElementById("buy_supply").style.display="none";
@@ -1124,8 +1124,6 @@ var Game = {
   },
 trading:function(){
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
-    var items=[tongues,wheels,axles,clothing,oxen,food,bait];
-    var upItems=[TONGUES,WHEELS,AXLES,CLOTHING,OXEN,FOOD,BAIT];
     var randomIndex1= Math.floor(Math.random() * items.length);
     var randomIndex2= Math.floor(Math.random() * items.length);
     while(randomIndex1==randomIndex2){
