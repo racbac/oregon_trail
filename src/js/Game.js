@@ -939,11 +939,20 @@ var Game = {
   },
 
   Landmark: function(landmark){
-    Game.gameDiv.innerHTML=`
-      <div id="landmark" class="centered_content white_black">
-        You are now at `+landmark.name+`
-      </div>`;
-    Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
+	
+	// Go to river crossing menu if the landmark is a river	
+	if (landmark.river == true) {
+	  Game.scenes.ArriveAtRiver(5, 40);
+	}
+	
+	else {
+      Game.gameDiv.innerHTML=`
+        <div id="landmark" class="centered_content white_black">
+          You are now at `+landmark.name+`
+        </div>`;
+	  
+      Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
+	}
    },
 
    LandmarkMenu: function(landmark){
@@ -1096,6 +1105,7 @@ var Game = {
   fishingGame:function(){
     if (Game.gameCaravan.bait == 0) {
 
+	  Game.alertBox("You have no bait to fish with", Game.scenes.TrailMenu);
 	  return;
 	}
 
@@ -1108,15 +1118,18 @@ var Game = {
 	if (chanceToCatch < 6) {
 	  Game.gameCaravan.bait--;
 	  Game.gameCaravan.food += weights[fishNum];
+	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.TrailMenu);
 	  return;
 	}
 
 	else if (chanceToCatch < 8) {
 	  Game.gameCaravan.bait--;
+	  Game.alertBox("The fish took your bait and escaped", Game.scenes.TrailMenu);
 	  return;
 	}
 
 	else {
+	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.TrailMenu);
 	  return;
     }
   },
