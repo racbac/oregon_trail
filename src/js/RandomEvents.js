@@ -172,7 +172,7 @@ function oxenWanderedOff(caravan) {
 
 function oxenSick(caravan) {
 	
-	if ((caravan.oxen > 0) && (carava.injured_oxen != caravan.oxen)) {
+	if ((caravan.oxen > 0) && (caravan.injured_oxen != caravan.oxen)) {
 		
 		caravan.injured_oxen++;
 		return "One of your oxen has gotten sick";

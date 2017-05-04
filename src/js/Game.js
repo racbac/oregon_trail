@@ -825,6 +825,8 @@ var Game = {
 	    	  Game.scenes.StopToRest();
 	      else if(input == 7)
 	    	  Game.trading();
+		  else if(input == 8)
+			  Game.fishingGame();
         else
           Game.scenes.TrailMenu();
       });
@@ -834,14 +836,14 @@ var Game = {
       `<div id="check_supplies" class="centered_content white_black">\n
         <p>Your Supplies</p>\n
         <ul>\n
-          <li>oxen<span>`+ Game.gameCaravan.oxen +`</span></li>\n
-          <li>sets of clothing<span>`+ Game.gameCaravan.clothing +`</span></li>\n
-          <li>bait<span>`+ Game.gameCaravan.bait +`</span></li>\n
-          <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
-          <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
-          <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
-          <li>pounds of food<span>`+ Game.gameCaravan.food +`</span></li>\n
-          <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
+          <li>oxen: <span>`+ Game.gameCaravan.oxen +`</span></li>\n
+          <li>sets of clothing: <span>`+ Game.gameCaravan.clothing +`</span></li>\n
+          <li>bait: <span>`+ Game.gameCaravan.bait +`</span></li>\n
+          <li>wagon wheels: <span>`+ Game.gameCaravan.wheels +`</span></li>\n
+          <li>wagon axles: <span>`+ Game.gameCaravan.axles +`</span></li>\n
+          <li>wagon tongues: <span>`+ Game.gameCaravan.tongues +`</span></li>\n
+          <li>pounds of food: <span>`+ Game.gameCaravan.food +`</span></li>\n
+          <li>money left: <span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
         </ul>\n
         <p class="prompt" class="white_black">Press ENTER to continue</p>\n
       </div>\n`;
@@ -907,8 +909,8 @@ var Game = {
 		<p>Grueling - You travel about 16 hours a day, starting before sunrise and continuing until dark.` +
 		`You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely` + `
 		exhausted, and your health suffers.
-		<p class=\"prompt\">Press SPACE to continue</p>\n
-      </div>`;
+		<p class=\"prompt\">Press ENTER to continue</p>\n
+      </div>`;	
 
 	  Game.waitForInput(null, null, Game.scenes.ChangePace);;
 	  return;
@@ -990,11 +992,20 @@ var Game = {
   },
 
   Landmark: function(landmark){
-    Game.gameDiv.innerHTML=`
-      <div id="landmark" class="centered_content white_black">
-        You are now at `+landmark.name+`
-      </div>`;
-    Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
+	
+	// Go to river crossing menu if the landmark is a river	
+	if (landmark.river == true) {
+	  Game.scenes.ArriveAtRiver(5, 40);
+	}
+	
+	else {
+      Game.gameDiv.innerHTML=`
+        <div id="landmark" class="centered_content white_black">
+          You are now at `+landmark.name+`
+        </div>`;
+	  
+      Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
+	}
    },
 
 
@@ -1153,7 +1164,7 @@ var Game = {
   fishingGame:function(){
     if (Game.gameCaravan.bait == 0) {
 
-	  Game.alertBox("You have no bait to fish with", Game.scenes.journey);
+	  Game.alertBox("You have no bait to fish with", Game.scenes.TrailMenu);
 	  return;
 	}
 
@@ -1166,18 +1177,18 @@ var Game = {
 	if (chanceToCatch < 6) {
 	  Game.gameCaravan.bait--;
 	  Game.gameCaravan.food += weights[fishNum];
-	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
+	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.TrailMenu);
 	  return;
 	}
 
 	else if (chanceToCatch < 8) {
 	  Game.gameCaravan.bait--;
-	  Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
+	  Game.alertBox("The fish took your bait and escaped", Game.scenes.TrailMenu);
 	  return;
 	}
 
 	else {
-	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
+	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.TrailMenu);
 	  return;
     }
   },
