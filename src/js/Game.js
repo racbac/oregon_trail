@@ -561,7 +561,7 @@ var Game = {
               waitForInput(null,null,game.scenes.TrailMenu);
               return;
             }
-          }
+          
 
           else if(timeOfDay==5){//start traveling at 5am
             /*set oxen animation to running*/
@@ -714,12 +714,12 @@ var Game = {
 
   alertBox : function(message, returnScene) {
 
-	if (message == null) {
+	   if (message == null) {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
-	}
-	Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">` + message + `</p>\n`;
-	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
+	     }
+	   Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">` + message + `</p>\n`;
+	   Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
   },
 
   removeAlertBox : function() {
@@ -742,34 +742,34 @@ var Game = {
 
 	  Game.alertBox("You have no bait to fish with", Game.scenes.journey);
 	  return;
-	}
+	   }
 
     var fish = ["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
     var weights = [50,10,27,27,40,12,1,20,26];
 
     var chanceToCatch = Math.floor((Math.random()*10)+1);
-	var fishNum = Math.floor((Math.random()*9));
+	   var fishNum = Math.floor((Math.random()*9));
 
-	if (chanceToCatch < 6) {
-	  Game.gameCaravan.bait--;
-	  Game.gameCaravan.food += weights[fishNum];
-	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
-	  return;
-	}
+	   if (chanceToCatch < 6) {
+	    Game.gameCaravan.bait--;
+	    Game.gameCaravan.food += weights[fishNum];
+	    Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
+	     return;
+	   }
 
-	else if (chanceToCatch < 8) {
-	  Game.gameCaravan.bait--;
-	  Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
-	  return;
-	}
+	   else if (chanceToCatch < 8) {
+	     Game.gameCaravan.bait--;
+	     Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
+	     return;
+	     }
 
-	else {
-	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
-	  return;
-    }
+	   else {
+	     Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
+	     return;
+      }
 
   },
-trading:function(){
+  trading:function(){
 
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
       Game.gameDiv.innerHTML = 
@@ -802,7 +802,7 @@ trading:function(){
           <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
           <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
           <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
-          <li>pounds of food<span`+ Game.gameCaravan.food +`></span></li>\n
+          <li>pounds of food<span>`+ Game.gameCaravan.food +`</span></li>\n
           <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
         </ul>\n
         <div id='trading' class ='white_black'></div></div>`;
@@ -831,6 +831,47 @@ trading:function(){
       }
     )}
 
+  },
+  results:function(){
+    var spareparts=  Game.gameCaravan.wheels+Game.gameCaravan.axles +Game.gameCaravan.tongues ;
+    var famamt=Game.gameCaravan.family.length;
+    var avghealth=Game.gameCaravan.getHealth();
+    var healthval="";
+    var wagonscore=50;
+    var healthscore=0;
+    var sparescore=spareparts*2;
+    var clothscore=Game.gameCaravan.clothing*2;
+    var baitscore=Math.floor(Game.gameCaravan.bait/57);
+    var foodscore=Math.floor(Game.gameCaravan.food/29);
+    var moneyscore=Math.floor(Game.gameCaravan.money/5);
+    var oxenscore=Game.gameCaravan.oxen *4;
+
+    if(avghealth>90){healthval="good";
+      healthscore=famamt*500;
+    }
+    else if(avghealth>70){healthval="fair";
+      healthscore=famamt*400;
+    }
+    else if(avghealth>50){healthval="poor";
+      healthscore=famamt*300;
+    }
+    else{healthval="very poor";
+      healthscore=famamt*200;
+    }
+    var totalscore=healthscore+wagonscore+sparescore+clothscore+baitscore+foodscore+moneyscore+oxenscore;
+    Game.gameDiv.innerHTML=`<div id='sup' class ='white_black'><p>Points for arriving in Oregon</p>\n
+        <ul>\n
+          <li>`+ famamt+` people in `+healthval+` health<span>   `+healthscore+`</span></li>\n
+          <li>1 wagon<span>  50</span></li>\n
+          <li>`+ Game.gameCaravan.oxen +` oxen<span> `+oxenscore+`</span></li>\n
+          <li>`+ spareparts +` spare wagon parts<span> `+ sparescore+`</span></li>\n
+          <li>`+ Game.gameCaravan.clothing +` sets of clothing<span> `+clothscore +`</span></li>\n
+          <li>`+ Game.gameCaravan.bait +` bait<span> `+ baitscore+`</span></li>\n
+          <li>`+ Game.gameCaravan.food +` pounds of food<span> `+ foodscore+`</span></li>\n
+          <li>      $`+ Game.gameCaravan.money.toFixed(2) +` cash<span> `+moneyscore +`</span></li>\n
+          <li>Total:<span>   `+totalscore+`</span></li>\n
+        </ul>\n
+        </div>`;
   }
 };
 

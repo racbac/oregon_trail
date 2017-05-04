@@ -58,6 +58,7 @@ function Caravan() {
     this.clothing = 0;
     this.food = 0;
     this.boxes_ammo = 0;
+    this.bait=0;
 	
 	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
 	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
