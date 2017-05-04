@@ -431,30 +431,75 @@ var Game = {
 `+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
         <div class="centered_content white_black">\n
           You May Buy:
-          <ol id="options">\n
-            <li>Oxen</li>\n
-            <li>Clothing</li>\n
-            <li>Baits</li>\n
-            <li>Wagon Wheels</li>\n
-            <li>Wagon Axles</li>\n
-            <li>Wagon Tongues</li>\n
-            <li>Food</li>\n
-            <li>Leave Store</li>\n
-          </ol>\n
+          <table id="options" class="white_black">\n
+          </table>\n
         </div>\n
         <p>You have $<span id="money"></span> to spend.</p>\n
         <p>Which number?<span id="input"></span></p>\n
+        <p id="how_many"></p>
       </div>\n`;
+      var table=document.getElementById("options");
+      var items=["oxen", "clothing", "bait", "wheels", "axles", "tongues", "food"];
+      var itemName=["Oxen", "Clothing", "Bait", "Wagon wheels", "Wagon axles", "Wagon tongues", "Food"];
+      var itemUnit=["ox", "set", "box", "wheel", "axle", "tongue", "pound"];
+      for(var i=0;i<items.length;i++){
+        var row=table.insertRow(-1);
+        row.insertCell(0).innerHTML=i+1+".";
+        row.insertCell(1).innerHTML=itemName[i];
+        row.insertCell(2).innerHTML=landmark.store[items[i]].cost.toFixed(2);
+        row.insertCell(3).innerHTML="per "+itemUnit[i];
+      }
+      var row=table.insertRow(-1);
+      row.insertCell(0).innerHTML=8+".";
+      row.insertCell(1).innerHTML="Leave store";
+      document.getElementById("money").innerHTML=Game.gameCaravan.money;
+
       var validationFunc=function(input){
         input=+input;
         return Number.isInteger(input)&&input>0&&input<=8;
       };
-      Game.waitForInput(null,validationFunc,function(input){
-        if(input==8){
+      Game.waitForInput(null,validationFunc,function(choice){
+        if(choice==8){
           Game.scenes.LandmarkMenu(landmark);
+          return;
         }
         else{
-          Game.scenes.BuySupply(landmark);
+          document.getElementById("input").removeAttribute("id");
+          if(choice==1){
+            document.getElementById("how_many").innerHTML='How many oxen?<span id="input"></span>';
+          }
+          else if(choice==2){
+            document.getElementById("how_many").innerHTML='How many sets?<span id="input"></span>';
+          }
+          else if(choice==3){
+            document.getElementById("how_many").innerHTML='How many boxes?<span id="input"></span>';
+          }
+          else if(choice==4){
+            document.getElementById("how_many").innerHTML='How many wheels?<span id="input"></span>';
+          }
+          else if(choice==5){
+            document.getElementById("how_many").innerHTML='How many axles?<span id="input"></span>';
+          }
+          else if(choice==6){
+            document.getElementById("how_many").innerHTML='How many tongues?<span id="input"></span>';
+          }
+          else if(choice==7){
+            document.getElementById("how_many").innerHTML='How many pounds?<span id="input"></span>';
+          }
+          else{
+            Game.scenes.BuySupply(landmark);
+            return;
+          }
+          var validationFunc=function(input){
+            input=+input;
+            return Number.isInteger(input)&&input>=0;
+          }
+          Game.waitForInput(null,validationFunc,function(quantity){
+            var name=items[choice-1];
+            var cost=landmark.store[items[choice-1]].cost;
+            Game.gameCaravan.purchaseItems([{item:name,cost:cost,quantity:+quantity}]);
+            Game.scenes.BuySupply(landmark);
+          });
         }
       })
     },
