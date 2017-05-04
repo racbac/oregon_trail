@@ -685,7 +685,7 @@ var Game = {
 
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
         document.getElementById("weather").innerHTML = Game.weather = getWeather(Game.date.getMonth());
-        document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+        document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
         document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         document.getElementById("miles").innerHTML=Game.miles;
