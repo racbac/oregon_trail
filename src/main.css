@@ -44,7 +44,6 @@ main > div {
 .black_white { color: black; background-color: white; }
 
 #game ul {
-    list-style-type: square;
     margin-left: 0px;
     padding-left: 1.5em;
 }
@@ -106,6 +105,9 @@ ol.col2 span, ul.col2 span {
     width:100%;
 }
 
+#mattstore ol span, #check_supplies ul span {
+    float: right; margin-left: 2em;
+}
 
 #AlertBox {
 	position: relative;
@@ -120,9 +122,22 @@ ol.col2 span, ul.col2 span {
 	background-color : black;
 }
 
+#DialogBox {
+	position: relative;
+    word-wrap: break-word;
+    z-index: 1;
+    height: 95%;
+    width: 95%;
+    top: -100%;
+    padding: 0.2em;
+    margin: auto;
+    border: 0.6em solid white;
+    border-radius: 10px;
+    background-color: black;
+}
+
 #journey #animation {
     background-color: black;
-
     height: 30%;
     position: relative;
 }
@@ -142,7 +157,6 @@ ol.col2 span, ul.col2 span {
 #journey #status {
     text-align: center;
     height: 50%;
-    list-style-type: none;
 }
 
 

@@ -1,15 +1,7 @@
-// Health object enables access to each health level's numerical and string values
-const HEALTH = {
-    GOOD: {value: 5, string: "good"},
-    FAIR: {value: 4, string: "fair"},
-    POOR: {value: 3, string: "poor"},
-    VERYPOOR: {value: 2, string: "very poor"},
-    DYING: {value: 1, string: "dying"}
-}
-
 // Pace object enables access to each pace level's numerical and string values
 // rate is the percentage of maximum distance per day that pace corresponds to. max distance depends on how many oxen you have, with a max of 40 mi/day
 const PACE = {
+
     STEADY: {rate: 8, chance: 0, string: "steady", description: "You travel about 8 hours a day, taking frequent rests. You take care not to get too tired."},
     STRENUOUS: {rate: 12, chance: 0.2, string: "strenuous", description: "You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset. You stop to rest only when necessary. You finish each day feeling very tired."},
     GRUELING: {rate: 16, chance: 0.4, string: "grueling", description: "You travel about 16 hours a day, starting before sunrise and continuing until dark. You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely exhausted, and your health suffers."}
@@ -35,7 +27,7 @@ const MAXIMUM = {
     AXLES: 3,
     FOOD: 2000,
     CLOTHING: 10000,
-    AMMO: 10000
+    BAIT: 10000
 }
 
 // Caravan constructor
@@ -44,7 +36,7 @@ const MAXIMUM = {
 function Caravan() {
     // members
     this.family = [];
-    this.health = HEALTH.GOOD;
+    this.health = "good";
     this.pace = PACE.STEADY;
     this.occupation;
     this.rations = RATIONS.FILLING;
@@ -57,11 +49,18 @@ function Caravan() {
     this.injured_oxen = 0;
     this.clothing = 0;
     this.food = 0;
+
+    this.boxes_ammo = 0;
+    this.bait=0;
+
     this.bait = 0;
+
+
 	
 	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
 	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
 	"Mr Anderson"];
+
 }
 
 Caravan.prototype.updateFood = function() {
@@ -119,15 +118,15 @@ Caravan.prototype.purchaseItems = function(purchases) {
 
 // Return the average health
 Caravan.prototype.getHealth = function() {
-
+    var healths = ["dying", "very poor", "poor", "fair", "good"];
 	var familySize = this.family.length;
 	var totalHealth = 0;
 
 	for (var i = 0; i < familySize; i++) {
 		totalHealth += this.family[i].health;
-	}
-
-	return totalHealth / familySize;
+    }
+    totalHealth /= familySize;
+    return healths[map(totalHealth, 0, 100, 0, 4)];
 }
 
 // Remove a person from the caravan (because they died)
@@ -148,19 +147,6 @@ Caravan.prototype.removeOx = function(oxenNum) {
 	if(this.oxen<0){
 		this.oxen=0;
 	}
-}
-
-// Return the average health
-Caravan.prototype.getHealth = function() {
-
-	var familySize = this.family.length;
-	var totalHealth = 0;
-
-	for (var i = 0; i < familySize; i++) {
-		totalHealth += this.family[i].health;
-	}
-
-	return totalHealth / familySize;
 }
 
 // Add a person to the family
@@ -184,12 +170,21 @@ Caravan.prototype.removePerson = function(person) {
 Caravan.prototype.getMph = function() {
     var mph;
     if (this.oxen > 0) {
-        mph = Math.floor(this.oxen * 0.625 + this.injured_oxen * 0.5); 
+        mph = (this.oxen - this.injured_oxen) * 0.625 + this.injured_oxen * 0.5; 
     } else {
         mph = 3;
     }
     return (mph > 40) ?  40 : mph;
 }
+
+Caravan.prototype.sickenOxen = function() {
+    if (this.oxen > 0 && this.injured_oxen < this.oxen) {
+        this.injured_oxen++;
+        return true;
+    }
+    return false;
+}
+
 Caravan.prototype.trade=function(take,takeamt,give,giveamt){
     if (giveamt+this.give<=MAXIMUM.give){
         this.give+=giveamt;
