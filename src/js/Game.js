@@ -658,6 +658,7 @@ var Game = {
             // see if everyone's dead
             if (Game.gameCaravan.family.length == 0) {
               Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+
             }
           }
           if(timeOfDay==5){//start traveling at 5am
@@ -877,6 +878,23 @@ trading:function(){
       var item2=items[randomIndex2];
       Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
     }
+  },
+  getTombstone : function() {
+    var xhttp = new XMLHttpRequest();
+    var text = "";
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
+        text += this.responseText;
+        if (text != "NULL"){
+          Game.alertBox("You passed a tombstone. Would you like to examine it?", function() {
+            
+            Game.scenes.Journey();
+          });
+        }
+      }
+    };
+    xhttp.open("GET", "getTombstone.php", true);
+    xhttp.send();
   }
 };
 
