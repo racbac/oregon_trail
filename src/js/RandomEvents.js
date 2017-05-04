@@ -297,12 +297,12 @@ function wagonTipOver(caravan) {
 
 		// Pick a random drowning victim
 		var victimIndex = Math.floor(Math.random() * familySize);
-		var victim = family[victimIndex];
+		var victimName = family[victimIndex].name;
 
 		// Remove that person from the caravan
 		caravan.removePerson(victim);
 
-		return "The wagon tipped over and " + victime.name + " has drowned";
+		return "The wagon tipped over and " + victimName + " has drowned";
 	}
 
 	// 10% chance of losing oxen
