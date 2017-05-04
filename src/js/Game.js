@@ -748,6 +748,7 @@ var Game = {
 
           }// end timeofday24
 
+
           else if(timeOfDay==5){//start traveling at 5am
             /*set oxen animation to running*/
             document.getElementById("oxen").src="./img/oxen_walking.gif";
@@ -812,7 +813,7 @@ var Game = {
         if(input==1)
           Game.scenes.Journey();
         else if (input==2)
-          Game.scenes.CheckSupply();
+          Game.scenes.CheckSupply(Game.scenes.TrailMenu);
         else if(input==3)
           Game.scenes.ShowMap(Game.scenes.TrailMenu);
         else if(input==4)
@@ -827,7 +828,7 @@ var Game = {
           Game.scenes.TrailMenu();
       });
     },
-    CheckSupply: function(){
+    CheckSupply: function(returnScene){
       Game.gameDiv.innerHTML =
       `<div id="check_supplies" class="centered_content white_black">\n
         <p>Your Supplies</p>\n
@@ -843,7 +844,7 @@ var Game = {
         </ul>\n
         <p class="prompt" class="white_black">Press ENTER to continue</p>\n
       </div>\n`;
-      Game.waitForInput(null, null, Game.scenes.TrailMenu);
+      Game.waitForInput(null, null, returnScene);
     },
     ShowMap: function(returnScene){
       Map.display(Game.miles);
@@ -995,6 +996,7 @@ var Game = {
     Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
    },
 
+
    LandmarkMenu: function(landmark){
      document.getElementById("game").innerHTML=`
        <div id="landmark_menu" class="centered_content white_black">\n
@@ -1009,6 +1011,7 @@ var Game = {
            Pace: `+ Game.gameCaravan.pace.string +`<br>\n
            Rations: `+ Game.gameCaravan.rations.string +`<br>\n
          </div>\n
+
          <div>\n
            You May:
            <ol id="options">\n
@@ -1023,7 +1026,6 @@ var Game = {
              <li id="buy_supply">Buy Supplies</li>\n
            </ol>\n
          </div>\n
-
          <p>What is your choice?<span id="input"></span></p>\n
 
        </div>\n`;
@@ -1044,7 +1046,7 @@ var Game = {
          if(input==1)
            Game.scenes.Journey(true);
          else if (input==2)
-           Game.scenes.CheckSupply();
+           Game.scenes.CheckSupply(function(){Game.scenes.LandmarkMenu(landmark)});
          else if(input==3)
            Game.scenes.ShowMap(function(){Game.scenes.LandmarkMenu(landmark)});
          else if(input==8)

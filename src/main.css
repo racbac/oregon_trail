@@ -146,8 +146,6 @@ ol.col2 span, ul.col2 span {
 }
 
 
-ul.plain_list { list-style-type: none; }
-
 
 #oxen {
     position: absolute;
@@ -159,11 +157,4 @@ ul.plain_list { list-style-type: none; }
 #river_crossing { width: 50%; }
 
 
-
-#river_crossing {
-    width: 50%;
-}
-
-#map{
-  background-image: url("img/map.png");
-}
+#map { background-image: url("img/map.png"); }
