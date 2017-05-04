@@ -1143,7 +1143,7 @@ var Game = {
 	Game.gameDiv.appendChild(alert);
 
 	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
->>>>>>> refs/remotes/origin/master
+
   },
 
   removeAlertBox : function() {
@@ -1168,8 +1168,6 @@ var Game = {
 
 	   }
 
-
-	}
 	
 
     var fish = ["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
@@ -1247,11 +1245,6 @@ trading:function(){
     if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
       document.getElementById("trading").innerHTML = "You meet a trader who wants "+
 
-    var amtwanted=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex1])+1;
-    var amttrade=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex2])+1;
-    if(amtwanted>Game.gameCaravan.items[randomIndex1]){
-      Game.gameDiv.innerHTML="You meet a trader who wants"+
-
       amtwanted+" "+itemNames[randomIndex1]+
       ". You don't have this.";
     }else{
@@ -1271,13 +1264,15 @@ trading:function(){
         text += this.responseText;
         if (text != "NULL"){
           Game.alertBox("You passed a tombstone. Would you like to examine it?", function() {
-            
+
             Game.scenes.Journey();
           });
         }
       }
 
-    )}
+    }
+        xhttp.open("GET", "getTombstone.php", true);
+    xhttp.send();
 
   },
   results:function(){
@@ -1321,11 +1316,9 @@ trading:function(){
         </ul>\n
         </div>`;
 
-    };
-    xhttp.open("GET", "getTombstone.php", true);
-    xhttp.send();
+    }
 
-  }
+
 };
 
 const MONTH = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];

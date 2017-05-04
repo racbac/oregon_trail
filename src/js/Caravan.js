@@ -54,14 +54,13 @@ function Caravan() {
     this.bait=0;
 
     this.bait = 0;
-<<<<<<< HEAD
+
 
 	
 	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
 	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
 	"Mr Anderson"];
-=======
->>>>>>> refs/remotes/origin/master
+
 }
 
 Caravan.prototype.updateFood = function() {
