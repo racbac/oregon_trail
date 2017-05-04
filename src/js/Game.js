@@ -3,7 +3,6 @@ var Game = {
   date: new Date(),
   weather: "warm",
   miles: 0,
-  branch:[null,null],
 
   gameDiv: document.getElementById("game"),
 
@@ -51,12 +50,12 @@ var Game = {
       }
     };
   },
-
+  
   // Use for times when the caravan gets lost or has to wait for something
   passDays: function(numDays) {
-
+	
 	Game.date.setDate(Game.date.getDate() + numDays);
-
+	
 	for (var i = 0; i < numDays; i++) {
 	  Game.gameCaravan.updateFood();
 	}
@@ -392,7 +391,7 @@ var Game = {
             else{ // checkout
               if (thestore.oxen.quantity > 0) { // they must have purchased oxen to leave the store
                 if (Game.gameCaravan.purchaseItems(thestore.generate_bill())) { // make sure they have enough money
-                  Game.scenes.Landmark(landmarks.Independence);
+                  Game.scenes.Journey(); 
                 } else {
                   Game.alertBox("You don't have enough money to pay your bill.", storeFront); return;
                 }
@@ -507,11 +506,12 @@ var Game = {
           });
         }
       })
-    },
 
+    },
+	
 	// Arrive at the river and show the width and depth
 	ArriveAtRiver: function(width, depth) {
-
+		
 	  var message = "You must cross the river in order to continue. The river at this point is currently " + width +
 	  " feet wide and " + depth + " feet deep in the middle."
 
@@ -522,15 +522,15 @@ var Game = {
       <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
 	  Game.waitForInput(null, null, function() {Game.scenes.CrossRiver(width, depth) });
-
+		
 	},
-
+	
 	// Select an option for crossing the river
 	CrossRiver:function(width, depth) {
 
 	console.log("Width is " + width);
-
-
+	
+	
 		document.getElementById("game").innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
         <p>Weather: </p>\n
@@ -545,12 +545,13 @@ var Game = {
           <li>get more information</li>\n
         </ol>\n
         <p>What is your choice? <span id="input"></span></p>\n
-      </div>\n`;
-
+      </div>\n
+`;
+	  
     var validationFunc=function(input){
       return Number.isInteger(+input) && +input>0 && +input<5;
     }
-
+	
     Game.waitForInput(null,validationFunc,function(choice){
 
       // Ford the river
@@ -563,19 +564,19 @@ var Game = {
           var accidentChance = (depth - 1) * 50;
           var chance = randrange(1, 100);
           if (chance < accidentChance) {
-
+			  
 			var eventResult = wagonTipOver(Game.gameCaravan);
 
 		    Game.scenes.animateRiver("ford", false);
 			setTimeout(function() {Game.alertBox(eventResult, Game.scenes.Journey)}, 4000);
-
-		  }
-
+            
+		  }  
+		  
 		  else {
-
+			  
 		    Game.scenes.animateRiver("ford", true);
 			setTimeout(function() {Game.scenes.Journey()}, 4000);
-
+		    
 		  }
 		}
       }
@@ -584,73 +585,73 @@ var Game = {
       else if(choice ==2){
 
         var accidentChance = randrange(1, 100);
-
+		
         if (accidentChance < 30) {
 
 		  var eventResult = wagonTipOver(Game.gameCaravan);
-
+		  
 		  if (eventResult != null) {
-
+			
 			Game.scenes.animateRiver("float", false);
             Game.alertBox(eventResult, Game.scenes.journey);
 		  }
         }
-
+		
 		Game.scenes.animateRiver("float", true);
 		Game.scenes.Journey();
       }
-
+	  
 	  // Take the ferry
       else if(choice == 3){
-
+        
 		var ferryAvailable = randrange(1, 5);
-
+		
 		if (ferryAvailable <= 2) {
-
+			
 		  Game.passDays(1);
 		  Game.alertBox("No ferry comes around today. Lose one day waiting", Game.scenes.CrossRiver);
 		}
-
+		
 		else {
-
+		  
 		  Game.scenes.animateRiver("ferry", true);
 		  Game.gameCaravan.money -= 50;
 		}
       }
-
+	  
 	  //let a day pass and change the width/depth slightly
       else if(choice == 4) {
-
+		
 		// See if it gets deeper or shallower
 		var deeper = randrange(1, 10);
-
+		
 		if (deeper > 5) {
-
+			
 		  // Round to 2 decimal places
 		  var newDepth = depth - Math.round(Math.random()) / 100;
 		}
-
+		
 		else {
-
+			
 		  var newDepth = depth + Math.round(Math.random()) / 100;
 		}
-
+		
 		var wider = randrange(1, 10);
-
+		
 		if (wider > 5) {
-
+			
 		  var newWidth = width - Math.round(Math.random()) / 100;
 		}
-
+		
 		else {
-
+			
 		  var newWidth = width + Math.round(Math.random()) / 100;
 		}
-
+		
 		Game.passDays(1);
-		Game.scenes.CrossRiver(newWidth, newDepth);
+		Game.scenes.CrossRiver(newWidth, newDepth);		
       }
-
+	  
 	  // Show information
       else if(choice == 5) {
 
@@ -658,8 +659,7 @@ var Game = {
     });
   },
 
-
-    Journey:function(leavingLandmark){
+    Journey:function(){
       Game.gameDiv.innerHTML =
 
         `<div id="journey" class="centered_content white_black">\n
@@ -684,17 +684,17 @@ var Game = {
         var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
 
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-        document.getElementById("weather").innerHTML = Game.weather = getWeather(Game.date.getMonth());
-        document.getElementById("health").innerHTML=Game.gameCaravan.health.string;
+        document.getElementById("weather").innerHTML = Game.weather;
+        document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
-        document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
+        document.getElementById("next_landmark").innerHTML='000';
         document.getElementById("miles").innerHTML=Game.miles;
         var timeOfDay=0;
         var travelFunc=function(){//called once per game Hour
           timeOfDay++;
 
           if(timeOfDay==24){//once a day
-
+            /*generate the conditions for the day*/
             Game.date.setDate(Game.date.getDate()+1);
             timeOfDay=0;
 
@@ -707,7 +707,7 @@ var Game = {
             document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
             document.getElementById("next_landmark").innerHTML='000';
             document.getElementById("miles").innerHTML =  Game.miles += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
-
+            
             // see if random event happened (50% chance)
             var eventChance = (Math.random() * 10);
             if (eventChance < 5) {
@@ -733,17 +733,17 @@ var Game = {
                   }
                 });
               }
-			      }//eventChance
+			      }
 
             // see if anyone died
             for (var i in deaths) {
-
               clearInterval(travelLoop);
               Game.alertBox(deaths[i] + " has died.", Game.scenes.Journey);
             }
             // see if everyone's dead
             if (Game.gameCaravan.family.length == 0) {
               Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+
             }
 
           }// end timeofday24
@@ -755,19 +755,6 @@ var Game = {
           }
 
           else if(timeOfDay== 5+Game.gameCaravan.pace.rate){
-            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
-
-            Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
-            document.getElementById("miles").innerHTML=Game.miles;
-            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
-
-            document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
-            if(nextLandmark.milesToNext==0){
-              Game.alertBox("You are now at "+landmarks[nextLandmark.nextLandmark].name+". Would you like to look around?");
-              clearInterval(travelLoop);
-              Game.waitForInput(null,null,function(){Game.scenes.Landmark(landmarks[nextLandmark.nextLandmark])});
-              return;
-            }
             /*set oxen animation to stopped*/
             document.getElementById("oxen").src = "./img/oxen_standing.png";
           }
@@ -782,17 +769,16 @@ var Game = {
 
     TrailMenu: function(){
       document.getElementById("game").innerHTML=`
-        <div id="trail_menu" class="centered_content white_black">\n
+        <div id=trail_menu>\n
           <div id="date" >`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
 
           <div id="conditions">\n
             Weather: <span id = "conditions_weather">`+ Game.weather +`</span><br>\n
             Health: <span id = "conditions_health">`+ Game.gameCaravan.health.string +`</span><br>\n
-
             Pace: `+ Game.gameCaravan.pace.string +`<br>\n
             Rations: `+ Game.gameCaravan.rations.string +`<br>\n
           </div>\n
-          <div id="options">\n
+          <div id="options" class="centered_content white_black">\n
             You May:
             <ol>\n
               <li>Continue on trail</li>\n
@@ -808,6 +794,7 @@ var Game = {
           <p>What is your choice?<span id="input"></span></p>\n
         </div>\n`;
       var validationFunc=function(input){
+        console.log(input)
         return  +input>0 && +input<9;
       }
       Game.waitForInput(null,validationFunc,function(input){
@@ -849,9 +836,9 @@ var Game = {
       </div>\n`;
       Game.waitForInput(null, null, returnScene);
     },
-    ShowMap: function(returnScene){
+    ShowMap: function(){
       Map.display(Game.miles);
-      Game.waitForInput(null,null,returnScene);
+      Game.waitForInput(null,null,Game.scenes.TrailMenu);
     },
 
 	// Change the pace that the caravan is travelling at
@@ -1089,7 +1076,7 @@ var Game = {
       var ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
 
-      var grd; var bank1 = -40; var bank2 = 75;
+      var grd; var bank1 = -40; var bank2 = 75; 
       var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
       const BLUE = "#42B2FF"; const TAN = "#F6B68E";
 
@@ -1100,7 +1087,7 @@ var Game = {
         grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
         grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
         grd.addColorStop(1, TAN);
-        ctx.fillStyle = grd;
+        ctx.fillStyle = grd; 
         ctx.fillRect(0,0,width, height);
       };
 
@@ -1132,15 +1119,14 @@ var Game = {
       }
     }
   },
-
+  
   alertBox : function(message, returnScene) {
-
+	  
 	if (message == null) {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
 	}
-
-  var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
+  var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message)); 
   alert.setAttribute("id", "AlertBox"); alert.setAttribute("class", "white_black");
 	Game.gameDiv.appendChild(alert);
 
@@ -1151,42 +1137,42 @@ var Game = {
 
     document.getElementById("AlertBox").remove();
   },
-
+  
   dialogBox : function(dialog, returnScene) {
     Game.gameDiv.innerHTML += `<p id="DialogBox" class="white_black">` + dialog + `</p>\n`;
-	Game.waitForInput(null,null,function() {Game.removeDialogBox(); returnScene() || null;});
+	Game.waitForInput(null,null,function() {Game.removeDialogBox(); returnScene() || null;}); 
   },
-
+  
   removeDialogBox : function() {
     document.getElementById("DialogBox").remove();
   },
-
+  
   fishingGame:function(){
     if (Game.gameCaravan.bait == 0) {
 
 	  Game.alertBox("You have no bait to fish with", Game.scenes.TrailMenu);
 	  return;
 	}
-
+	
     var fish = ["sturgeon","salmon","steelhead","trout","catfish","bass","sunfish","barracuda","flounder"];
     var weights = [50,10,27,27,40,12,1,20,26];
-
+	
     var chanceToCatch = Math.floor((Math.random()*10)+1);
 	var fishNum = Math.floor((Math.random()*9));
-
+	
 	if (chanceToCatch < 6) {
 	  Game.gameCaravan.bait--;
 	  Game.gameCaravan.food += weights[fishNum];
 	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.TrailMenu);
 	  return;
 	}
-
+	
 	else if (chanceToCatch < 8) {
 	  Game.gameCaravan.bait--;
 	  Game.alertBox("The fish took your bait and escaped", Game.scenes.TrailMenu);
 	  return;
 	}
-
+	
 	else {
 	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.TrailMenu);
 	  return;
@@ -1222,7 +1208,7 @@ trading:function(){
         text += this.responseText;
         if (text != "NULL"){
           Game.alertBox("You passed a tombstone. Would you like to examine it?", function() {
-
+            
             Game.scenes.Journey();
           });
         }
