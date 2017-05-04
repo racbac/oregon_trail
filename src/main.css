@@ -39,15 +39,12 @@ main > div {
     font-weight: lighter;
 }
 
-.white_black {
-    color: white; background-color: black;
-}
+.white_black { color: white; background-color: black; }
 
-.black_white {
-    color: black; background-color: white;
-}
+.black_white { color: black; background-color: white; }
 
 #game ul {
+    list-style-type: square;
     margin-left: 0px;
     padding-left: 1.5em;
 }
@@ -65,9 +62,7 @@ main > div {
     align-items: center;
 }
 
-#game * {
-    font-family: 'Press Start 2P', monospace;
-}
+#game * { font-family: 'Press Start 2P', monospace; }
 
 #game .prompt {
     position: absolute;
@@ -78,9 +73,7 @@ main > div {
     margin: 0;
 }
 
-#matt_intro {
-    display: flex;
-}
+#matt_intro { display: flex; }
 
 #matt_img {
     background-image: url("./img/mal.png");
@@ -91,9 +84,7 @@ main > div {
     align-self: center;
 }
 
-#matt_img + div {
-    flex: 3;
-}
+#matt_img + div { flex: 3; }
 
 #mattstore {
     display: flex;
@@ -107,9 +98,6 @@ main > div {
     width:100%;
 }
 
-#mattstore ol span, #check_supplies ul span {
-    float: right; margin-left: 2em;
-}
 
 #AlertBox {
 	position: relative;
@@ -124,22 +112,9 @@ main > div {
 	background-color : black;
 }
 
-#DialogBox {
-	position: relative;
-    word-wrap: break-word;
-    z-index: 1;
-    height: 95%;
-    width: 95%;
-    top: -100%;
-    padding: 0.2em;
-    margin: auto;
-    border: 0.6em solid white;
-    border-radius: 10px;
-    background-color: black;
-}
-
 #journey #animation {
     background-color: black;
+
     height: 30%;
     position: relative;
 }
@@ -149,9 +124,7 @@ main > div {
     width: 100%;
 }
 
-#journey div {
-    width: 100%;
-}
+#journey div { width: 100%; }
 
 #journey #ground {
     background-color: #04B600;
@@ -161,6 +134,7 @@ main > div {
 #journey #status {
     text-align: center;
     height: 50%;
+    list-style-type: none;
 }
 
 ul.plain_list { list-style-type: none; }
@@ -173,12 +147,6 @@ ul.square_list { list-style-type: square; }
     height: 55%;
 }
 
+#river_crossing { width: 50%; }
 
-#river_crossing > div {
-    width: 50%;
-    margin-top: 11%;
-}
-
-#map{
-  background-image: url("img/map.png");
-}
+#map { background-image: url("img/map.png"); }

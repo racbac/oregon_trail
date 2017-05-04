@@ -23,10 +23,6 @@ function getWeather(month) {
 	}
 }
 
-function death() {
-	
-}
-
 function randomEvent(caravan) {
 	
 	// There are 12 events, so generate a random number between 1 and 12
@@ -175,9 +171,13 @@ function oxenWanderedOff(caravan) {
 }
 
 function oxenSick(caravan) {
-	if (caravan.sickenOxen()) {
+	
+	if ((caravan.oxen > 0) && (carava.injured_oxen != caravan.oxen)) {
+		
+		caravan.injured_oxen++;
 		return "One of your oxen has gotten sick";
 	}
+	
 	return null;
 }
 
@@ -262,17 +262,17 @@ function getDisease(caravan) {
 		var family = caravan.family;
 		var familySize = caravan.family.length;
 	
-		var diseaseNames = ["cholera", "dysentery", "typhoid fever"];
-		var chosenDisease = diseaseNames[randrange(0,2)];
+		// Pick a random bite victim
+		var victimIndex = Math.floor(Math.random() * familySize);	
+		var victim = family[victimIndex];
 
-		var victim = family[randrange(0,familySize)];
+		// Reduce their health by 40
 		victim.sicken(40);
-		if (victim.disease == chosenDisease) {
-			return victim.name + " has taken a turn for the worse.";
-		} else {
-			victim.disease = chosenDisease;	
-			return victim.name + " is sick with " + chosenDisease;
-		}
+		
+		var diseaseNames = ["cholera", "dysentary", "typhoid fever"];
+		var chosenDisease = diseaseNames[Math.floor(Math.random() * 3)];
+		
+		return victim.name + " is sick with " + chosenDisease;
 	}
 }
 
@@ -325,13 +325,14 @@ function wagonTipOver(caravan) {
 }
 
 function randomName() {
-	var names = ["Shawn","Grace","Alan","Ada","River","Zoe","Kaylee","Jayne","Simon", "Chang", "Marron", "Hrabowski", "Kalpakis", "Steve", "Tom"];
+	var names = ["Shawn","Grace","Alan","Ada","River","Zoe","Kaylee","Jayne","Simon"];
 	return names[randrange(0, names.length - 1)];
 }
 
 // Randomly remove supplies from the caravan, and return a message saying what was removed
 // Message should be appended to description of what destroyed the supplies
 function destroyRandomSupplies(caravan) {
+
 
 	// Between 2 and 6 supply types are reduced
 	var numLost = randrange(2,6);
@@ -523,8 +524,3 @@ function weightedRand(specs) {
 		if (num <= sum) { return i; }
 	}
 }
-
- function map(num, min1, max1, min2, max2)
- {
-   return Math.floor((num - min1) * (max2 - min2) / (max1 - min1) + min2);
- }
