@@ -734,8 +734,8 @@ var Game = {
         <div id="trail_menu" class="centered_content white_black">\n
           <div id="date" >`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
           <div id="conditions">\n
-            Weather: `+ Game.weather +`<br>\n
-            Health: `+ Game.gameCaravan.health.string +`<br>\n
+            Weather: <span id = "conditions_weather">`+ Game.weather +`</span><br>\n
+            Health: <span id = "conditions_health">`+ Game.gameCaravan.health.string +`</span><br>\n
             Pace: `+ Game.gameCaravan.pace.string +`<br>\n
             Rations: `+ Game.gameCaravan.rations.string +`<br>\n
           </div>\n
@@ -804,7 +804,7 @@ var Game = {
 	  Game.gameDiv.innerHTML = 
 	  `<div id="check_supplies" class="centered_content white_black">\n
 	    <p>Change Pace\n
-		(currently "` + Game.gameCaravan.pace + `")</p>
+		(currently "` + Game.gameCaravan.pace.string + `")</p>
 		<p>The pace at which you travel can change. Your choices are:</p>
 		<ol>\n
 		  <li>A steady pace</li>
@@ -867,7 +867,7 @@ var Game = {
 	  Game.gameDiv.innerHTML = 
 	  `<div id="check_supplies" class="centered_content white_black">\n
 	    <p>Change Food Rations\n
-		(currently "` + Game.gameCaravan.rations + `")</p>
+		(currently "` + Game.gameCaravan.rations.string + `")</p>
 		<p>The amount of food the people in your party eat each day can change. Your choices are:</p>
 		<ol>\n
 		  <li>Filling - meals are large and generous.</li>
