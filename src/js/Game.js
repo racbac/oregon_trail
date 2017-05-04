@@ -814,7 +814,7 @@ var Game = {
         if(input==1)
           Game.scenes.Journey();
         else if (input==2)
-          Game.scenes.CheckSupply();
+          Game.scenes.CheckSupply(Game.scenes.TrailMenu);
         else if(input==3)
           Game.scenes.ShowMap(Game.scenes.TrailMenu);
         else if(input==4)
@@ -829,7 +829,7 @@ var Game = {
           Game.scenes.TrailMenu();
       });
     },
-    CheckSupply: function(){
+    CheckSupply: function(returnScene){
       Game.gameDiv.innerHTML =
       `<div id="check_supplies" class="centered_content white_black">\n
         <p>Your Supplies</p>\n
@@ -845,7 +845,7 @@ var Game = {
         </ul>\n
         <p class="prompt" class="white_black">Press ENTER to continue</p>\n
       </div>\n`;
-      Game.waitForInput(null, null, Game.scenes.TrailMenu);
+      Game.waitForInput(null, null, returnScene);
     },
     ShowMap: function(returnScene){
       Map.display(Game.miles);
@@ -1049,7 +1049,7 @@ var Game = {
          if(input==1)
            Game.scenes.Journey(true);
          else if (input==2)
-           Game.scenes.CheckSupply();
+           Game.scenes.CheckSupply(function(){Game.scenes.LandmarkMenu(landmark)});
          else if(input==3)
            Game.scenes.ShowMap(function(){Game.scenes.LandmarkMenu(landmark)});
          else if(input==8)
