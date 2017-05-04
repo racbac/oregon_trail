@@ -681,7 +681,7 @@ var Game = {
 
         </div>\n`;
 
-        var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+        var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
 
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
         document.getElementById("weather").innerHTML = Game.weather = getWeather(Game.date.getMonth());
@@ -700,13 +700,14 @@ var Game = {
 
             var deaths = Game.gameCaravan.updateHealth();
 
+            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
             /*update status and html*/
             document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
             document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
             document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
             document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
-            document.getElementById("next_landmark").innerHTML='000';
-            document.getElementById("miles").innerHTML =  Game.miles += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
+            document.getElementById("miles").innerHTML =  Game.miles;// += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
+            document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
 
             // see if random event happened (50% chance)
             var eventChance = (Math.random() * 10);
@@ -763,9 +764,22 @@ var Game = {
 
             document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
             if(nextLandmark.milesToNext==0){
-              Game.alertBox("You are now at "+landmarks[nextLandmark.nextLandmark].name+". Would you like to look around?");
+              Game.alertBox("You are now at "+landmarks[nextLandmark.landmark].name+'. Would you like to look around?');
+              document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
+              document.getElementById("oxen").src = "./img/oxen_standing.png";
               clearInterval(travelLoop);
-              Game.waitForInput(null,null,function(){Game.scenes.Landmark(landmarks[nextLandmark.nextLandmark])});
+              var validationFunc=function(input){
+                input=input.toUpperCase();
+                return input=="Y"||input=="N";
+              }
+              Game.waitForInput(null,validationFunc,function(stopAtLandmark){
+                if(stopAtLandmark.toUpperCase()=="Y"){
+                  Game.scenes.Landmark(landmarks[nextLandmark.landmark]);
+                }
+                else {
+                  Game.scenes.Journey(true);
+                }
+              });
               return;
             }
             /*set oxen animation to stopped*/
@@ -773,11 +787,26 @@ var Game = {
           }
         } // end travelFunc
 
-        var travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
-        Game.waitForInput(null,null,function(){
-          clearInterval(travelLoop);
-          Game.scenes.TrailMenu();
-        });
+        var travelLoop;
+        if(leavingLandmark){
+          var currentLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+          Game.alertBox("From "+landmarks[currentLandmark.landmark].name+" it is "+nextLandmark.milesToNext+" miles to "+landmarks[nextLandmark.landmark].name+".");
+          Game.waitForInput(null,null,function(){
+            Game.removeAlertBox();
+            travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
+            Game.waitForInput(null,null,function(){
+              clearInterval(travelLoop);
+              Game.scenes.TrailMenu();
+            });
+          });
+        }
+        else{
+          travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
+          Game.waitForInput(null,null,function(){
+            clearInterval(travelLoop);
+            Game.scenes.TrailMenu();
+          });
+        }
     },
 
     TrailMenu: function(){
