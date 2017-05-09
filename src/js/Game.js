@@ -528,6 +528,9 @@ var Game = {
 	// Select an option for crossing the river
 	CrossRiver:function(width, depth) {
 
+	console.log("Width is " + width);
+
+
 		document.getElementById("game").innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
         <p>Weather: </p>\n
@@ -552,7 +555,7 @@ var Game = {
 
       // Ford the river
       if(choice == 1){
-	  
+
         // A depth of more than 1 foot is where risk starts
         if (depth > 1) {
 
@@ -564,14 +567,14 @@ var Game = {
 			var eventResult = wagonTipOver(Game.gameCaravan);
 
 		    Game.scenes.animateRiver("ford", false);
-			setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, 4000);
+			setTimeout(function() {Game.alertBox(eventResult, Game.scenes.Journey)}, 4000);
 
 		  }
 
 		  else {
 
 		    Game.scenes.animateRiver("ford", true);
-			setTimeout(function() {Game.scenes.Journey(true)}, 4000);
+			setTimeout(function() {Game.scenes.Journey()}, 4000);
 
 		  }
 		}
@@ -589,12 +592,12 @@ var Game = {
 		  if (eventResult != null) {
 
 			Game.scenes.animateRiver("float", false);
-            Game.alertBox(eventResult, function(){Game.scenes.journey(true)});
+            Game.alertBox(eventResult, Game.scenes.journey);
 		  }
         }
 
 		Game.scenes.animateRiver("float", true);
-		Game.scenes.Journey(true);
+		Game.scenes.Journey();
       }
 
 	  // Take the ferry
@@ -612,7 +615,6 @@ var Game = {
 
 		  Game.scenes.animateRiver("ferry", true);
 		  Game.gameCaravan.money -= 50;
-		  Game.scenes.Journey(true);
 		}
       }
 
@@ -774,7 +776,7 @@ var Game = {
                 if(stopAtLandmark.toUpperCase()=="Y"){
                   Game.scenes.Landmark(landmarks[nextLandmark.landmark]);
                 }
-                else {	
+                else {
                   Game.scenes.Journey(true);
                 }
               });
@@ -845,14 +847,12 @@ var Game = {
           Game.scenes.ShowMap(Game.scenes.TrailMenu);
         else if(input==4)
           Game.scenes.ChangePace();
-		else if(input == 5)
-		  Game.scenes.ChangeRations();
-	    else if(input == 6)
-	      Game.scenes.StopToRest();
-	    else if(input == 7)
-	      Game.trading();
-		else if(input == 8)
-		  Game.fishingGame();
+		    else if(input == 5)
+		      Game.scenes.ChangeRations();
+	    	else if(input == 6)
+	    	  Game.scenes.StopToRest();
+	      else if(input == 7)
+	    	  Game.trading();
         else
           Game.scenes.TrailMenu();
       });
@@ -862,14 +862,14 @@ var Game = {
       `<div id="check_supplies" class="centered_content white_black">\n
         <p>Your Supplies</p>\n
         <ul>\n
-          <li>oxen: <span>`+ Game.gameCaravan.oxen +`</span></li>\n
-          <li>sets of clothing: <span>`+ Game.gameCaravan.clothing +`</span></li>\n
-          <li>bait: <span>`+ Game.gameCaravan.bait +`</span></li>\n
-          <li>wagon wheels: <span>`+ Game.gameCaravan.wheels +`</span></li>\n
-          <li>wagon axles: <span>`+ Game.gameCaravan.axles +`</span></li>\n
-          <li>wagon tongues: <span>`+ Game.gameCaravan.tongues +`</span></li>\n
-          <li>pounds of food: <span>`+ Game.gameCaravan.food +`</span></li>\n
-          <li>money left: <span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
+          <li>oxen<span>`+ Game.gameCaravan.oxen +`</span></li>\n
+          <li>sets of clothing<span>`+ Game.gameCaravan.clothing +`</span></li>\n
+          <li>bait<span>`+ Game.gameCaravan.bait +`</span></li>\n
+          <li>wagon wheels<span>`+ Game.gameCaravan.wheels +`</span></li>\n
+          <li>wagon axles<span>`+ Game.gameCaravan.axles +`</span></li>\n
+          <li>wagon tongues<span>`+ Game.gameCaravan.tongues +`</span></li>\n
+          <li>pounds of food<span>`+ Game.gameCaravan.food +`</span></li>\n
+          <li>money left<span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
         </ul>\n
         <p class="prompt" class="white_black">Press ENTER to continue</p>\n
       </div>\n`;
@@ -918,7 +918,6 @@ var Game = {
 		  Game.scenes.TrailMenu();
 	    }
 		else if (choice == 4) {
-			
 		  Game.scenes.PaceInfo();
 		}
 	  });
@@ -936,7 +935,7 @@ var Game = {
 		<p>Grueling - You travel about 16 hours a day, starting before sunrise and continuing until dark.` +
 		`You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely` + `
 		exhausted, and your health suffers.
-		<p class=\"prompt\">Press ENTER to continue</p>\n
+		<p class=\"prompt\">Press SPACE to continue</p>\n
       </div>`;
 
 	  Game.waitForInput(null, null, Game.scenes.ChangePace);;
@@ -1019,27 +1018,11 @@ var Game = {
   },
 
   Landmark: function(landmark){
-	 
-	Game.gameDiv.innerHTML=`
-    <div id="landmark" class="centered_content white_black">
-      You are now at `+landmark.name+`
-    </div>`;
-	 
-	// Go to river crossing menu if the landmark is a river	
- 	if (landmark.river == true) {
-		
-	  // Determine a random width and depth
-	  width = randrange(30, 50);
-	  depth = randrange(1, 5);
-	  
- 	  //Game.scenes.ArriveAtRiver(width, depth);
-	  Game.waitForInput(null,null,function(){Game.scenes.ArriveAtRiver(width, depth)});
- 	}
- 	
- 	else {  
-	  
-      Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
-	}
+    Game.gameDiv.innerHTML=`
+      <div id="landmark" class="centered_content white_black">
+        You are now at `+landmark.name+`
+      </div>`;
+    Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
    },
 
 
@@ -1095,6 +1078,14 @@ var Game = {
            Game.scenes.CheckSupply(function(){Game.scenes.LandmarkMenu(landmark)});
          else if(input==3)
            Game.scenes.ShowMap(function(){Game.scenes.LandmarkMenu(landmark)});
+        else if(input==4)
+          Game.scenes.ChangePace();
+        else if(input==5)
+          Game.scenes.ChangeRations();
+        else if(input==6)
+          Game.scenes.StopToRest();
+        else if(input==7)
+          Game.scenes.trading();
          else if(input==8)
            Game.scenes.LandmarkTalk(landmark);
         else if(input==9)
@@ -1196,7 +1187,7 @@ var Game = {
   fishingGame:function(){
     if (Game.gameCaravan.bait == 0) {
 
-	  Game.alertBox("You have no bait to fish with", Game.scenes.TrailMenu);
+	  Game.alertBox("You have no bait to fish with", Game.scenes.journey);
 	  return;
 	}
 
@@ -1209,18 +1200,18 @@ var Game = {
 	if (chanceToCatch < 6) {
 	  Game.gameCaravan.bait--;
 	  Game.gameCaravan.food += weights[fishNum];
-	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.TrailMenu);
+	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.Journey);
 	  return;
 	}
 
 	else if (chanceToCatch < 8) {
 	  Game.gameCaravan.bait--;
-	  Game.alertBox("The fish took your bait and escaped", Game.scenes.TrailMenu);
+	  Game.alertBox("The fish took your bait and escaped", Game.scenes.Journey);
 	  return;
 	}
 
 	else {
-	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.TrailMenu);
+	  Game.alertBox("No luck, the fish aren't biting around here", Game.scenes.Journey);
 	  return;
     }
   },
