@@ -1,9 +1,20 @@
 var myGamePiece;
 var myObstacles=[];
+var infopage;
+ var GameCaravan= new Caravan();
+ var redGamePiece;
+ var gameDiv=document.getElementById("game");
 function startGame() {
-    
+   
+GameCaravan.wheels=3;
+GameCaravan.axles=3;
+GameCaravan.bait =5;
+ GameCaravan.food=100;
+ GameCaravan.tongues=3;
+ GameCaravan.clothing=400;
     //myGamePiece=new component(30,30,"wagonOnRiver.gif",10,120,"image");
-    
+    //infopage = new component("10px", "Consolas", "black", 10, 40, "text");
+    redGamePiece = new component(10, 10, "red", 10, 10,"block");
     myGameArea.start();
     myGamePiece=new component(80,30,"../img/wagonOnRiver.gif",20,70,"image");
     //myObstacle  = new component(20, 10, "../img/rock.gif", 200, 100,"image");   
@@ -30,8 +41,13 @@ var myGameArea = {
             myGameArea.key = false;
         })
         },
+    resume: function(){
+    	myObstacles=[];
+    	this.interval = setInterval(updateGameArea, 20);
+    },
     clear : function() {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        
     },
     stop : function() {
         clearInterval(this.interval);
@@ -52,8 +68,12 @@ function component(width, height, color, x, y, type) {
   this.y = y;
   this.update = function() {
     ctx = canvas.getContext("2d");
-
-    if (type == "image") {
+	if (this.type == "text") {
+		ctx.font = this.width + " " + this.height;
+      	ctx.fillStyle = color;
+		ctx.fillText(this.text, this.x, this.y);
+	}
+   else if (type == "image") {
       ctx.drawImage(this.image,
         this.x,
         this.y,
@@ -90,7 +110,8 @@ function updateGameArea() {
 
     //myGameArea.clear();
     myGamePiece.speedX = 0;
-    myGamePiece.speedY = 0; 
+    myGamePiece.speedY = 0;
+    myGameArea.frameNo+=1; 
     if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
     if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
     if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
@@ -98,12 +119,20 @@ function updateGameArea() {
     var x, y,minHeight, maxHeight;
     for (i = 0; i < myObstacles.length; i += 1) {
         if (myGamePiece.crashWith(myObstacles[i])) {
+ 			console.log("test");
+ 			
+           alert("You have lost "+destroyRandomSupplies(GameCaravan));
+            //infopage.update();
             myGameArea.stop();
+            myGameArea.clear();
+            myGamePiece.newPos();
+    		myGamePiece.update();
+            myGameArea.resume();
+           
             return;
         }
     }
     myGameArea.clear();
-    myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(150)||everyinterval(100)) {
         x = canvas.width;
         minHeight = 30;
@@ -116,6 +145,7 @@ function updateGameArea() {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
+
 
     myGamePiece.newPos();
     myGamePiece.update();
