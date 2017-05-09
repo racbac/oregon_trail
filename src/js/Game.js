@@ -1087,16 +1087,22 @@ var Game = {
       var ferryImg = new Image(); ferryImg.src = "./img/wagon_ferry.png";
       var canvas = document.getElementById("river_animation");
       var ctx = canvas.getContext("2d");
-      canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
+      var width = canvas.width = canvas.clientWidth; var height = canvas.height = canvas.clientHeight;
+      var hypo = Math.sqrt(width * width + height * height);
 
       var grd; 
       var bank1 = -40; var bank2 = 75; var end = (success ? 30 : 0);
-      var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
       var BLUE = "#42B2FF"; var TAN = "#F6B68E";
 
-      // drawing  the river at different stages in crossing
-      var drawRiver = function(pct1, pct2) {
-        grd = ctx.createLinearGradient(0,0, hypo / 2, hypo * 0.866);
+            // drawing  the river at different stages in crossing
+      var drawRiver = function(pct1, pct2, angle) {
+        var rad = angle % 90 * Math.PI / 180;
+        var hypo2 = hypo * Math.cos(Math.abs(rad - Math.atan(height / width)));
+        if (angle > 90) {
+          grd = ctx.createLinearGradient(width, 0, hypo2 * Math.sin(rad), hypo2 * Math.cos(rad));
+        } else {
+          grd = ctx.createLinearGradient(0, 0, hypo2 * Math.cos(rad), hypo2 * Math.sin(rad));
+        }
         grd.addColorStop(0, TAN);
         grd.addColorStop(pct1 < 0? pct1 = 0 : pct1/=100, TAN); grd.addColorStop(pct1, BLUE);
         grd.addColorStop(pct2 > 100 ? pct2 = 1 : pct2/=100, BLUE); grd.addColorStop(pct2, TAN);
@@ -1117,27 +1123,27 @@ var Game = {
 
       //  draw the wagon going across the river
       imageObj.onload = function() {
-        drawRiver(bank1, bank2);
+        drawRiver(bank1, bank2, 60);
         ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377 );
         setTimeout(function() { // wait a second before moving
           var progress = setInterval(function() { // go across the river
             if (bank1 == end) {
                   clearInterval(progress);
                 if (!success ) { // if failed to cross, show sinking
-                  bank1=0; bank2=40;
+                  bank1=0; bank2=60;
                   TAN = BLUE; BLUE = "rgba(0, 0, 0, 0)";
                   var progress2 = setInterval(function() {
-                      if (bank2 == 37) {
+                      if (bank2 == 40) {
                         clearInterval(progress2);
                       } else {
                         ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
-                        drawRiver(bank1, bank2);
+                        drawRiver(bank1, bank2, 120);
                         bank2--;
                       }
                   }, 60);
                 }
             } else {
-                drawRiver(bank1, bank2);
+                drawRiver(bank1, bank2,60);
                 ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
                 bank1++, bank2++;
             }
