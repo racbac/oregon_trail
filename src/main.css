@@ -168,7 +168,7 @@ ol.col2 span, ul.col2 span {
     height: 55%;
 }
 
-#river_crossing { width: 50%; }
+#river_crossing > div { width: 50%; }
 
 
 #map { background-image: url("img/map.png"); }

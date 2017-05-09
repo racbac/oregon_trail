@@ -159,12 +159,11 @@ Caravan.prototype.addPerson = function(person) {
 Caravan.prototype.removePerson = function(person) {
 
 	var familySize = this.family.length;
-
-	for (var i = 0; i < familySize; i++) {
-		if (this.family[i].name == person.name) {
-			this.family.splice(i,1);
-		}
-	}
+    var i = 0;
+	while (family[i].name != person.name) {
+        i++
+    }
+	this.family.splice(i, 1);
 }
 
 Caravan.prototype.getMph = function() {

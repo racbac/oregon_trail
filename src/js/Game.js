@@ -536,8 +536,8 @@ var Game = {
         <p>You may:</p>\n
         <ol>\n
           <li>attempt to ford the river</li>\n
-          <li>caulk the wagon and float it accross</li>\n
-          <li>take a ferry accross</li>\n
+          <li>caulk the wagon and float it across</li>\n
+          <li>take a ferry across</li>\n
           <li>wait to see if conditions improve</li>\n
           <li>get more information</li>\n
         </ol>\n
@@ -549,107 +549,73 @@ var Game = {
     }
 
     Game.waitForInput(null,validationFunc,function(choice){
-
       // Ford the river
+      var eventResult; var success;
       if(choice == 1){
-	  
         // A depth of more than 1 foot is where risk starts
         if (depth > 1) {
-
           // Every 10th of a foot adds a 5% chance of disaster
           var accidentChance = (depth - 1) * 50;
-          var chance = randrange(1, 100);
-          if (chance < accidentChance) {
-
-			var eventResult = wagonTipOver(Game.gameCaravan);
-
-		    Game.scenes.animateRiver("ford", false);
-			setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, 4000);
-
-		  }
-
-		  else {
-
-		    Game.scenes.animateRiver("ford", true);
-			setTimeout(function() {Game.scenes.Journey(true)}, 4000);
-
-		  }
-		}
+        
+          if (randrange(1, 100) < accidentChance) {
+			      eventResult = wagonTipOver(Game.gameCaravan); success = false;
+		      } else {
+		        eventResult = "You crossed the river safely."; success = true;
+          }
+		    }
+        var time = Game.scenes.animateRiver("ford", success);
+        setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
       }
 
-      //Float accross the river
+      //Float across the river
       else if(choice ==2){
+        var success = true;
+        if (randrange(1, 100) < 30) {
+		      var eventResult = wagonTipOver(Game.gameCaravan) || "You crossed the river safely.";
+          if (eventResult != null) {
+            success = false;
+          }
+        }
+        var time = Game.scenes.animateRiver("float", success);
+        setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
+      }
 
-        var accidentChance = randrange(1, 100);
-
-        if (accidentChance < 30) {
-
-		  var eventResult = wagonTipOver(Game.gameCaravan);
-
-		  if (eventResult != null) {
-
-			Game.scenes.animateRiver("float", false);
-            Game.alertBox(eventResult, function(){Game.scenes.journey(true)});
-		  }
+	    // Take the ferry
+      else if(choice == 3){
+        if (randrange(1, 5) <= 2) {
+          Game.passDays(1);
+          Game.alertBox("No ferry comes around today. Lose one day waiting", Game.scenes.CrossRiver);
         }
 
-		Game.scenes.animateRiver("float", true);
-		Game.scenes.Journey(true);
+        else {
+          Game.gameCaravan.money -= 50;
+          var time = Game.scenes.animateRiver("ferry", true);
+          setTimeout(function() {Game.alertBox("The ferry got you across safely.", function(){Game.scenes.Journey(true)})}, time + 500);
+        }
       }
 
-	  // Take the ferry
-      else if(choice == 3){
-
-		var ferryAvailable = randrange(1, 5);
-
-		if (ferryAvailable <= 2) {
-
-		  Game.passDays(1);
-		  Game.alertBox("No ferry comes around today. Lose one day waiting", Game.scenes.CrossRiver);
-		}
-
-		else {
-
-		  Game.scenes.animateRiver("ferry", true);
-		  Game.gameCaravan.money -= 50;
-		  Game.scenes.Journey(true);
-		}
-      }
-
-	  //let a day pass and change the width/depth slightly
+	    //let a day pass and change the width/depth slightly
       else if(choice == 4) {
 
-		// See if it gets deeper or shallower
-		var deeper = randrange(1, 10);
+        // See if it gets deeper or shallower
+        if (randrange(1, 10) > 5) {
+          // Round to 2 decimal places
+          var newDepth = depth - Math.round(Math.random()) / 100;
+        } else {
+          var newDepth = depth + Math.round(Math.random()) / 100;
+        }
 
-		if (deeper > 5) {
+        if (randrange(1, 10) > 5) {
+          var newWidth = width - Math.round(Math.random()) / 100;
+        } else {
+          var newWidth = width + Math.round(Math.random()) / 100;
+        }
 
-		  // Round to 2 decimal places
-		  var newDepth = depth - Math.round(Math.random()) / 100;
-		}
-
-		else {
-
-		  var newDepth = depth + Math.round(Math.random()) / 100;
-		}
-
-		var wider = randrange(1, 10);
-
-		if (wider > 5) {
-
-		  var newWidth = width - Math.round(Math.random()) / 100;
-		}
-
-		else {
-
-		  var newWidth = width + Math.round(Math.random()) / 100;
-		}
-
-		Game.passDays(1);
-		Game.scenes.CrossRiver(newWidth, newDepth);
+        Game.passDays(1);
+        Game.scenes.CrossRiver(newWidth, newDepth);
       }
 
-	  // Show information
+      // Show information
       else if(choice == 5) {
 
       }
@@ -1115,15 +1081,18 @@ var Game = {
 
     animateRiver: function(method, success) {
       // setup
-      Game.gameDiv.innerHTML = `<div id="river_crossing" class="centered_content">\n<div class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>\n
-`;
+      Game.gameDiv.innerHTML = `<div id="river_crossing" class="centered_content">\n<div class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>\n`;
+      var fordImg = new Image(); fordImg.src = './img/wagon_ford.png';
+      var floatImg = new Image(); floatImg.src = "./img/wagon_caulk.png";
+      var ferryImg = new Image(); ferryImg.src = "./img/wagon_ferry.png";
       var canvas = document.getElementById("river_animation");
       var ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
 
-      var grd; var bank1 = -40; var bank2 = 75;
+      var grd; 
+      var bank1 = -40; var bank2 = 75; var end = (success ? 30 : 0);
       var width = canvas.clientWidth; var height = canvas.clientHeight; var hypo = 0.866 * height + 0.5 * width;
-      const BLUE = "#42B2FF"; const TAN = "#F6B68E";
+      var BLUE = "#42B2FF"; var TAN = "#F6B68E";
 
       // drawing  the river at different stages in crossing
       var drawRiver = function(pct1, pct2) {
@@ -1137,13 +1106,13 @@ var Game = {
       };
 
       // set and draw graphic for method of travel
-      var imageObj = new Image();
+      var imageObj;
       if (method == "ford") {
-        imageObj.src = './img/wagon_ford.png';
-      } else if (method == "caulk") {
-        imageObj.src = './img/wagon_caulk.png';
+        imageObj = fordImg;
+      } else if (method == "float") {
+        imageObj = floatImg;
       } else if (method == "ferry") {
-        imageObj.src = './img/wagon_ferry.png';
+        imageObj = ferryImg;
       }
 
       //  draw the wagon going across the river
@@ -1151,9 +1120,22 @@ var Game = {
         drawRiver(bank1, bank2);
         ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377 );
         setTimeout(function() { // wait a second before moving
-          var progress = setInterval(function() { // go across the river until mostly across
-            if (bank1 == 25) {
-                clearInterval(progress);
+          var progress = setInterval(function() { // go across the river
+            if (bank1 == end) {
+                  clearInterval(progress);
+                if (!success ) { // if failed to cross, show sinking
+                  bank1=0; bank2=40;
+                  TAN = BLUE; BLUE = "rgba(0, 0, 0, 0)";
+                  var progress2 = setInterval(function() {
+                      if (bank2 == 37) {
+                        clearInterval(progress2);
+                      } else {
+                        ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
+                        drawRiver(bank1, bank2);
+                        bank2--;
+                      }
+                  }, 60);
+                }
             } else {
                 drawRiver(bank1, bank2);
                 ctx.drawImage(imageObj, width / 4, canvas.clientHeight / 4, width * 0.5, width * 0.3377);
@@ -1162,6 +1144,7 @@ var Game = {
           }, 60);
         }, 1000);
       }
+      return (end - bank1) * 60 + 1000;
     }
   },
 
