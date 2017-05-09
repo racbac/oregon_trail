@@ -56,9 +56,9 @@ function Caravan() {
     this.bait = 0;
 
 
-	
-	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
-	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
+
+	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis",
+	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace",
 	"Mr Anderson"];
 
 }
@@ -67,21 +67,21 @@ Caravan.prototype.updateFood = function() {
     var eaten = this.rations.pounds * this.family.length;
     if (this.food >= eaten) {
         this.food -= this.rations.pounds * this.family.length;
-    } else { 
+    } else {
         this.food = 0;
     }
     return this.food;
 }
 
 Caravan.prototype.generateRandomName = function() {
-	
+
 	// Pick a name from the list
 	var randomIndex = Math.floor(Math.random() * this.randomNames.length);
 	var chosenName = this.randomNames[randomIndex];
-	
+
 	// Remove the name from the array so there are no duplicates
 	this.randomNames.splice(randomIndex, 1);
-	
+
 	return chosenName;
 }
 
@@ -170,7 +170,7 @@ Caravan.prototype.removePerson = function(person) {
 Caravan.prototype.getMph = function() {
     var mph;
     if (this.oxen > 0) {
-        mph = (this.oxen - this.injured_oxen) * 0.625 + this.injured_oxen * 0.5; 
+        mph = (this.oxen - this.injured_oxen) * 0.625 + this.injured_oxen * 0.5;
     } else {
         mph = 3;
     }
@@ -186,20 +186,20 @@ Caravan.prototype.sickenOxen = function() {
 }
 
 Caravan.prototype.trade=function(take,takeamt,give,giveamt){
-    if (giveamt+this.give<=MAXIMUM.give){
-        this.give+=giveamt;
+    if (giveamt+this[give]<=MAXIMUM[give.toUpperCase()]){
+        this[give]+=giveamt;
     }else{
-        var amt=MAXIMUM.give-this.give;
-        this.give+=amt;
+        var amt=MAXIMUM[give.toUpperCase()]-this[give];
+        this[give]+=amt;
     }
-    this.take-=takeamt;
+    this[take]-=takeamt;
 }
 
 Caravan.prototype.updateHealth = function() {
     // percentage that each person will sicken or heal
     var factor = this.pace.chance + (this.food > 0 ? this.rations.chance : 0.6);
     var died = [];
-    for (var i = 0; i < this.family.length; i++) { 
+    for (var i = 0; i < this.family.length; i++) {
         // random amount to sicken/heal, modified by healing rate
         this.family[i].heal(randrange(10,30) * (1 - factor));
         var dead = this.family[i].sicken(randrange(10,30) * factor);

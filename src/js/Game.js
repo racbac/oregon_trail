@@ -844,13 +844,13 @@ var Game = {
         else if(input==3)
           Game.scenes.ShowMap(Game.scenes.TrailMenu);
         else if(input==4)
-          Game.scenes.ChangePace();
+          Game.scenes.ChangePace(Game.scenes.TrailMenu);
 	else if(input == 5)
-	  Game.scenes.ChangeRations();
+	  Game.scenes.ChangeRations(Game.scenes.TrailMenu);
 	else if(input == 6)
-	  Game.scenes.StopToRest();
+	  Game.scenes.StopToRest(Game.scenes.TrailMenu);
 	else if(input == 7)
-	  Game.trading();
+	  Game.trading(Game.scenes.TrailMenu);
 	else if(input == 8)
 	  Game.fishingGame();
         else
@@ -881,7 +881,8 @@ var Game = {
     },
 
 	// Change the pace that the caravan is travelling at
-	ChangePace: function() {
+	ChangePace: function(returnScene) {
+    returnScene=returnScene||Game.scenes.TrailMenu;
 	  Game.gameDiv.innerHTML =
 	  `<div id="check_supplies" class="centered_content white_black">\n
 	    <p>Change Pace\n
@@ -905,17 +906,17 @@ var Game = {
 	    if (choice == 1) {
 
 	      Game.gameCaravan.pace = PACE.STEADY;
-		  Game.scenes.TrailMenu();
+		  returnScene();
 	    }
 	    else if (choice == 2) {
 
 		  Game.gameCaravan.pace = PACE.STRENUOUS;
-		  Game.scenes.TrailMenu();
+		  returnScene();
 	    }
 	    else if (choice == 3) {
 
 		  Game.gameCaravan.pace = PACE.GRUELING;
-		  Game.scenes.TrailMenu();
+		  returnScene();
 	    }
 		else if (choice == 4) {
 		  Game.scenes.PaceInfo();
@@ -943,8 +944,8 @@ var Game = {
 	},
 
 	// Change the amount of rations
-	ChangeRations: function() {
-
+	ChangeRations: function(returnScene) {
+    returnScene=returnScene||Game.scenes.TrailMenu;
 	  Game.gameDiv.innerHTML =
 	  `<div id="check_supplies" class="centered_content white_black">\n
 	    <p>Change Food Rations\n
@@ -967,24 +968,24 @@ var Game = {
 	    if (choice == 1) {
 
 	      Game.gameCaravan.rations = RATIONS.FILLING;
-		  Game.scenes.TrailMenu();
+		  returnScene();
 	    }
 	    else if (choice == 2) {
 
 		  Game.gameCaravan.rations = RATIONS.MEAGER;
-		  Game.scenes.TrailMenu();
+		  returnScene();
 	    }
 	    else if (choice == 3) {
 
 		  Game.gameCaravan.rations = RATIONS.BAREBONES;
-		  Game.scenes.TrailMenu();
+		  returnScene();
 	    }
 	  });
 	},
 
 	// Ask the player how many days to rest
-	StopToRest: function() {
-
+	StopToRest: function(returnScene) {
+    returnScene=returnScene||Game.scenes.TrailMenu;
 	  document.getElementById("input").remove();
 	  Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">How many days would you like to rest? <span id="input"></span></p>\n`;
 
@@ -1013,7 +1014,7 @@ var Game = {
         }, 1000)
       }
       restADay();
-      Game.scenes.TrailMenu();
+      returnScene();
     })
   },
 
@@ -1022,20 +1023,20 @@ var Game = {
       <div id="landmark" class="centered_content white_black">
         You are now at `+landmark.name+`
       </div>`;
-	  
-    // Go to river crossing menu if the landmark is a river	
+
+    // Go to river crossing menu if the landmark is a river
     if (landmark.river == true) {
-	    
+
        // Determine a random width and depth
        width = randrange(30, 50);
        depth = randrange(1, 5);
-   
+
        //Game.scenes.ArriveAtRiver(width, depth);
        Game.waitForInput(null,null,function(){Game.scenes.ArriveAtRiver(width, depth)});
     }
- 	
-    else {  
-	    
+
+    else {
+
       Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
     }
   },
@@ -1049,8 +1050,8 @@ var Game = {
          <div id="date" >`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
 
          <div id="conditions">\n
-           Weather: `+ Game.weather +`<br>\n
-           Health: `+ Game.gameCaravan.health.string +`<br>\n
+           Weather: <span id = "conditions_weather">`+ Game.weather +`</span><br>\n
+           Health: <span id = "conditions_health">`+ Game.gameCaravan.health.string +`</span><br>\n
            Pace: `+ Game.gameCaravan.pace.string +`<br>\n
            Rations: `+ Game.gameCaravan.rations.string +`<br>\n
          </div>\n
@@ -1086,20 +1087,21 @@ var Game = {
          }
        }
        Game.waitForInput(null,validationFunc,function(input){
+         var returnScene=function(){Game.scenes.LandmarkMenu(landmark)};
          if(input==1)
            Game.scenes.Journey(true);
          else if (input==2)
-           Game.scenes.CheckSupply(function(){Game.scenes.LandmarkMenu(landmark)});
+           Game.scenes.CheckSupply(returnScene);
          else if(input==3)
-           Game.scenes.ShowMap(function(){Game.scenes.LandmarkMenu(landmark)});
+           Game.scenes.ShowMap(returnScene);
         else if(input==4)
-          Game.scenes.ChangePace();
+          Game.scenes.ChangePace(returnScene);
         else if(input==5)
-          Game.scenes.ChangeRations();
+          Game.scenes.ChangeRations(returnScene);
         else if(input==6)
-          Game.scenes.StopToRest();
+          Game.scenes.StopToRest(returnScene);
         else if(input==7)
-          Game.scenes.trading();
+          Game.trading(returnScene);
          else if(input==8)
            Game.scenes.LandmarkTalk(landmark);
         else if(input==9)
@@ -1229,26 +1231,41 @@ var Game = {
 	  return;
     }
   },
-trading:function(){
+trading:function(returnScene){
+    returnScene=returnScene||Game.scenes.TrailMenu;
+    var div=Game.gameDiv.children[0];
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
-    var randomIndex1= Math.floor(Math.random() * items.length);
-    var randomIndex2= Math.floor(Math.random() * items.length);
+    var randomIndex1= Math.floor(Math.random() * itemNames.length);
+    var randomIndex2= Math.floor(Math.random() * itemNames.length);
     while(randomIndex1==randomIndex2){
-      randomIndex2=Math.floor(Math.random() * items.length);
+      randomIndex2=Math.floor(Math.random() * itemNames.length);
     }
-    var amtwanted=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex1])+1;
-    var amttrade=Math.floor(Math.random() * MAXIMUM.upitems[randomIndex2])+1;
-    if(amtwanted>Game.gameCaravan.items[randomIndex1]){
-      Game.gameDiv.innerHTML="You meet a trader who wants"+
+    var amtwanted=Math.floor(Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1;
+    var amttrade=Math.floor(Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1;
+    if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
+      div.innerHTML+="<p>You meet a trader who wants "+
       amtwanted+" "+itemNames[randomIndex1]+
-      ". You don't have this.";
+      ". You don't have this.</p>";
+      Game.waitForInput(null,null,returnScene);
     }else{
-      Game.gameDiv.innerHTML="You meet a trader who wants"+
-      amtwanted+" "+Game.gameCaravan.items[randomIndex1]+
-      ". He will trade you"+amttrade+" "+itemNames[randomIndex2]+".";
-      var item1=items[randomIndex1];
-      var item2=items[randomIndex2];
-      Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
+      document.getElementById("input").removeAttribute("id");
+      div.innerHTML+="<p>You meet a trader who wants "+
+      amtwanted+" "+itemNames[randomIndex1]+
+      ". He will trade you "+amttrade+" "+itemNames[randomIndex2]+". "+
+      'Do you wish to trade?(Y/N)<span id="input"></span></p>';
+      var item1=itemNames[randomIndex1];
+      var item2=itemNames[randomIndex2];
+      var tradeFunc=function(input){
+        if(input.toUpperCase()=="Y"){
+          Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
+        }
+        returnScene();
+      };
+      var validationFunc=function(input){
+        input=input.toUpperCase();
+        return input=="N"||input=="Y";
+      }
+      Game.waitForInput(null,validationFunc,tradeFunc);
     }
   },
   getTombstone : function() {
