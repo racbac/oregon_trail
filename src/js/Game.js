@@ -653,69 +653,101 @@ var Game = {
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
         document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         document.getElementById("miles").innerHTML=Game.miles;
-        var timeOfDay=0;
+        var timeOfDay=0
+          
+        var updateDay = function() {
+          timeOfDay=0;
+          Game.date.setDate(Game.date.getDate()+1);
+          var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+          /*update status and html*/
+          document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+          document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
+          document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
+          document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
+          document.getElementById("miles").innerHTML =  Game.miles;// += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
+          document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
+        };
+
+        var examineTombstone = function(tombstoneMsg) {
+          // did we pass a tombstone?
+          if (tombstoneMsg != "null") {
+            clearInterval(travelLoop);
+            Game.alertBox("You passed a tombstone. Would you like to examine it?");
+            document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
+            var validationFunc=function(input){
+              input=input.toUpperCase();
+              return input=="Y"||input=="N";
+            }
+            Game.waitForInput(null,validationFunc,function(examine){
+              if(examine.toUpperCase()=="Y"){
+                Game.scenes.Tombstone(tombstoneMsg);
+              }
+              else {	
+                travelFunc();
+              }
+            });
+          } else {
+            travelFunc();
+          }
+        };
+
+        var checkDeath = function(callback) {
+          // see if anyone died
+          var deaths = Game.gameCaravan.updateHealth();
+          for (var i in deaths) {
+            clearInterval(travelLoop);
+            Game.alertBox(deaths[i] + " has died.", callback);
+          }
+          // see if everyone's dead
+          if (Game.gameCaravan.family.length == 0) {
+            Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+          }
+          callback();
+        };
+
+        var checkEvent = function(callback) {
+          // see if random event happened (50% chance)
+          var eventChance = (Math.random() * 10);
+          if (eventChance < 5) {
+            var eventResult = randomEvent(Game.gameCaravan);
+
+            // Random event will return null if event was inapplicable
+            if (eventResult != null) {
+              clearInterval(travelLoop);
+              Game.alertBox(eventResult, function() {
+                if (eventResult == "Took the wrong trail, lose 3 days") {
+                  var losedays = setInterval(function(){
+                    Game.date.setDate(Game.date.getDate()+1);
+                    document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
+                    document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
+                    document.getElementById("food").innerHTML = Game.gameCaravan.updateFood();
+                  }, 800);
+                  setTimeout(function() {
+                    clearInterval(losedays);
+                    callback();
+                  }, 2400);
+                } else {
+                  callback();
+                }
+              });
+            }
+          } else {
+            callback();
+          }
+        };
+
         var travelFunc=function(){//called once per game Hour
           timeOfDay++;
-
-          if(timeOfDay==24){//once a day
-
-            Game.date.setDate(Game.date.getDate()+1);
-            timeOfDay=0;
-
-            var deaths = Game.gameCaravan.updateHealth();
-
-            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
-            /*update status and html*/
-            document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-            document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
-            document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
-            document.getElementById("food").innerHTML=Game.gameCaravan.updateFood();
-            document.getElementById("miles").innerHTML =  Game.miles;// += Math.floor(Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate);
-            document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
-
-            // see if random event happened (50% chance)
-            var eventChance = (Math.random() * 10);
-            if (eventChance < 5) {
-              var eventResult = randomEvent(Game.gameCaravan);
-
-              // Random event will return null if event was inapplicable
-              if (eventResult != null) {
-                clearInterval(travelLoop);
-                Game.alertBox(eventResult, function() {
-                  if (eventResult == "Took the wrong trail, lose 3 days") {
-                    var losedays = setInterval(function(){
-                      Game.date.setDate(Game.date.getDate()+1);
-                      document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-                      document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
-                      document.getElementById("food").innerHTML = Game.gameCaravan.updateFood();
-                    }, 800);
-                    setTimeout(function() {
-                      clearInterval(losedays);
-                      Game.scenes.Journey();
-                    }, 2400);
-                  } else {
-                    Game.scenes.Journey();
-                  }
-                });
-              }
-			      }//eventChance
-
-            // see if anyone died
-            for (var i in deaths) {
-
-              clearInterval(travelLoop);
-              Game.alertBox(deaths[i] + " has died.", Game.scenes.Journey);
-            }
-            // see if everyone's dead
-            if (Game.gameCaravan.family.length == 0) {
-              Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
-            }
-
-          }// end timeofday24
-
-
-          else if(timeOfDay==5){//start traveling at 5am
-            /*set oxen animation to running*/
+          if(timeOfDay==24){ // at midnight/morning
+            updateDay();
+            checkEvent(function(){
+              checkDeath(function(){
+                Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, examineTombstone);
+              })
+            });
+          }
+          
+          else if(timeOfDay==5){ //start traveling at 5am
             document.getElementById("oxen").src="./img/oxen_walking.gif";
           }
 
@@ -771,6 +803,16 @@ var Game = {
             Game.scenes.TrailMenu();
           });
         }
+    },
+
+    Tombstone : function(message) {
+      Game.gameDiv.innerHTML=`
+        <div id="tombstone" class="centered_content">\n
+          <img src='./img/tombstone.png'/>
+          <p class="prompt" class="white_black">Press ENTER to continue</p>\n
+        </div>\
+      `;
+      Game.waitForInput(null, null, Game.scenes.Journey(false));
     },
 
     TrailMenu: function(){
@@ -1235,21 +1277,15 @@ trading:function(){
       Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
     }
   },
-  getTombstone : function() {
+  getTombstone : function(startMi, endMi, callback) {
     var xhttp = new XMLHttpRequest();
     var text = "";
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
-        text += this.responseText;
-        if (text != "NULL"){
-          Game.alertBox("You passed a tombstone. Would you like to examine it?", function() {
-
-            Game.scenes.Journey();
-          });
-        }
+        callback(this.responseText);
       }
     };
-    xhttp.open("GET", "getTombstone.php", true);
+    xhttp.open("GET", "./php/getTombstone.php?startMi="+ startMi +"&endMi=" + endMi, true);
     xhttp.send();
   }
 };
