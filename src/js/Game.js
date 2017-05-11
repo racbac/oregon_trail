@@ -862,6 +862,55 @@ var Game = {
 
         if(leavingLandmark){
           var currentLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+          if (Object.keys(landmarks[currentLandmark.landmark].routes).length>1){
+            var list="";
+            if(currentLandmark.landmark=="SouthPass")
+              list= `
+                <ol>
+                  <li>head for Fort Bridger</li>
+                  <li>head for Green River Crossing</li>
+                  <li>see the map</li>
+                <ol>`;
+            else if(currentLandmark.landmark=="BlueMountains")
+              list=`
+              <ol>
+                <li>head for TheDalles</li>
+                <li>head for FortWallaWalla</li>
+                <li>see the map</li>
+              </ol>
+            `;
+
+            Game.alertBox('The trail divides here. You may:'+list+'What is your choice?<span id="input"></span>');
+            var validationFunc=function(input){
+              return input==1||input==2||input==3;
+            }
+            Game.waitForInput(null,validationFunc,function(choice){
+              Game.removeAlertBox();
+              if(choice==1){
+                if(currentLandmark.landmark=="SouthPass")
+                  branch[0]=0;
+                else {
+                  branch[1]=0;
+                }
+              }
+              else if(choice==2){
+                if(currentLandmark.landmark=="SouthPass")
+                  branch[0]=1;
+                else {
+                  branch[1]=1;
+                }
+              }
+              else if(choice==3){
+                Game.scenes.ShowMap(function(){Game.scenes.journey(true)});
+                return;
+              }
+              travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
+              Game.waitForInput(null,null,function(){
+                clearInterval(travelLoop);
+                Game.scenes.TrailMenu();
+              });
+            });
+          }//if trail branches
           Game.alertBox("From "+landmarks[currentLandmark.landmark].name+" it is "+nextLandmark.milesToNext+" miles to "+landmarks[nextLandmark.landmark].name+".");
           Game.waitForInput(null,null,function(){
             Game.removeAlertBox();
