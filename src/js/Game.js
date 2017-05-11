@@ -669,7 +669,7 @@ var Game = {
                   Game.scenes.Landmark(landmarks[nextLandmark.landmark]);
                 }
                 else {	
-                  callback();
+                  Game.scenes.Journey(true);
                 }
               });
               return;
@@ -684,7 +684,7 @@ var Game = {
           
           nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
           Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
-          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1], leavingLandmark);
 
           /*update status and html*/
           document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
@@ -767,21 +767,22 @@ var Game = {
         };
 
         var travelFunc=function(){//called once per game Hour
+          var checkStatus = false;
           Game.waitForInput(null,null,function(){
-            Game.scenes.TrailMenu();
+            checkStatus = true
           });
-          updateDay();
           // travel
           document.getElementById("oxen").src="./img/oxen_walking.gif";
           setTimeout(function() {
             document.getElementById("oxen").src = "./img/oxen_standing.png";
+            updateDay();
             checkEvent(function(){
               checkDeath(function(){
                 Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, function(message) {
                   examineTombstone(message, function(){
                     checkLandmark(function() {
                       setTimeout(function(){
-                        travelFunc();
+                        checkStatus ? Game.scenes.TrailMenu() : travelFunc();
                       }, 1000);
                     });
                   })
