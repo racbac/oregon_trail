@@ -167,9 +167,15 @@ function updateGameArea() {
     	dock.x+=-1;
     	dock.update();
     	if (myGamePiece.crashWith(dock)){
+    		myGamePiece.x=20;
+            myGamePiece.y=70;
     	alert("you win!")
     	}
     }
+        if(myGameArea.frameNo==1500){
+        	alert("you went to far!");
+        	myGameArea.stop();
+        }
     
     
     botborder.update();
