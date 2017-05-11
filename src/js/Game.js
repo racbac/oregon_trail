@@ -743,10 +743,10 @@ var Game = {
             // see if everyone's dead
             if (Game.gameCaravan.family.length == 0) {
               Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
-			  
-			  
-			  
-			  
+
+
+
+
             }
 
           }// end timeofday24
@@ -1023,9 +1023,15 @@ var Game = {
   },
 
   Landmark: function(landmark){
-    Game.gameDiv.innerHTML=`
+    Game.gameDiv.innerHTML=
+    `
       <div id="landmark" class="centered_content white_black">
-        You are now at `+landmark.name+`
+        <img src="`+landmark.img+`" style="width:100%; height:70%;">
+        <div style="background-color:white; color:black; width: 70%;text-align:center;">
+          <p>`+landmark.name+`</p>
+          <p>`+MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</p>
+        </div>
+        <p>Press ENTER to continue</p>
       </div>`;
 
     // Go to river crossing menu if the landmark is a river
@@ -1290,18 +1296,18 @@ trading:function(returnScene){
     xhttp.send();
   },
   setTombstone : function() {
-	  
+
 	var name = Game.gameCaravan.family[0];
 	var date = Game.date;
 	var distance = Game.miles;
 	Game.dialogBox("You and the rest of your caravan are dead. What is your epitaph?");
-	
+
 	document.getElementById("input").remove();
-	
+
 	var epitaphInput = document.createElement('div');
-	
+
 	document.getElementById("DialogBox").innerHTML += `<br>`;
-	document.getElementById("DialogBox").innerHTML += `<br>`;	
+	document.getElementById("DialogBox").innerHTML += `<br>`;
 	document.getElementById("DialogBox").appendChild(epitaphInput);
 	epitaphInput.setAttribute("id", "input");
 
@@ -1310,22 +1316,22 @@ trading:function(returnScene){
 		if (choice == "") {
 			Game.alertBox("Please enter something for your final words", Game.setTombStone);
 		}
-		
+
 		else {
 			var epitaph = choice;
 		}
-		
+
 	})
-	
+
 	var xhttp = new XMLHttpRequest();
 	xhttp.open("POST", "set_tombstone.php", true);
 	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	xhttp.send("name="+ name +"&distance=" + distance + "&epitaph" + epitaph);
-	  
+
 	//xhttp.onreadystatechange = function() {
-	  
+
 	//}
-	
+
   }
 };
 
