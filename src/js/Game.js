@@ -684,7 +684,7 @@ var Game = {
           
           nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
           Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
-          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1], leavingLandmark);
+          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
 
           /*update status and html*/
           document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
@@ -728,8 +728,9 @@ var Game = {
           else if (deaths.length > 0) { // see if anyone died
             for (var i in deaths) {
               Game.alertBox(deaths[i] + " has died.");
-              Game.waitForInput(null, null, callback);
             }
+            Game.removeAlertBox();
+            Game.waitForInput(null, null, callback);
           } else { // no one died
             callback();
           }
@@ -772,24 +773,24 @@ var Game = {
             checkStatus = true
           });
           // travel
-          document.getElementById("oxen").src="./img/oxen_walking.gif";
-          setTimeout(function() {
-            document.getElementById("oxen").src = "./img/oxen_standing.png";
-            updateDay();
-            checkEvent(function(){
-              checkDeath(function(){
-                Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, function(message) {
-                  examineTombstone(message, function(){
-                    checkLandmark(function() {
-                      setTimeout(function(){
+          setTimeout(function(){
+            document.getElementById("oxen").src="./img/oxen_walking.gif";
+            setTimeout(function() {
+              document.getElementById("oxen").src = "./img/oxen_standing.png";
+              updateDay();
+              checkEvent(function(){
+                checkDeath(function(){
+                  Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, function(message) {
+                    examineTombstone(message, function(){
+                      checkLandmark(function() {
                         checkStatus ? Game.scenes.TrailMenu() : travelFunc();
-                      }, 1000);
-                    });
-                  })
-                });
-              })
-            });
-          }, 125*Game.gameCaravan.pace.rate);
+                      });
+                    })
+                  });
+                })
+              });
+            }, 125*Game.gameCaravan.pace.rate);
+          }, 1000);
         } // end travelFunc
 
         if(leavingLandmark){
@@ -1212,7 +1213,7 @@ var Game = {
 	}
 
   var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
-  alert.setAttribute("id", "AlertBox"); alert.setAttribute("class", "white_black");
+  alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
 	Game.gameDiv.appendChild(alert);
 
 	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
@@ -1220,7 +1221,10 @@ var Game = {
 
   removeAlertBox : function() {
 
-    document.getElementById("AlertBox").remove();
+    var alerts = document.getElementsByClassName("AlertBox")
+    for (var i = 0; i < alerts.length; i++) {
+      alerts[i].remove();
+    }
   },
 
   dialogBox : function(dialog, returnScene) {
@@ -1311,6 +1315,19 @@ trading:function(returnScene){
     xhttp.open("GET", "./php/getTombstone.php?startMi="+ startMi +"&endMi=" + endMi, true);
     xhttp.send();
   },
+
+  getTombstones : function(callback) {
+      var xhttp = new XMLHttpRequest();
+      var text = "";
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
+          callback(this.responseText);
+        }
+      };
+      xhttp.open("GET", "./php/getTombstones.php", true);
+      xhttp.send();
+    },
+
   setTombstone : function() {
 	  
 	var name = Game.gameCaravan.family[0];
