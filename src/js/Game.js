@@ -554,7 +554,7 @@ var Game = {
       if(choice == 1){
 
         // A depth of more than 1 foot is where risk starts
-        if (depth > 1) {
+        if (depth >= 1) {
 
           // Every 10th of a foot adds a 5% chance of disaster
           var accidentChance = (depth - 1) * 50;
@@ -742,11 +742,13 @@ var Game = {
             }
             // see if everyone's dead
             if (Game.gameCaravan.family.length == 0) {
+
               Game.alertBox("Everyone is dead.", Game.setTombstone);
-			  
-			  
-			  
-			  
+
+
+
+
+
             }
 
           }// end timeofday24
@@ -779,7 +781,14 @@ var Game = {
                   Game.scenes.Landmark(landmarks[nextLandmark.landmark]);
                 }
                 else {
-                  Game.scenes.Journey(true);
+                  if(landmarks[nextLandmark.landmark].river){
+                    // Determine a random width and depth
+                    width = randrange(30, 50);
+                    depth = randrange(1, 5);
+                    Game.scenes.ArriveAtRiver(width, depth);
+                  }else{
+                    Game.scenes.Journey(true);
+                  }
                 }
               });
               return;
@@ -1023,26 +1032,21 @@ var Game = {
   },
 
   Landmark: function(landmark){
-    Game.gameDiv.innerHTML=`
+    Game.gameDiv.innerHTML=
+    `
       <div id="landmark" class="centered_content white_black">
-        You are now at `+landmark.name+`
+        <img src="`+landmark.img+`" style="width:100%; height:70%;">
+        <div style="background-color:white; color:black; width: 70%;text-align:center;">
+          <p>`+landmark.name+`</p>
+          <p>`+MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</p>
+        </div>
+        <p>Press ENTER to continue</p>
       </div>`;
 
-    // Go to river crossing menu if the landmark is a river
-    if (landmark.river == true) {
 
-       // Determine a random width and depth
-       width = randrange(30, 50);
-       depth = randrange(1, 5);
-
-       //Game.scenes.ArriveAtRiver(width, depth);
-       Game.waitForInput(null,null,function(){Game.scenes.ArriveAtRiver(width, depth)});
-    }
-
-    else {
 
       Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
-    }
+
   },
 
    LandmarkMenu: function(landmark){
@@ -1092,8 +1096,18 @@ var Game = {
        }
        Game.waitForInput(null,validationFunc,function(input){
          var returnScene=function(){Game.scenes.LandmarkMenu(landmark)};
-         if(input==1)
-           Game.scenes.Journey(true);
+         if(input==1){
+           // Go to river crossing menu if the landmark is a river
+           if (landmark.river) {
+              // Determine a random width and depth
+              width = randrange(30, 50);
+              depth = randrange(1, 5);
+              Game.scenes.ArriveAtRiver(width, depth);
+           }
+           else {
+             Game.scenes.Journey(true);
+           }
+         }
          else if (input==2)
            Game.scenes.CheckSupply(returnScene);
          else if(input==3)
@@ -1126,8 +1140,11 @@ var Game = {
 
     animateRiver: function(method, success) {
       // setup
-      Game.gameDiv.innerHTML = `<div id="river_crossing" class="centered_content">\n<div class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>\n
-`;
+      Game.gameDiv.innerHTML =
+      `<div id="river_crossing" class="centered_content ratio-wrapper ratio5-4" >\n
+          <canvas id="river_animation" class="ratio-content"></canvas>\n
+      </div>\n
+      `;
       var canvas = document.getElementById("river_animation");
       var ctx = canvas.getContext("2d");
       canvas.width = canvas.clientWidth; canvas.height = canvas.clientHeight;
@@ -1291,40 +1308,45 @@ trading:function(returnScene){
   },
   // Ask the player for an epitaph, and add their tombstone to the database
   setTombstone : function() {
+
 	var name = Game.gameCaravan.family[0];
 	var date = Game.date;
 	var distance = Game.miles;
 	Game.dialogBox("You and the rest of your caravan are dead. What is your epitaph?");
+
 	document.getElementById("DialogBox").style.top = "-100%";
 
 	if (document.getElementById("input") != null) {
 
 	  document.getElementById("input").remove();
     }
-	
+
+
 	var epitaphInput = document.createElement('div');
-	
+
 	document.getElementById("DialogBox").innerHTML += `<br>`;
-	document.getElementById("DialogBox").innerHTML += `<br>`;	
+	document.getElementById("DialogBox").innerHTML += `<br>`;
 	document.getElementById("DialogBox").appendChild(epitaphInput);
 	epitaphInput.setAttribute("id", "input");
 
 	Game.waitForInput(null, null, function(choice) {
 
+
 	  if (choice == "") {
-		  
+
 	    Game.alertBox("Please enter something for your final words", Game.setTombStone);
 	  }
-		
+
 	  else {
-		  
+
 		var epitaph = choice;
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("POST", "set_tombstone.php", true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send("name="+ name +"&distance=" + distance + "&epitaph" + epitaph);
-      }	
+      }
     })
+
   }
 };
 
