@@ -128,7 +128,7 @@ ol.col2 span, ul.col2 span {
     z-index: 1;
     height: 95%;
     width: 95%;
-    top: -100%;
+    /*top: -100%;*/
     padding: 0.2em;
     margin: auto;
     border: 0.6em solid white;
