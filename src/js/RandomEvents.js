@@ -297,8 +297,7 @@ function wagonTipOver(caravan) {
 
 		// Pick a random drowning victim
 		var victimIndex = Math.floor(Math.random() * familySize);
-		var victim = family[victimIndex];
-		var victimName = victim.name;
+		var victimName = family[victimIndex].name;
 
 		// Remove that person from the caravan
 		caravan.removePerson(victim);
@@ -329,7 +328,7 @@ function wagonTipOver(caravan) {
 			return "The wagon tipped over, but you didn't lose any supplies";
 		}
 
-		return "The wagon tipped over and you lost " + messageEnd;
+		return "The wagon tipped over and you lost" + messageEnd;
 	}
 }
 
