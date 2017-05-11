@@ -182,7 +182,7 @@ Caravan.prototype.trade=function(take,takeamt,give,giveamt){
     this.take-=takeamt;
 }
 
-Caravan.prototype.fillUp = function() {
+Caravan.prototype.fill = function() {
     this.axles = 3;
     this.wheels = 3;
     this.tongues = 3;
@@ -192,6 +192,11 @@ Caravan.prototype.fillUp = function() {
     this.oxen = 4;
     this.money = 200.00;
     this.occupation = OCCUPATION.CARPENTER;
+    this.addPerson(new Person("Joe"));
+    this.addPerson(new Person("Jack"));
+    this.addPerson(new Person("Jill"));
+    this.addPerson(new Person("Jane"));
+    this.addPerson(new Person("John"));
 }
 
 Caravan.prototype.updateHealth = function() {

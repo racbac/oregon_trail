@@ -4,7 +4,6 @@ var Game = {
   weather: "warm",
   miles: 0,
   branch:[null,null],
-
   gameDiv: document.getElementById("game"),
 
   start: function(){
@@ -654,11 +653,39 @@ var Game = {
         document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         document.getElementById("miles").innerHTML=Game.miles;
         var timeOfDay=0
+
+        var checkLandmark = function(callback) {
+          if(nextLandmark.milesToNext==0){
+              Game.alertBox("You are now at "+landmarks[nextLandmark.landmark].name+'. Would you like to look around?');
+              document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
+              document.getElementById("oxen").src = "./img/oxen_standing.png";
+              var validationFunc=function(input){
+                input=input.toUpperCase();
+                return input=="Y"||input=="N";
+              }
+              Game.waitForInput(null,validationFunc,function(stopAtLandmark){
+                Game.removeAlertBox();
+                if(stopAtLandmark.toUpperCase()=="Y"){
+                  Game.scenes.Landmark(landmarks[nextLandmark.landmark]);
+                }
+                else {	
+                  callback();
+                }
+              });
+              return;
+            } else {
+              callback();
+            }
+        };
           
         var updateDay = function() {
           timeOfDay=0;
           Game.date.setDate(Game.date.getDate()+1);
-          var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+          
+          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
+          Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
+          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+
           /*update status and html*/
           document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
           document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
@@ -668,10 +695,9 @@ var Game = {
           document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         };
 
-        var examineTombstone = function(tombstoneMsg) {
+        var examineTombstone = function(tombstoneMsg, callback) {
           // did we pass a tombstone?
           if (tombstoneMsg != "null") {
-            clearInterval(travelLoop);
             Game.alertBox("You passed a tombstone. Would you like to examine it?");
             document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
             var validationFunc=function(input){
@@ -679,30 +705,34 @@ var Game = {
               return input=="Y"||input=="N";
             }
             Game.waitForInput(null,validationFunc,function(examine){
+              Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
                 Game.scenes.Tombstone(tombstoneMsg);
               }
               else {	
-                travelFunc();
+                callback();
               }
             });
           } else {
-            travelFunc();
+            callback();
           }
         };
 
         var checkDeath = function(callback) {
-          // see if anyone died
+          // get deaths
           var deaths = Game.gameCaravan.updateHealth();
-          for (var i in deaths) {
-            clearInterval(travelLoop);
-            Game.alertBox(deaths[i] + " has died.", callback);
-          }
-          // see if everyone's dead
-          if (Game.gameCaravan.family.length == 0) {
+         
+          if (Game.gameCaravan.family.length == 0) { // see if everyone's dead
             Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+          } 
+          else if (deaths.length > 0) { // see if anyone died
+            for (var i in deaths) {
+              Game.alertBox(deaths[i] + " has died.");
+              Game.waitForInput(null, null, callback);
+            }
+          } else { // no one died
+            callback();
           }
-          callback();
         };
 
         var checkEvent = function(callback) {
@@ -710,10 +740,8 @@ var Game = {
           var eventChance = (Math.random() * 10);
           if (eventChance < 5) {
             var eventResult = randomEvent(Game.gameCaravan);
-
             // Random event will return null if event was inapplicable
             if (eventResult != null) {
-              clearInterval(travelLoop);
               Game.alertBox(eventResult, function() {
                 if (eventResult == "Took the wrong trail, lose 3 days") {
                   var losedays = setInterval(function(){
@@ -730,6 +758,8 @@ var Game = {
                   callback();
                 }
               });
+            } else {
+              callback();
             }
           } else {
             callback();
@@ -737,72 +767,42 @@ var Game = {
         };
 
         var travelFunc=function(){//called once per game Hour
-          timeOfDay++;
-          if(timeOfDay==24){ // at midnight/morning
-            updateDay();
+          Game.waitForInput(null,null,function(){
+            Game.scenes.TrailMenu();
+          });
+          updateDay();
+          // travel
+          document.getElementById("oxen").src="./img/oxen_walking.gif";
+          setTimeout(function() {
+            document.getElementById("oxen").src = "./img/oxen_standing.png";
             checkEvent(function(){
               checkDeath(function(){
-                Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, examineTombstone);
+                Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, function(message) {
+                  examineTombstone(message, function(){
+                    checkLandmark(function() {
+                      setTimeout(function(){
+                        travelFunc();
+                      }, 1000);
+                    });
+                  })
+                });
               })
             });
-          }
-          
-          else if(timeOfDay==5){ //start traveling at 5am
-            document.getElementById("oxen").src="./img/oxen_walking.gif";
-          }
-
-          else if(timeOfDay== 5+Game.gameCaravan.pace.rate){
-            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
-
-            Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
-            document.getElementById("miles").innerHTML=Game.miles;
-            var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
-
-            document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
-            if(nextLandmark.milesToNext==0){
-              Game.alertBox("You are now at "+landmarks[nextLandmark.landmark].name+'. Would you like to look around?');
-              document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
-              document.getElementById("oxen").src = "./img/oxen_standing.png";
-              clearInterval(travelLoop);
-              var validationFunc=function(input){
-                input=input.toUpperCase();
-                return input=="Y"||input=="N";
-              }
-              Game.waitForInput(null,validationFunc,function(stopAtLandmark){
-                if(stopAtLandmark.toUpperCase()=="Y"){
-                  Game.scenes.Landmark(landmarks[nextLandmark.landmark]);
-                }
-                else {	
-                  Game.scenes.Journey(true);
-                }
-              });
-              return;
-            }
-            /*set oxen animation to stopped*/
-            document.getElementById("oxen").src = "./img/oxen_standing.png";
-          }
+          }, 125*Game.gameCaravan.pace.rate);
         } // end travelFunc
 
-        var travelLoop;
         if(leavingLandmark){
           var currentLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
           Game.alertBox("From "+landmarks[currentLandmark.landmark].name+" it is "+nextLandmark.milesToNext+" miles to "+landmarks[nextLandmark.landmark].name+".");
           Game.waitForInput(null,null,function(){
             Game.removeAlertBox();
-            travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
-            Game.waitForInput(null,null,function(){
-              clearInterval(travelLoop);
-              Game.scenes.TrailMenu();
-            });
+            travelFunc();           
           });
         }
         else{
-          travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
-          Game.waitForInput(null,null,function(){
-            clearInterval(travelLoop);
-            Game.scenes.TrailMenu();
-          });
+          travelFunc();
         }
+
     },
 
     Tombstone : function(message) {
@@ -812,7 +812,7 @@ var Game = {
           <p class="prompt" class="white_black">Press ENTER to continue</p>\n
         </div>\
       `;
-      Game.waitForInput(null, null, Game.scenes.Journey(false));
+      Game.waitForInput(null, null, function() {Game.scenes.Journey(false)});
     },
 
     TrailMenu: function(){
