@@ -4,6 +4,7 @@ var infopage;
  var GameCaravan= new Caravan();
  var topborder;
  var botborder;
+ var dock;
  var gameDiv=document.getElementById("game");
 function startGame() {
    
@@ -17,11 +18,13 @@ GameCaravan.bait =5;
     //infopage = new component("10px", "Consolas", "black", 10, 40, "text");
     topborder = new component(480, 20, "peru", 0, 0,"block");
     botborder=new component(480, 20, "peru", 0, 130,"block");
+    //dock=new component(20, 20, "black", 0, 0,"block");
     myGameArea.start();
     myGamePiece=new component(80,30,"../img/wagonOnRiver.gif",20,70,"image");
     //myObstacle  = new component(20, 10, "../img/rock.gif", 200, 100,"image"); 
     botborder.update(); 
-    topborder.update(); 
+    topborder.update();
+    //dock.update(); 
     myGamePiece.update();
     //myGamePiece = new component(30, 30, "red", 10, 120);
 }
@@ -157,7 +160,18 @@ function updateGameArea() {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
-
+    if (myGameArea.frameNo == 1000 ){
+    	//x = canvas.width;
+    	dock=new component(20, 20, "black", 300, 10,"block");}
+    if(myGameArea.frameNo>1000){
+    	dock.x+=-1;
+    	dock.update();
+    	if (myGamePiece.crashWith(dock)){
+    	alert("you win!")
+    	}
+    }
+    
+    
     botborder.update();
 
     topborder.update();
