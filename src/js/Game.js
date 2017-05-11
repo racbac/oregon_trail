@@ -742,7 +742,7 @@ var Game = {
             }
             // see if everyone's dead
             if (Game.gameCaravan.family.length == 0) {
-              Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+              Game.alertBox("Everyone is dead.", Game.setTombstone);
 			  
 			  
 			  
@@ -1289,14 +1289,18 @@ trading:function(returnScene){
     xhttp.open("GET", "getTombstone.php", true);
     xhttp.send();
   },
+  // Ask the player for an epitaph, and add their tombstone to the database
   setTombstone : function() {
-	  
 	var name = Game.gameCaravan.family[0];
 	var date = Game.date;
 	var distance = Game.miles;
 	Game.dialogBox("You and the rest of your caravan are dead. What is your epitaph?");
-	
-	document.getElementById("input").remove();
+	document.getElementById("DialogBox").style.top = "-100%";
+
+	if (document.getElementById("input") != null) {
+
+	  document.getElementById("input").remove();
+    }
 	
 	var epitaphInput = document.createElement('div');
 	
@@ -1307,25 +1311,20 @@ trading:function(returnScene){
 
 	Game.waitForInput(null, null, function(choice) {
 
-		if (choice == "") {
-			Game.alertBox("Please enter something for your final words", Game.setTombStone);
-		}
+	  if (choice == "") {
+		  
+	    Game.alertBox("Please enter something for your final words", Game.setTombStone);
+	  }
 		
-		else {
-			var epitaph = choice;
-		}
-		
-	})
-	
-	var xhttp = new XMLHttpRequest();
-	xhttp.open("POST", "set_tombstone.php", true);
-	xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	xhttp.send("name="+ name +"&distance=" + distance + "&epitaph" + epitaph);
-	  
-	//xhttp.onreadystatechange = function() {
-	  
-	//}
-	
+	  else {
+		  
+		var epitaph = choice;
+		var xhttp = new XMLHttpRequest();
+		xhttp.open("POST", "set_tombstone.php", true);
+		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		xhttp.send("name="+ name +"&distance=" + distance + "&epitaph" + epitaph);
+      }	
+    })
   }
 };
 
