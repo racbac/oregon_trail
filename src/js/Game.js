@@ -8,7 +8,15 @@ var Game = {
   gameDiv: document.getElementById("game"),
 
   start: function(){
+    Game.resetGame();
     Game.scenes.startScreen();
+  },
+
+  resetGame: function(){
+    Game.Caravan= new Caravan();
+    Game.date= new Date(),
+    Game.miles=0;
+    Game.branch=[null,null];
   },
 
   waitForInput: function(enterKeys,validationFunc,callback=function(){}){
@@ -729,7 +737,12 @@ var Game = {
                     width = randrange(30, 50);
                     depth = randrange(1, 5);
                     Game.scenes.ArriveAtRiver(width, depth);
-                  }else{
+                  }
+                  else if(nextLandmark.landmark=="WillametteValley"){//game finished
+                    //go to result scene, not:
+                    Game.start();
+                  }
+                  else{
                     Game.scenes.Journey(true);
                   }
                 }
@@ -785,7 +798,7 @@ var Game = {
           var deaths = Game.gameCaravan.updateHealth();
 
           if (Game.gameCaravan.family.length == 0) { // see if everyone's dead
-            Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
+            Game.alertBox("Everyone is dead.", Game.start);
           }
           else if (deaths.length > 0) { // see if anyone died
             for (var i in deaths) {
@@ -909,7 +922,7 @@ var Game = {
                 }
               }
               else if(choice==3){
-                Game.scenes.ShowMap(function(){Game.scenes.journey(true)});
+                Game.scenes.ShowMap(function(){Game.scenes.Journey(true)});
                 return;
               }
               nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],true);
@@ -1159,7 +1172,11 @@ var Game = {
       </div>
       <p class = "prompt white_black">Press ENTER to continue</p>`;
 
-
+      if(landmark==landmarks.WillametteValley){
+        //go to result scene, not:
+        Game.waitForInput(null,null,Game.start);
+        return;
+      }
 
       Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
 
