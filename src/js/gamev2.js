@@ -67,7 +67,6 @@ var Game = {
       Game.gameDiv.innerHTML=
         '<div class=\"centered_content\">'+
           '<h1>The Oregon Trail</h1>'+
-		  '<img id="text_decoration" src="./img/TextDecoration.png">\n'+
           '<div class="white_black">'+
           '<p>You may:</p>'+
           '<ol>'+
@@ -104,7 +103,6 @@ var Game = {
     chooseOccupation: function(){
       Game.gameDiv.innerHTML =
         `<div id="choose_occupation" class="white_black">\n
-		<img id="text_decoration" src="./img/TextDecoration.png">\n
           <p>Many kinds of people made the trip to Oregon.</p>\n
           <p>You may:</p>\n
           <ol>\n
@@ -114,7 +112,6 @@ var Game = {
             <li>Find out the difference between the choices</li>\n
           </ol>\n
           <p>What is your choice? <span id="input"></span></p>\n
-		  <img id="text_decoration" src="./img/TextDecoration.png">\n
         </div>\n
 `;
       var validationFunc=function(input){
@@ -157,7 +154,6 @@ var Game = {
 
       Game.gameDiv.innerHTML =
         `<div id="enterNames" class="white_black">\n
-		<img id="family" src="./img/family.png">\n
           <p>\n
             What is the first name of the wagon leader?
             <span id="input"></span>\n
@@ -173,7 +169,6 @@ var Game = {
 
         document.getElementById("enterNames").innerHTML =
           ` <div class="white_black">\n
-		      <img id="family" src="./img/family.png">\n
               <p>What are the first names of the four other members in your party?</p>\n
               <ol>\n`
                 +'<li>'+leadername+'</li>\n'+
@@ -217,7 +212,6 @@ var Game = {
     chooseDepartureMonth:function(){
       Game.gameDiv.innerHTML =
       `<div id="chooseMonth" class="white_black"><div>\n
-	    <img id="text_decoration" src="./img/TextDecoration.png">
         <p>It is 1848. Your jumping off place for Oregon is Independence, Missouri. You must decide which month to leave Independence.</p>\n
         <ol>\n
           <li>March</li>\n
@@ -230,7 +224,6 @@ var Game = {
         <p>What is your choice?
           <span id="input"><span>\n
         </p></div>\n
-		<img id="text_decoration" src="./img/TextDecoration.png">
       </div>\n
       `;
       var validationFunc=function(input){
@@ -272,13 +265,7 @@ var Game = {
       Game.waitForInput(null,null,Game.scenes.chooseDepartureMonth);
     },
     MattStore:function(){
-      Game.gameDiv.innerHTML =`<div class='white_black'>\n`+
-	  `<img id="text_decoration" src="./img/TextDecoration.png">`+
-	  `<p>Before leaving Independence you should buy equipment and supplies.`+
-	  `You have $` + Game.gameCaravan.occupation.cash + ` in cash, but you don't have to spend it all now.`+
-	  `</p>\n<p class="prompt" class="white_black">Press ENTER to continue</p>\n`+
-	  `<img id="text_decoration" src="./img/TextDecoration.png">`+
-	  `</div>\n`;
+      Game.gameDiv.innerHTML =`<div class='white_black'>\n<p>Before leaving Independence you should buy equipment and supplies. You have $` + Game.gameCaravan.occupation.cash + ` in cash, but you don't have to spend it all now.</p>\n<p class="prompt" class="white_black">Press ENTER to continue</p>\n</div>\n`;
       Game.waitForInput(null,null,function(){
         Game.gameDiv.innerHTML =
           `<div id="matt_intro">\n
@@ -308,7 +295,6 @@ var Game = {
               <div>\n
                 <div id="matt_img"></div>\n
                 <div>\n
-				  <hr id = "red_line">
                   <ol class="col2">\n
                     <li>Oxen<span id="oxen_bill">$`+thestore.item_bill("oxen").toFixed(2)+`</span></li>\n
                     <li>Food<span id="food_bill">$`+thestore.item_bill("food").toFixed(2)+`</span></li>\n
@@ -316,7 +302,6 @@ var Game = {
                     <li>Bait<span id="bait_bill">$`+thestore.item_bill("bait").toFixed(2)+`</span></li>\n
                     <li>Spare Parts<span id="spare_bill">$`+thestore.item_bill("axles", "tongues", "wheels").toFixed(2)+`</span></li>\n
                   </ol>\n
-				  <hr id = "red_line">
                   <p>Total Bill: <span id="total_bill">$`+thestore.bill.toFixed(2)+`</span></p>\n
                   <p>Amount you have:<span id="money">$`+(Game.gameCaravan.money - thestore.bill).toFixed(2)+`</span></p>\n
                   <p>Which item would you like to buy? <span id="input"></span></p>\n
@@ -531,12 +516,10 @@ var Game = {
 	  " feet wide and " + depth + " feet deep in the middle."
 
 	  document.getElementById("game").innerHTML =
-      `<img id="text_decoration" src="./img/TextDecoration.png">\n
-	  <div id="cross_river_message" class="centered_content white_black">\n
+      `<div id="cross_river_message" class="centered_content white_black">\n
         <p>` + message + `</p>\n
       </div>\n
-      <p class="prompt" class="white_black">Press ENTER to continue</p>\n
-	  <img id="text_decoration" src="./img/TextDecoration.png">\n`;
+      <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
 	  Game.waitForInput(null, null, function() {Game.scenes.CrossRiver(width, depth) });
 
@@ -547,7 +530,6 @@ var Game = {
 
 		document.getElementById("game").innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
-	  <img id="text_decoration" src="./img/TextDecoration.png">\n
         <p>Weather: </p>\n
         <p>River width: ` + width + `</p>\n
         <p>River depth: ` + depth + `</p>\n
@@ -560,11 +542,10 @@ var Game = {
           <li>get more information</li>\n
         </ol>\n
         <p>What is your choice? <span id="input"></span></p>\n
-		<img id="text_decoration" src="./img/TextDecoration.png">\n
       </div>\n`;
 
     var validationFunc=function(input){
-      return Number.isInteger(+input) && +input>0 && +input<6;
+      return Number.isInteger(+input) && +input>0 && +input<5;
     }
 
     Game.waitForInput(null,validationFunc,function(choice){
@@ -573,7 +554,7 @@ var Game = {
       if(choice == 1){
 
         // A depth of more than 1 foot is where risk starts
-        if (depth >= 1) {
+        if (depth > 1) {
           // Every 10th of a foot adds a 5% chance of disaster
           var accidentChance = (depth - 1) * 50;
         
@@ -600,7 +581,7 @@ var Game = {
         setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
       }
 
-	  // Take the ferry
+	    // Take the ferry
       else if(choice == 3){
         if (randrange(1, 5) <= 2) {
           Game.passDays(1);
@@ -635,41 +616,14 @@ var Game = {
         Game.scenes.CrossRiver(newWidth, newDepth);
       }
 
+	  // Show information
       else if(choice == 5) {
-		
-	    Game.scenes.CrossingInfo(1, width, depth);
+
       }
     });
   },
 
-  // Show a series of dialog boxes explaining the river crossing options
-  CrossingInfo:function(counter, width, depth) {
-	  
-	if (counter == 1) {
-		
-	  var message = "To ford a river means to pull your wagon across a shallow part of the river with your oxen still attached.";
-	  Game.dialogBox(null, function() {Game.scenes.CrossingInfo(2, width, depth)});
-	  document.getElementById("DialogBox").innerHTML = `<img id="text_decoration" src="./img/TextDecoration.png"><br>` + message;
-	  document.getElementById("DialogBox").style.top = "-100%";
-	  document.getElementById("DialogBox").innerHTML += `<img id="text_decoration" src="./img/TextDecoration.png">\n`;
-	}
-	
-	if (counter == 2) {
-		
-	  var message = "To caulk the wagon means to seal it so that no water can get in. The wagon can then be floated accross like a boat.";
-	  Game.dialogBox(message, function() {Game.scenes.CrossingInfo(3, width, depth)});
-	  document.getElementById("DialogBox").style.top = "-100%";
-	}
-	
-	if (counter == 3) {
-		
-	  var message = "To use a ferry means to put your wagon on top of a flat boat belonging to someone else." +
-	  "The owner of the ferry will take your wagon across the river.";
-	  Game.dialogBox(message, function() { Game.scenes.CrossRiver(width, depth); });
-	  document.getElementById("DialogBox").style.top = "-100%";
-	}
-  },
-  
+
     Journey:function(leavingLandmark){
       Game.gameDiv.innerHTML =
 
@@ -785,10 +739,7 @@ var Game = {
               Game.alertBox(deaths[i] + " has died.");
             }
             Game.removeAlertBox();
-            Game.waitForInput(null, null, function(){
-            	Game.removeAlertBox();
-            	callback();
-            });
+            Game.waitForInput(null, null, callback);
           } else { // no one died
             callback();
           }
@@ -827,11 +778,9 @@ var Game = {
 
         var travelFunc=function(){//called once per game Hour
           var checkStatus = false;
-          document.onkeydown = function(key) {
-            var x = key.charCode || key.keyCode;
-            if (x == 13)
-              checkStatus = true
-          };
+          Game.waitForInput(null,null,function(){
+            checkStatus = true
+          });
           // travel
           setTimeout(function(){
             document.getElementById("oxen").src="./img/oxen_walking.gif";
@@ -840,7 +789,7 @@ var Game = {
               updateDay();
               checkEvent(function(){
                 checkDeath(function(){
-                  Game.getTombstone(Game.miles - Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, Game.miles, function(message) {
+                  Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, function(message) {
                     examineTombstone(message, function(){
                       checkLandmark(function() {
                         checkStatus ? Game.scenes.TrailMenu() : travelFunc();
@@ -872,7 +821,7 @@ var Game = {
         <div id="tombstone" class="centered_content">\n
           <img src='./img/tombstone.png'/>
           <p class="prompt" class="white_black">Press ENTER to continue</p>\n
-        </div>\n`;
+        </div>\`;
       Game.waitForInput(null, null, function() {Game.scenes.Journey(false)});
     },
 
@@ -883,7 +832,7 @@ var Game = {
 
           <div id="conditions">\n
             Weather: <span id = "conditions_weather">`+ Game.weather +`</span><br>\n
-            Health: <span id = "conditions_health">`+ Game.gameCaravan.getHealth() +`</span><br>\n
+            Health: <span id = "conditions_health">`+ Game.gameCaravan.health.string +`</span><br>\n
             Pace: `+ Game.gameCaravan.pace.string +`<br>\n
             Rations: `+ Game.gameCaravan.rations.string +`<br>\n
           </div>\n
@@ -914,14 +863,14 @@ var Game = {
           Game.scenes.ShowMap(Game.scenes.TrailMenu);
         else if(input==4)
           Game.scenes.ChangePace(Game.scenes.TrailMenu);
-		else if(input == 5)
-		  Game.scenes.ChangeRations(Game.scenes.TrailMenu);
-		else if(input == 6)
-		  Game.scenes.StopToRest(Game.scenes.TrailMenu);
-		else if(input == 7)
-	      Game.trading(Game.scenes.TrailMenu);
-		else if(input == 8)
-		  Game.fishingGame();
+	else if(input == 5)
+	  Game.scenes.ChangeRations(Game.scenes.TrailMenu);
+	else if(input == 6)
+	  Game.scenes.StopToRest(Game.scenes.TrailMenu);
+	else if(input == 7)
+	  Game.trading(Game.scenes.TrailMenu);
+	else if(input == 8)
+	  Game.fishingGame();
         else
           Game.scenes.TrailMenu();
       });
@@ -954,7 +903,6 @@ var Game = {
     returnScene=returnScene||Game.scenes.TrailMenu;
 	  Game.gameDiv.innerHTML =
 	  `<div id="check_supplies" class="centered_content white_black">\n
-	    <img id="text_decoration" src="./img/TextDecoration.png">\n
 	    <p>Change Pace\n
 		(currently "` + Game.gameCaravan.pace.string + `")</p>
 		<p>The pace at which you travel can change. Your choices are:</p>
@@ -965,7 +913,6 @@ var Game = {
 		  <li>Find out what these different paces mean</li>
 		</ol>
 		<p>What is your choice? <span id="input"></span></p>\n
-		<img id="text_decoration" src="./img/TextDecoration.png">\n
       </div>`;
 
 	  var validationFunc=function(input){
@@ -1019,7 +966,6 @@ var Game = {
     returnScene=returnScene||Game.scenes.TrailMenu;
 	  Game.gameDiv.innerHTML =
 	  `<div id="check_supplies" class="centered_content white_black">\n
-	    <img id="text_decoration" src="./img/TextDecoration.png">\n
 	    <p>Change Food Rations\n
 		(currently "` + Game.gameCaravan.rations.string + `")</p>
 		<p>The amount of food the people in your party eat each day can change. Your choices are:</p>
@@ -1029,7 +975,6 @@ var Game = {
 		  <li>Bare bones - meals are very small; everyone stays hungry.</li>
 		</ol>
 		<p>What is your choice? <span id="input"></span></p>\n
-		<img id="text_decoration" src="./img/TextDecoration.png">\n
       </div>`;
 
 	  var validationFunc=function(input){
@@ -1122,7 +1067,7 @@ var Game = {
            Pace: `+ Game.gameCaravan.pace.string +`<br>\n
            Rations: `+ Game.gameCaravan.rations.string +`<br>\n
          </div>\n
-		 <br>
+
          <div>\n
            You May:
            <ol id="options">\n
@@ -1334,38 +1279,28 @@ var Game = {
 	  return;
     }
   },
-  trading:function(returnScene){
+trading:function(returnScene){
     returnScene=returnScene||Game.scenes.TrailMenu;
     var div=Game.gameDiv.children[0];
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
     var randomIndex1= Math.floor(Math.random() * itemNames.length);
     var randomIndex2= Math.floor(Math.random() * itemNames.length);
-
     while(randomIndex1==randomIndex2){
-    
-	randomIndex2=Math.floor(Math.random() * itemNames.length);
+      randomIndex2=Math.floor(Math.random() * itemNames.length);
     }
-
     var amtwanted=Math.floor(Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1;
     var amttrade=Math.floor(Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1;
-    
-	if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
-		
-		var message = "You meet a trader who wants " + amtwanted + " " + itemNames[randomIndex1];
-		Game.dialogBox(message, returnScene);
-		document.getElementById("DialogBox").style.top = "-100%";
-		document.getElementById("DialogBox").innerHTML += `<br><br>You don't have this`
-    }
-	
-	else{
-
-	  document.getElementById("input").remove();
-      var message = "You meet a trader who wants " + amtwanted + " " + itemNames[randomIndex1] +
-      ". He will trade you " + amttrade + " " + itemNames[randomIndex2] + ". ";
-	  Game.dialogBox(message, returnScene);
-	  document.getElementById("DialogBox").style.top = "-100%";
-	  document.getElementById("DialogBox").innerHTML += `<br><br>Do you wish to trade(Y/N)<span id="input"></span></p>`
-
+    if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
+      div.innerHTML+="<p>You meet a trader who wants "+
+      amtwanted+" "+itemNames[randomIndex1]+
+      ". You don't have this.</p>";
+      Game.waitForInput(null,null,returnScene);
+    }else{
+      document.getElementById("input").removeAttribute("id");
+      div.innerHTML+="<p>You meet a trader who wants "+
+      amtwanted+" "+itemNames[randomIndex1]+
+      ". He will trade you "+amttrade+" "+itemNames[randomIndex2]+". "+
+      'Do you wish to trade?(Y/N)<span id="input"></span></p>';
       var item1=itemNames[randomIndex1];
       var item2=itemNames[randomIndex2];
       var tradeFunc=function(input){
@@ -1392,8 +1327,7 @@ var Game = {
     xhttp.open("GET", "./php/getTombstone.php?startMi="+ startMi +"&endMi=" + endMi, true);
     xhttp.send();
   },
-  
-  // Ask the player for an epitaph, and add their tombstone to the database
+
   getTombstones : function(callback) {
       var xhttp = new XMLHttpRequest();
       var text = "";
@@ -1411,12 +1345,6 @@ var Game = {
 	var name = Game.gameCaravan.family[0];
 	var date = Game.date;
 	var distance = Game.miles;
-	
-	// Need to redraw the DialogBox after being prompted to enter something
-	if (document.getElementById("DialogBox") != null) {
-	  document.getElementById("DialogBox").remove();
-	}
-	
 	Game.dialogBox("You and the rest of your caravan are dead. What is your epitaph?");
 
 	document.getElementById("DialogBox").style.top = "-100%";
@@ -1438,9 +1366,8 @@ var Game = {
 
 
 	  if (choice == "") {
-		  
-	    Game.alertBox("Please enter something for your final words", Game.setTombstone);
-		document.getElementById("AlertBox").style.top = "-175%";
+
+	    Game.alertBox("Please enter something for your final words", Game.setTombStone);
 	  }
 
 	  else {

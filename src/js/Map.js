@@ -130,5 +130,5 @@ var Map={
       landmarktraveled=nextlandmark;
       milesTraveled+=milesToNext;
     }
-    return {nextLandmark: landmarktraveled, milesToNext: milesTraveled-miles};
+    return {landmark: landmarktraveled, milesToNext: milesTraveled-miles};
   }
