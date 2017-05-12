@@ -789,7 +789,7 @@ var Game = {
               updateDay();
               checkEvent(function(){
                 checkDeath(function(){
-                  Game.getTombstone(Game.miles - Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, Game.miles, function(message) {
+                  Game.getTombstone(Game.miles, Game.miles + Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, function(message) {
                     examineTombstone(message, function(){
                       checkLandmark(function() {
                         checkStatus ? Game.scenes.TrailMenu() : travelFunc();
@@ -821,7 +821,7 @@ var Game = {
         <div id="tombstone" class="centered_content">\n
           <img src='./img/tombstone.png'/>
           <p class="prompt" class="white_black">Press ENTER to continue</p>\n
-        </div>\n`;
+        </div>\`;
       Game.waitForInput(null, null, function() {Game.scenes.Journey(false)});
     },
 

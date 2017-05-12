@@ -48,7 +48,18 @@ function Caravan() {
     this.oxen = 0;
     this.injured_oxen = 0;
     this.clothing = 0;
+    this.food = 0;
+
+    this.boxes_ammo = 0;
+    this.bait=0;
+
     this.bait = 0;
+
+
+
+	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis",
+	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace",
+	"Mr Anderson"];
 
 }
 
@@ -120,19 +131,13 @@ Caravan.prototype.getHealth = function() {
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-	if (person instanceof Number)
-		this.family.splice(person, 1);
-	else if (person instanceof String) {
-		var i = 0;
-		while (this.family[i].name != person)
-			i++;
-		this.family.splice(i, 1);
-	}
-	else if (person instanceof Person) {
-		var i = 0;
-		while (this.family[i].name != person.name)
-			i++
-		this.family.splice(i, 1);
+
+	var familySize = this.family.length;
+
+	for (var i = 0; i < familySize; i++) {
+		if (this.family[i].name == person.name) {
+			this.family.splice(i,1);
+		}
 	}
 }
 Caravan.prototype.removeOx = function(oxenNum) {
@@ -153,11 +158,13 @@ Caravan.prototype.addPerson = function(person) {
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
 
-    var i = 0;
-	while (family[i].name != person.name) {
-        i++
-    }
-	this.family.splice(i, 1);
+	var familySize = this.family.length;
+
+	for (var i = 0; i < familySize; i++) {
+		if (this.family[i].name == person.name) {
+			this.family.splice(i,1);
+		}
+	}
 }
 
 Caravan.prototype.getMph = function() {
@@ -188,6 +195,8 @@ Caravan.prototype.trade=function(take,takeamt,give,giveamt){
     this[take]-=takeamt;
 }
 
+<<<<<<< HEAD
+=======
 Caravan.prototype.fill = function() {
     this.axles = 3;
     this.wheels = 3;
@@ -205,6 +214,7 @@ Caravan.prototype.fill = function() {
     this.addPerson(new Person("John"));
 }
 
+>>>>>>> rachelCommit
 Caravan.prototype.updateHealth = function() {
     // percentage that each person will sicken or heal
     var factor = this.pace.chance + (this.food > 0 ? this.rations.chance : 0.6);
