@@ -875,15 +875,15 @@ var Game = {
             if(currentLandmark.landmark=="SouthPass")
               list= `
                 <ol>
-                  <li>head for Fort Bridger</li>
                   <li>head for Green River Crossing</li>
+                  <li>head for Fort Bridger</li>
                   <li>see the map</li>
-                <ol>`;
+                </ol>`;
             else if(currentLandmark.landmark=="BlueMountains")
               list=`
               <ol>
-                <li>head for TheDalles</li>
                 <li>head for FortWallaWalla</li>
+                <li>head for TheDalles</li>
                 <li>see the map</li>
               </ol>
             `;
@@ -896,22 +896,23 @@ var Game = {
               Game.removeAlertBox();
               if(choice==1){
                 if(currentLandmark.landmark=="SouthPass")
-                  branch[0]=0;
+                  Game.branch[0]=0;
                 else {
-                  branch[1]=0;
+                  Game.branch[1]=0;
                 }
               }
               else if(choice==2){
                 if(currentLandmark.landmark=="SouthPass")
-                  branch[0]=1;
+                  Game.branch[0]=1;
                 else {
-                  branch[1]=1;
+                  Game.branch[1]=1;
                 }
               }
               else if(choice==3){
                 Game.scenes.ShowMap(function(){Game.scenes.journey(true)});
                 return;
               }
+              nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],true);
               alertNextLandmark();
             });//end wait for input for branch choice
           }// end if trail branches
@@ -1335,7 +1336,8 @@ var Game = {
 		"I think I just broke my leg and caught Ebola!";
 	}
 
-  var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
+  var alert = document.createElement("p"); //alert.appendChild(document.createTextNode(message));
+  alert.innerHTML=message;
   alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
 	Game.gameDiv.appendChild(alert);
 
