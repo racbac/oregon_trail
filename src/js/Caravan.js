@@ -41,6 +41,7 @@ function Caravan() {
     this.occupation;
     this.rations = RATIONS.FILLING;
 
+    this.food = 0;
     this.money = 0.00;
     this.tongues = 0;
     this.wheels = 0;
@@ -48,18 +49,7 @@ function Caravan() {
     this.oxen = 0;
     this.injured_oxen = 0;
     this.clothing = 0;
-    this.food = 0;
-
-    this.boxes_ammo = 0;
-    this.bait=0;
-
     this.bait = 0;
-
-
-	
-	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis", 
-	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace", 
-	"Mr Anderson"];
 
 }
 
@@ -67,21 +57,21 @@ Caravan.prototype.updateFood = function() {
     var eaten = this.rations.pounds * this.family.length;
     if (this.food >= eaten) {
         this.food -= this.rations.pounds * this.family.length;
-    } else { 
+    } else {
         this.food = 0;
     }
     return this.food;
 }
 
 Caravan.prototype.generateRandomName = function() {
-	
+
 	// Pick a name from the list
 	var randomIndex = Math.floor(Math.random() * this.randomNames.length);
 	var chosenName = this.randomNames[randomIndex];
-	
+
 	// Remove the name from the array so there are no duplicates
 	this.randomNames.splice(randomIndex, 1);
-	
+
 	return chosenName;
 }
 
@@ -131,13 +121,19 @@ Caravan.prototype.getHealth = function() {
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-
-	var familySize = this.family.length;
-
-	for (var i = 0; i < familySize; i++) {
-		if (this.family[i].name == person.name) {
-			this.family.splice(i,1);
-		}
+	if (person instanceof Number)
+		this.family.splice(person, 1);
+	else if (person instanceof String) {
+		var i = 0;
+		while (this.family[i].name != person)
+			i++;
+		this.family.splice(i, 1);
+	}
+	else if (person instanceof Person) {
+		var i = 0;
+		while (this.family[i].name != person.name)
+			i++
+		this.family.splice(i, 1);
 	}
 }
 Caravan.prototype.removeOx = function(oxenNum) {
@@ -158,19 +154,17 @@ Caravan.prototype.addPerson = function(person) {
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
 
-	var familySize = this.family.length;
-
-	for (var i = 0; i < familySize; i++) {
-		if (this.family[i].name == person.name) {
-			this.family.splice(i,1);
-		}
-	}
+    var i = 0;
+	while (this.family[i].name != person.name) {
+        i++
+    }
+	this.family.splice(i, 1);
 }
 
 Caravan.prototype.getMph = function() {
     var mph;
     if (this.oxen > 0) {
-        mph = (this.oxen - this.injured_oxen) * 0.625 + this.injured_oxen * 0.5; 
+        mph = (this.oxen - this.injured_oxen) * 0.625 + this.injured_oxen * 0.5;
     } else {
         mph = 3;
     }
@@ -186,20 +180,37 @@ Caravan.prototype.sickenOxen = function() {
 }
 
 Caravan.prototype.trade=function(take,takeamt,give,giveamt){
-    if (giveamt+this.give<=MAXIMUM.give){
-        this.give+=giveamt;
+    if (giveamt+this[give]<=MAXIMUM[give.toUpperCase()]){
+        this[give]+=giveamt;
     }else{
-        var amt=MAXIMUM.give-this.give;
-        this.give+=amt;
+        var amt=MAXIMUM[give.toUpperCase()]-this[give];
+        this[give]+=amt;
     }
-    this.take-=takeamt;
+    this[take]-=takeamt;
+}
+
+Caravan.prototype.fill = function() {
+    this.axles = 3;
+    this.wheels = 3;
+    this.tongues = 3;
+    this.food = 200;
+    this.bait = 20;
+    this.clothing = 4;
+    this.oxen = 4;
+    this.money = 200.00;
+    this.occupation = OCCUPATION.CARPENTER;
+    this.addPerson(new Person("Joe"));
+    this.addPerson(new Person("Jack"));
+    this.addPerson(new Person("Jill"));
+    this.addPerson(new Person("Jane"));
+    this.addPerson(new Person("John"));
 }
 
 Caravan.prototype.updateHealth = function() {
     // percentage that each person will sicken or heal
     var factor = this.pace.chance + (this.food > 0 ? this.rations.chance : 0.6);
     var died = [];
-    for (var i = 0; i < this.family.length; i++) { 
+    for (var i = 0; i < this.family.length; i++) {
         // random amount to sicken/heal, modified by healing rate
         this.family[i].heal(randrange(10,30) * (1 - factor));
         var dead = this.family[i].sicken(randrange(10,30) * factor);
