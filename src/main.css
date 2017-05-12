@@ -224,3 +224,10 @@ img.text_decoration:nth-of-type(2) {
 #river_crossing > div { width: 50%; }
 
 #map { background-image: url("img/map.png"); }
+
+#landmark {
+    position: absolute;
+    bottom: 0;
+    height: 35%;
+    transition: right 1s linear 0s;
+}

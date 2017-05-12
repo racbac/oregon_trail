@@ -682,6 +682,7 @@ var Game = {
 
         `<div id="journey" class="centered_content white_black">\n
           <div id="animation">\n
+            <img id="landmark"/>\n
             <img id="bg" src="./img/bg_grass.png">\n
             <img id="oxen" src="./img/oxen_standing.png">\n
           </div>\n
@@ -700,14 +701,13 @@ var Game = {
         </div>\n`;
 
         var nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
-
+        document.getElementById("landmark").style.right = 33 + nextLandmark.milesToNext + "%";
         document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
         document.getElementById("weather").innerHTML = Game.weather = getWeather(Game.date.getMonth());
         document.getElementById("health").innerHTML=Game.gameCaravan.getHealth();
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
         document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         document.getElementById("miles").innerHTML=Game.miles;
-        var timeOfDay=0
 
         var checkLandmark = function(callback) {
           if(nextLandmark.milesToNext==0){
@@ -741,13 +741,6 @@ var Game = {
         };
           
         var updateDay = function() {
-          timeOfDay=0;
-          Game.date.setDate(Game.date.getDate()+1);
-          
-          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
-          Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
-          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
-
           /*update status and html*/
           document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
           document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
@@ -831,23 +824,34 @@ var Game = {
             callback();
           }
         };
-
-        var travelFunc=function(){//called once per game Hour
+        // listen for going to trailmenu after day
+        var travelFunc=function(){
           var checkStatus = false;
           document.onkeydown = function(key) {
             var x = key.charCode || key.keyCode;
             if (x == 13)
               checkStatus = true
           };
-          // travel
+          // update day's info
+          Game.date.setDate(Game.date.getDate()+1);
+          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
+          var travelled = Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
+          Game.miles+= travelled;
+          nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
+
+          document.getElementById("landmark").setAttribute("src", "./img/" + landmarks[nextLandmark.landmark].icon);
+          
+          // day's events
           setTimeout(function(){
+            document.getElementById("landmark").style.right = 33 + nextLandmark.milesToNext + "%";
+            document.getElementById("landmark").style.transitionDuration = 75*travelled + "ms";
             document.getElementById("oxen").src="./img/oxen_walking.gif";
             setTimeout(function() {
               document.getElementById("oxen").src = "./img/oxen_standing.png";
               updateDay();
               checkEvent(function(){
                 checkDeath(function(){
-                  Game.getTombstone(Game.miles - Game.gameCaravan.getMph() * Game.gameCaravan.pace.rate, Game.miles, function(message) {
+                  Game.getTombstone(Game.miles - travelled, Game.miles, function(message) {
                     examineTombstone(message, function(){
                       checkLandmark(function() {
                         checkStatus ? Game.scenes.TrailMenu() : travelFunc();
@@ -856,7 +860,7 @@ var Game = {
                   });
                 })
               });
-            }, 125*Game.gameCaravan.pace.rate);
+            }, 75*travelled);
           }, 1000);
         } // end travelFunc
 
