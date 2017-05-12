@@ -41,6 +41,7 @@ function Caravan() {
     this.occupation;
     this.rations = RATIONS.FILLING;
 
+    this.food = 0;
     this.money = 0.00;
     this.tongues = 0;
     this.wheels = 0;
@@ -154,7 +155,7 @@ Caravan.prototype.addPerson = function(person) {
 Caravan.prototype.removePerson = function(person) {
 
     var i = 0;
-	while (family[i].name != person.name) {
+	while (this.family[i].name != person.name) {
         i++
     }
 	this.family.splice(i, 1);
