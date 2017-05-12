@@ -437,7 +437,7 @@ var Game = {
               </p>\n
             </div>\n
 `;
-            document.getElementById("bill").innerHTML=thestore.bill;
+            document.getElementById("bill").innerHTML=thestore.bill.toFixed(2);
             document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
             Game.waitForInput(null,validationFunc,mattFunc);
           }); // end waitForInput(choice)
@@ -1104,8 +1104,8 @@ var Game = {
           <p>`+landmark.name+`</p>
           <p>`+MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</p>
         </div>
-        <p>Press ENTER to continue</p>
-      </div>`;
+      </div>
+      <p>Press ENTER to continue</p>`;
 
 
 
