@@ -955,7 +955,7 @@ var Game = {
       };
       Game.waitForInput(null,validationFunc,function(choice){
         if(choice==1){
-          //do the river game
+          Game.scenes.RiverCrossingGame();
         }
         else{
           document.getElementById("content").innerHTML=
@@ -1387,8 +1387,16 @@ var Game = {
         }, 1000);
       }
       return (end - bank1) * 60 + 1000;
+    },
+
+    RiverCrossingGame: function(){
+      Game.gameDiv.innerHTML=
+      `<div id="river_game">
+        <canvas id="canvas"></canvas>
+      </div>`;
+      startRiverGame();
     }
-  },
+  },//end Game.scenes
 
   alertBox : function(message, returnScene) {
 
