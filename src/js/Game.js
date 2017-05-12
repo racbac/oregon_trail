@@ -740,7 +740,7 @@ var Game = {
                   }
                   else if(nextLandmark.landmark=="WillametteValley"){//game finished
                     //go to result scene, not:
-                    Game.start();
+                    Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
                   }
                   else{
                     Game.scenes.Journey(true);
@@ -883,7 +883,10 @@ var Game = {
               travelFunc();
             });
           }
-          if (Object.keys(landmarks[currentLandmark.landmark].routes).length>1){//if trail branches
+          if(currentLandmark.landmark=="TheDalles"&&leavingLandmark!="leaveTheDalles"){
+            Game.scenes.TheDalles();
+          }
+          else if (Object.keys(landmarks[currentLandmark.landmark].routes).length>1){//if trail branches
             var list="";
             if(currentLandmark.landmark=="SouthPass")
               list= `
@@ -907,24 +910,17 @@ var Game = {
             }
             Game.waitForInput(null,validationFunc,function(choice){
               Game.removeAlertBox();
-              if(choice==1){
-                if(currentLandmark.landmark=="SouthPass")
-                  Game.branch[0]=0;
-                else {
-                  Game.branch[1]=0;
-                }
-              }
-              else if(choice==2){
-                if(currentLandmark.landmark=="SouthPass")
-                  Game.branch[0]=1;
-                else {
-                  Game.branch[1]=1;
-                }
-              }
-              else if(choice==3){
+              if(choice==3){
                 Game.scenes.ShowMap(function(){Game.scenes.Journey(true)});
                 return;
               }
+              if(currentLandmark.landmark=="SouthPass"){
+                Game.branch[0]=+choice-1;
+              }
+              else if(currentLandmark.landmark=="BlueMountains"){
+                Game.branch[1]=+choice-1;
+              }
+
               nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],true);
               alertNextLandmark();
             });//end wait for input for branch choice
@@ -937,6 +933,52 @@ var Game = {
           travelFunc();
         }
 
+    },
+
+    TheDalles: function(){
+      Game.gameDiv.innerHTML=
+      `<div id="dalles" class="centered_content white_black">
+        <img class="text_decoration" src="./img/TextDecoration.png">
+        <div id="content">
+          <p>The trail divides here.</p>
+          <p>You may:</p>
+          <ol>
+            <li>Float down the Columbia River</li>
+            <li>Take the Barlow Toll Road</li>
+          </ol>
+          <p>What is your choice?<span id="input"></span></p>
+        </div>
+        <img class="text_decoration" src="./img/TextDecoration.png">
+      </div>`;
+      var validationFunc=function(input){
+        return input==1||input==2;
+      };
+      Game.waitForInput(null,validationFunc,function(choice){
+        if(choice==1){
+          //do the river game
+        }
+        else{
+          document.getElementById("content").innerHTML=
+          `<p>You must pay $14.00 to travel the Barlow road. Are you willing to do this?
+            <span id="input"><span>
+          </p>
+          `;
+          var validationFunc=function(input){
+            input =input.toUpperCase();
+            return input=="Y"||input=="N";
+          }
+          Game.waitForInput(null,validationFunc,function(input){
+            input=input.toUpperCase();
+            if(input=="Y"){
+              Game.gameCaravan.money-=14;
+              Game.scenes.Journey("leaveTheDalles");
+            }
+            else{
+              Game.scenes.TheDalles();
+            }
+          })
+        }
+      });
     },
 
     Tombstone : function(message) {
@@ -1174,7 +1216,9 @@ var Game = {
 
       if(landmark==landmarks.WillametteValley){
         //go to result scene, not:
-        Game.waitForInput(null,null,Game.start);
+        Game.waitForInput(null,null,function(){
+            Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+        });
         return;
       }
 
@@ -1192,7 +1236,7 @@ var Game = {
 
          <div id="conditions">\n
            Weather: <span id = "conditions_weather">`+ Game.weather +`</span><br>\n
-           Health: <span id = "conditions_health">`+ Game.gameCaravan.health.string +`</span><br>\n
+           Health: <span id = "conditions_health">`+Game.gameCaravan.getHealth() +`</span><br>\n
            Pace: `+ Game.gameCaravan.pace.string +`<br>\n
            Rations: `+ Game.gameCaravan.rations.string +`<br>\n
          </div>\n
