@@ -162,7 +162,7 @@ function updateGameArea() {
     }
     if (myGameArea.frameNo == 1000 ){
     	//x = canvas.width;
-    	dock=new component(20, 20, "black", 300, 10,"block");}
+    	dock=new component(30, 30, "../img/dock.jpg", 300, 100,"image");}
     if(myGameArea.frameNo>1000){
     	dock.x+=-1;
     	dock.update();
@@ -172,10 +172,10 @@ function updateGameArea() {
     	alert("you win!")
     	}
     }
-        if(myGameArea.frameNo==1500){
+    if(myGameArea.frameNo==1500){
         	alert("you went to far!");
         	myGameArea.stop();
-        }
+    }
     
     
     botborder.update();
