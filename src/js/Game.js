@@ -985,8 +985,11 @@ var Game = {
       Game.gameDiv.innerHTML=`
         <div id="tombstone" class="centered_content">\n
           <img src='./img/tombstone.png'/>
-        </div>\n
-        <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
+        </div>\n<div id="msg">hello </div>
+        <p class="prompt white_black">Press ENTER to continue</p>\n`;
+        document.getElementById("msg").style.position ="absolute";
+        document.getElementById("msg").style.textAlign ="center";
+        document.getElementById("msg").style.top="150px";
       Game.waitForInput(null, null, function() {Game.scenes.Journey(false)});
     },
 
