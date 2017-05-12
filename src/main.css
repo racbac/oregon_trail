@@ -20,7 +20,14 @@
 main > div {
     max-width: 700px;
     width: 80%;
+	margin: auto;
+	border: 1px solid white;
 }
+
+body {
+	background-image: url("./img/Old_Map.png");
+}
+
 #game { padding: 2em; background-color: black; }
 
 #game > div {
@@ -109,12 +116,20 @@ ol.col2 span, ul.col2 span {
     float: right; margin-left: 2em;
 }
 
+#conditions {
+	width: 95%;
+	color: black; 
+	background-color: white;
+	margin: 2%;
+	padding: 2%;
+}
+
 #AlertBox {
 	position: relative;
 	word-wrap: break-word;
 	z-index : 1;
 	width: 60%;
-	top: -65%;
+	top: -70%;
 	padding: 0.2em;
 	margin: auto;
 	border: 0.6em solid white;
@@ -166,6 +181,30 @@ ol.col2 span, ul.col2 span {
     right: 7%;
     bottom: 0px;
     height: 55%;
+}
+
+#text_decoration {
+	position: relative;
+	width: 80%;
+    height: 10%;
+	padding-left: 10%;
+    padding-right: 10%;
+	padding-top: 2%;
+	padding-bottom: 2%;
+}
+
+#red_line {
+	
+	width: 100%;
+	height: 5px;
+	background-color: red;
+	border: 0px;
+	border-radius: 1px;
+}
+
+#family {
+	width: 100%;
+	height: 50%;
 }
 
 #river_crossing { width: 50%; }
