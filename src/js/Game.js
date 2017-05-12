@@ -113,9 +113,9 @@ var Game = {
             <li>Be a farmer</li>\n
             <li>Find out the difference between the choices</li>\n
           </ol>\n
+		  <p>What is your choice? <span id="input"></span></p>\n
 		      <img class="text_decoration" src="./img/TextDecoration.png">\n
-        </div>\n
-        <p>What is your choice? <span id="input"></span></p>\n`;
+        </div>\n`;
       var validationFunc=function(input){
         return Number.isInteger(+input) && +input>0 && +input<5;
       }
@@ -400,7 +400,7 @@ var Game = {
                   //add wagon axles to bill
                   thestore.adjust_bill("axles", input);
 
-                  mattAdvice="You can carry three wagon tongues.<br>\nHow many wagon tongues? ";
+                  mattAdvice="You can carry 3 wagon tongues.<br>\nHow many wagon tongues? ";
                   document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
                   Game.waitForInput(null,validationFunc,function(input){
                     //add wagon tongues to bill
@@ -1191,7 +1191,7 @@ var Game = {
              <li id="buy_supply">Buy Supplies</li>\n
            </ol>\n
          </div>\n
-         <p>What is your choice?<span id="input"></span></p>\n
+         <p>What is your choice? <span id="input"></span></p>\n
 
        </div>\n`;
        if(!landmark.store){
