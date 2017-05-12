@@ -1,10 +1,10 @@
-@media (max-width: 800px) {
-    #game { font-size: 0.7em; }
+@media (max-width: 845px) {
+    #game { font-size: 0.8em; }
 }
-@media (max-width: 600px) {
-    #game { font-size: 0.5em; }
+@media (max-width: 720px) {
+    #game { font-size: 0.6em; }
 }
-@media (max-width: 450px) {
+@media (max-width: 540px) {
     #game { font-size: 0.3em; }
 }
 

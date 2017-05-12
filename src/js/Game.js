@@ -711,7 +711,7 @@ var Game = {
 
         var checkLandmark = function(callback) {
           if(nextLandmark.milesToNext==0){
-              Game.alertBox("You are now at "+landmarks[nextLandmark.landmark].name+'. Would you like to look around?');
+              Game.alertBox("You are now at "+landmarks[nextLandmark.landmark].name+'. Would you like to look around? ');
               document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
               document.getElementById("oxen").src = "./img/oxen_standing.png";
               var validationFunc=function(input){
@@ -907,7 +907,7 @@ var Game = {
               <li>Fish for food</li>\n
             </ol>\n
           </div>\n
-          <p>What is your choice?<span id="input"></span></p>\n
+          <p>What is your choice? <span id="input"></span></p>\n
         </div>\n`;
       var validationFunc=function(input){
         return  +input>0 && +input<9;
@@ -937,7 +937,7 @@ var Game = {
       Game.gameDiv.innerHTML =
       `<div id="check_supplies" class="centered_content white_black">\n
         <p>Your Supplies</p>\n
-        <ul>\n
+        <ul class="square_list">\n
           <li>oxen: <span>`+ Game.gameCaravan.oxen +`</span></li>\n
           <li>sets of clothing: <span>`+ Game.gameCaravan.clothing +`</span></li>\n
           <li>bait: <span>`+ Game.gameCaravan.bait +`</span></li>\n
@@ -948,7 +948,7 @@ var Game = {
           <li>money left: <span>$`+ Game.gameCaravan.money.toFixed(2) +`</span></li>\n
         </ul>\n
       </div>\n
-      <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
+      <p class="prompt white_black">Press ENTER to continue</p>\n`;
       Game.waitForInput(null, null, returnScene);
     },
     ShowMap: function(returnScene){
@@ -1105,7 +1105,7 @@ var Game = {
           <p>`+MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</p>
         </div>
       </div>
-      <p>Press ENTER to continue</p>`;
+      <p class = "prompt white_black">Press ENTER to continue</p>`;
 
 
 
