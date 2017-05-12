@@ -300,7 +300,7 @@ function wagonTipOver(caravan) {
 		var victimName = family[victimIndex].name;
 
 		// Remove that person from the caravan
-		caravan.removePerson(victim);
+		caravan.removePerson(victimIndex);
 
 		return "The wagon tipped over and " + victimName + " has drowned";
 	}
