@@ -48,18 +48,7 @@ function Caravan() {
     this.oxen = 0;
     this.injured_oxen = 0;
     this.clothing = 0;
-    this.food = 0;
-
-    this.boxes_ammo = 0;
-    this.bait=0;
-
     this.bait = 0;
-
-
-
-	this.randomNames = ["Lupoli", "Chang", "Marron", "Hrabowski", "Kalpakis",
-	"Bill Gates", "Alan Turing", "Steve Jobs", "Grace Hopper", "Ada Lovelace",
-	"Mr Anderson"];
 
 }
 
@@ -158,13 +147,11 @@ Caravan.prototype.addPerson = function(person) {
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
 
-	var familySize = this.family.length;
-
-	for (var i = 0; i < familySize; i++) {
-		if (this.family[i].name == person.name) {
-			this.family.splice(i,1);
-		}
-	}
+    var i = 0;
+	while (family[i].name != person.name) {
+        i++
+    }
+	this.family.splice(i, 1);
 }
 
 Caravan.prototype.getMph = function() {
@@ -193,6 +180,23 @@ Caravan.prototype.trade=function(take,takeamt,give,giveamt){
         this[give]+=amt;
     }
     this[take]-=takeamt;
+}
+
+Caravan.prototype.fill = function() {
+    this.axles = 3;
+    this.wheels = 3;
+    this.tongues = 3;
+    this.food = 200;
+    this.bait = 20;
+    this.clothing = 4;
+    this.oxen = 4;
+    this.money = 200.00;
+    this.occupation = OCCUPATION.CARPENTER;
+    this.addPerson(new Person("Joe"));
+    this.addPerson(new Person("Jack"));
+    this.addPerson(new Person("Jill"));
+    this.addPerson(new Person("Jane"));
+    this.addPerson(new Person("John"));
 }
 
 Caravan.prototype.updateHealth = function() {
