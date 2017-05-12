@@ -403,6 +403,7 @@ var Game = {
             }
             else if(choice == 5){
               mattAdvice="You can carry 3 wagon wheels.<br>\nHow many wagon wheels? "
+			  storeImage += "supplies.png";
               validationFunc=function(input){
                 return input.length<2&&Number.isInteger(+input)&&input<=3;
               }
@@ -1027,7 +1028,7 @@ var Game = {
           var deaths = Game.gameCaravan.updateHealth();
 
           if (Game.gameCaravan.family.length == 0) { // see if everyone's dead
-            Game.alertBox("Everyone is dead.", Game.start);
+            Game.alertBox("Everyone is dead.", Game.setTombstone);
           }
           else if (deaths.length > 0) { // see if anyone died
             for (var i in deaths) {
@@ -1820,7 +1821,7 @@ var Game = {
 
 		var epitaph = choice;
 		var xhttp = new XMLHttpRequest();
-		xhttp.open("POST", "set_tombstone.php", true);
+		xhttp.open("POST", "./php/set_tombstone.php", true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		xhttp.send("name="+ name +"&distance=" + distance + "&epitaph" + epitaph);
       }
