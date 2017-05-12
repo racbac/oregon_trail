@@ -739,7 +739,10 @@ var Game = {
               Game.alertBox(deaths[i] + " has died.");
             }
             Game.removeAlertBox();
-            Game.waitForInput(null, null, callback);
+            Game.waitForInput(null, null, function(){
+            	Game.removeAlertBox();
+            	callback();
+            });
           } else { // no one died
             callback();
           }
@@ -778,9 +781,11 @@ var Game = {
 
         var travelFunc=function(){//called once per game Hour
           var checkStatus = false;
-          Game.waitForInput(null,null,function(){
-            checkStatus = true
-          });
+          document.onkeydown = function(key) {
+            var x = key.charCode || key.keyCode;
+            if (x == 13)
+              checkStatus = true
+          };
           // travel
           setTimeout(function(){
             document.getElementById("oxen").src="./img/oxen_walking.gif";
