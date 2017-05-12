@@ -248,6 +248,13 @@ img.fish {
 	height: 50%;
 }
 
+#landmark {
+    position: absolute;
+    bottom: 0;
+    height: 35%;
+    transition: right 1s linear 0s;
+}
+
 #river_crossing > div { width: 50%; }
 
 #map { background-image: url("img/map.png"); }
@@ -262,4 +269,3 @@ img.fish {
 #canvas {
    background:url("./img/water.gif");
 }
-/***************/

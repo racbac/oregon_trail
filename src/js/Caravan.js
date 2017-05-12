@@ -50,7 +50,7 @@ function Caravan() {
     this.injured_oxen = 0;
     this.clothing = 0;
     this.bait = 0;
-
+    this.food = 0;
 }
 
 Caravan.prototype.updateFood = function() {
@@ -218,6 +218,7 @@ Caravan.prototype.updateHealth = function() {
         if (dead == -1) {
             died.push(this.family[i].name);
             this.family.splice(i, 1);
+            this.food+=100;
         }
     }
     return died;
