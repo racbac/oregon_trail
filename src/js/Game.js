@@ -278,9 +278,11 @@ var Game = {
     adviceDepartureMonth:function(){
       Game.gameDiv.innerHTML =
         `<div class='white_black'>\n
+		  <img class="text_decoration" src="./img/TextDecoration.png">
           <p>You attend a public meeting held for \"folks with the California - Oregon fever.\" You're told:<br><br>\n
           If you leave too early, there won't be any grass for your oxen to eat. If you leave too late, you may not get to Oregon before winter comes. If you leave at just the right time, there will be green grass and the weather will still be cool.</p>\n
-        </div>\n
+          <img class="text_decoration" src="./img/TextDecoration.png">
+		</div>\n
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
       Game.waitForInput(null,null,Game.scenes.chooseDepartureMonth);
     },
@@ -303,7 +305,7 @@ var Game = {
                 <ul class="square_list">\n<li>a team of oxen to pull your wagon</li>\n
                   <li>clothing for both summer and winter</li>\n
                   <li>plenty of food for the trip</li>\n
-                  <li>ammunition for your rifles</li>\n
+                  <li>bait to catch fish with</li>\n
                   <li>spare parts for your wagon</li>\n
                 </ul>\n
               </div>\n
@@ -344,6 +346,7 @@ var Game = {
           }
           Game.waitForInput([13/*enter*/,32/*space*/],validationFunc,function(choice){
             var mattAdvice="";
+			var storeImage="./img/";
             var mattFunc=null;
             var validationFunc=null;
             Game.waitForInput(null,validationFunc,mattFunc);
@@ -351,6 +354,7 @@ var Game = {
               mattAdvice=
                 `There are 2 oxen in a yoke. I recommend at least 3 yoke, but you need as least one yoke. I charge $40 a yoke.<br><br>\n
                 How many yoke do you want? `;
+			  storeImage += "oxen.png";
               validationFunc=function(input){
                 return Number.isInteger(+input)&&input<=10&&input>=1;
               }
@@ -362,6 +366,7 @@ var Game = {
             }
             else if(choice == 2){
               mattAdvice="I recommend 200 pounds of food for each person. How many pounds of food do you want? ";
+			  storeImage += "food.png";
               validationFunc=function(input){
                 return input.length<5&&Number.isInteger(+input);
               }
@@ -373,6 +378,7 @@ var Game = {
             }
             else if(choice == 3){
               mattAdvice="I recommend 2 sets of clothing for each person. How many sets of clothes do you want? ";
+			  storeImage += "clothing.png";
               validationFunc=function(input){
                 return input.length<3&&Number.isInteger(+input);
               }
@@ -384,6 +390,7 @@ var Game = {
             }
             else if(choice == 4){
               mattAdvice="Each box of bait holds 20 bait. How many boxes do you want? ";
+			  storeImage += "fishing_rod.png";
               validationFunc=function(input){
                 return input.length<3&&Number.isInteger(+input);
               }
@@ -439,6 +446,7 @@ var Game = {
               </p>\n
               <p id="matt_advice">\n
               </p>\n
+			  <img id = "store_image"></img>
               <p>\n
 
                 Bill so far: $<span id="bill"></span>\n
@@ -447,6 +455,7 @@ var Game = {
 `;
             document.getElementById("bill").innerHTML=thestore.bill.toFixed(2);
             document.getElementById("matt_advice").innerHTML=mattAdvice + '<span id="input"></span>';
+			document.getElementById("store_image").src = storeImage;
             Game.waitForInput(null,validationFunc,mattFunc);
           }); // end waitForInput(choice)
         }; // end storeFront()
@@ -540,7 +549,7 @@ var Game = {
     },
 
 	// Arrive at the river and show the width and depth
-	ArriveAtRiver: function(width, depth) {
+	ArriveAtRiver: function(width, depth, landmark) {
 
 	  var message = "You must cross the river in order to continue. The river at this point is currently " + width +
 	  " feet wide and " + depth + " feet deep in the middle."
@@ -553,8 +562,15 @@ var Game = {
       </div>\n
       <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
-	  Game.waitForInput(null, null, function() {Game.scenes.CrossRiver(width, depth) });
-
+	  if (landmark == "BigBlueRiverCrossing") {
+		Game.waitForInput(null, null, function() {Game.scenes.CrossBigBlue(width, depth) });  
+	  }
+	  else if (landmark == "SnakeRiverCrossing") {
+		Game.waitForInput(null, null, function() {Game.scenes.CrossSnakeRiver(width, depth) });
+	  }
+	  else {
+	    Game.waitForInput(null, null, function() {Game.scenes.CrossRiver(width, depth) });
+	  }
 	},
 
 	// Select an option for crossing the river
@@ -606,11 +622,14 @@ var Game = {
       else if(choice ==2){
         var success = true;
         if (randrange(1, 100) < 30) {
-		      var eventResult = wagonTipOver(Game.gameCaravan) || "You crossed the river safely.";
-          if (eventResult != null) {
-            success = false;
-          }
+		  var eventResult = wagonTipOver(Game.gameCaravan);
+          success = false;
+		}  
+		  
+		else {
+		  eventResult = "You crossed the river safely."; success = true;
         }
+        
         var time = Game.scenes.animateRiver("float", success);
         setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
       }
@@ -655,6 +674,220 @@ var Game = {
 	    Game.scenes.CrossingInfo(1, width, depth);
       }
     });
+  },
+  
+  // This is a modified CrossRiver() function for the Big Blue River, which has no ferry
+  CrossBigBlue(width, depth) {
+
+		document.getElementById("game").innerHTML =
+      `<div id="cross_river" class="centered_content white_black">\n
+	      <img class="text_decoration" src="./img/TextDecoration.png">\n
+        <p>Weather: </p>\n
+        <p>River width: ` + width + `</p>\n
+        <p>River depth: ` + depth + `</p>\n
+        <p>You may:</p>\n
+        <ol>\n
+          <li>attempt to ford the river</li>\n
+          <li>caulk the wagon and float it across</li>\n
+          <li>wait to see if conditions improve</li>\n
+          <li>get more information</li>\n
+        </ol>\n
+        <img class="text_decoration" src="./img/TextDecoration.png">\n
+        <p>What is your choice? <span id="input"></span></p>\n
+      </div>\n`;
+
+    var validationFunc=function(input){
+      return Number.isInteger(+input) && +input>0 && +input<5;
+    }
+
+    Game.waitForInput(null,validationFunc,function(choice){
+
+      // Ford the river
+      if(choice == 1){
+
+        // A depth of more than 1 foot is where risk starts
+        if (depth >= 1) {
+          // Every 10th of a foot adds a 5% chance of disaster
+          var accidentChance = (depth - 1) * 50;
+        
+          if (randrange(1, 100) < accidentChance) {
+			      eventResult = wagonTipOver(Game.gameCaravan); success = false;
+		      } else {
+		        eventResult = "You crossed the river safely."; success = true;
+          }
+		    }
+        var time = Game.scenes.animateRiver("ford", success);
+        setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
+      }
+
+      //Float across the river
+      else if(choice ==2){
+        var success = true;
+        if (randrange(1, 100) < 30) {
+		  var eventResult = wagonTipOver(Game.gameCaravan);
+          success = false;
+		}  
+		  
+		else {
+		  eventResult = "You crossed the river safely."; success = true;
+        }
+        
+        var time = Game.scenes.animateRiver("float", success);
+        setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
+      }
+
+	  //let a day pass and change the width/depth slightly
+      else if(choice == 3) {
+
+        // See if it gets deeper or shallower
+        if (randrange(1, 10) > 5) {
+          // Round to 2 decimal places
+          var newDepth = depth - Math.round(Math.random()) / 100;
+        } else {
+          var newDepth = depth + Math.round(Math.random()) / 100;
+        }
+
+        if (randrange(1, 10) > 5) {
+          var newWidth = width - Math.round(Math.random()) / 100;
+        } else {
+          var newWidth = width + Math.round(Math.random()) / 100;
+        }
+
+        Game.passDays(1);
+        Game.scenes.CrossRiver(newWidth, newDepth);
+      }
+
+      else if(choice == 4) {
+		
+	    Game.scenes.CrossingInfo(1, width, depth);
+      }
+    });  
+  },
+  
+  // This is a modified CrossRiver() function for the Snake River, which has the option to hire an Indian to cross
+  CrossSnakeRiver(width, depth) {
+
+		document.getElementById("game").innerHTML =
+      `<div id="cross_river" class="centered_content white_black">\n
+	      <img class="text_decoration" src="./img/TextDecoration.png">\n
+        <p>Weather: </p>\n
+        <p>River width: ` + width + `</p>\n
+        <p>River depth: ` + depth + `</p>\n
+        <p>You may:</p>\n
+        <ol>\n
+          <li>attempt to ford the river</li>\n
+          <li>caulk the wagon and float it across</li>\n
+		  <li>hire an indian to help you cross the river</li>\n
+          <li>wait to see if conditions improve</li>\n
+          <li>get more information</li>\n
+        </ol>\n
+        <img class="text_decoration" src="./img/TextDecoration.png">\n
+        <p>What is your choice? <span id="input"></span></p>\n
+      </div>\n`;
+
+    var validationFunc=function(input){
+      return Number.isInteger(+input) && +input>0 && +input<6;
+    }
+
+    Game.waitForInput(null,validationFunc,function(choice){
+
+      // Ford the river
+      if(choice == 1){
+
+        // A depth of more than 1 foot is where risk starts
+        if (depth >= 1) {
+          // Every 10th of a foot adds a 5% chance of disaster
+          var accidentChance = (depth - 1) * 50;
+        
+          if (randrange(1, 100) < accidentChance) {
+			      eventResult = wagonTipOver(Game.gameCaravan); success = false;
+		      } else {
+		        eventResult = "You crossed the river safely."; success = true;
+          }
+		    }
+        var time = Game.scenes.animateRiver("ford", success);
+        setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
+      }
+
+      //Float across the river
+      else if(choice ==2){
+        var success = true;
+        if (randrange(1, 100) < 30) {
+		  var eventResult = wagonTipOver(Game.gameCaravan);
+          success = false;
+		}  
+		  
+		else {
+		  eventResult = "You crossed the river safely."; success = true;
+        }
+        
+        var time = Game.scenes.animateRiver("float", success);
+        setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
+      }
+
+	  else if(choice == 3) {
+
+		if (Game.gameCaravan.clothing < 3) {
+			
+		  var message = "This Native American can take you accross the river safely in exchange for 3 sets of clothes."+ 
+		  " You don't have enough clothes to give him.";
+		  Game.dialogBox(message, function() {Game.scenes.CrossSnakeRiver(width, depth)});
+		  document.getElementById("DialogBox").style.top = "-100%";
+		}
+		
+		else {
+		  var message = "This Native American can take you accross the river safely in exchange for 3 sets of clothes."
+		  Game.dialogBox(message, function() {Game.scenes.CrossSnakeRiver(width, depth)});
+		  document.getElementById("game").innerHTML = 
+		  `<div id="indian_cross_river" class="centered_content white_black">\n
+	        <img class="text_decoration" src="./img/TextDecoration.png">\n
+		    <p>` + message + `</p>
+		    <br>
+		    <p>Do you want him to help you cross?(Y/N) <span id="input"></span></p>\n
+		  </div>`
+		  
+		  var validationFunc=function(input){
+              input=input.toUpperCase();
+              return input=="Y"||input=="N";
+          }
+          Game.waitForInput(null,validationFunc,function(input){
+		    if(input.toUpperCase()=="Y"){
+              var time = Game.scenes.animateRiver("ferry", true);
+              setTimeout(function() {Game.alertBox("The Indian got you accross safely.", function(){Game.scenes.Journey(true)})}, time + 500);
+            }
+			else {
+			  Game.scenes.CrossSnakeRiver(width, depth);
+			}
+		  });
+	    } 
+	  }
+	  
+	  //let a day pass and change the width/depth slightly
+      else if(choice == 4) {
+
+        // See if it gets deeper or shallower
+        if (randrange(1, 10) > 5) {
+          // Round to 2 decimal places
+          var newDepth = depth - Math.round(Math.random()) / 100;
+        } else {
+          var newDepth = depth + Math.round(Math.random()) / 100;
+        }
+
+        if (randrange(1, 10) > 5) {
+          var newWidth = width - Math.round(Math.random()) / 100;
+        } else {
+          var newWidth = width + Math.round(Math.random()) / 100;
+        }
+
+        Game.passDays(1);
+        Game.scenes.CrossRiver(newWidth, newDepth);
+      }
+
+      else if(choice == 5) {
+		
+	    Game.scenes.CrossingInfo(1, width, depth);
+      }
+    });  
   },
 
   // Show a series of dialog boxes explaining the river crossing options
@@ -734,10 +967,12 @@ var Game = {
                 else {
                   if(landmarks[nextLandmark.landmark].river){
                     // Determine a random width and depth
-                    width = randrange(30, 50);
+                    width = randrange(80, 300);
                     depth = randrange(1, 5);
-                    Game.scenes.ArriveAtRiver(width, depth);
+
+                    Game.scenes.ArriveAtRiver(width, depth, nextLandmark.landmark);
                   }
+				  
                   else if(nextLandmark.landmark=="WillametteValley"){//game finished
                     //go to result scene, not:
                     Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
@@ -955,7 +1190,7 @@ var Game = {
       };
       Game.waitForInput(null,validationFunc,function(choice){
         if(choice==1){
-          //do the river game
+          Game.scenes.RiverCrossingGame();
         }
         else{
           document.getElementById("content").innerHTML=
@@ -1118,13 +1353,15 @@ var Game = {
 	  Game.gameDiv.innerHTML =
 	  `<div id="pace_info" class="centered_content white_black">\n
 	    <p>Steady - You travel about 8 hours a day, taking frequent rests. You take care not to get too tired.</p><br>\n
-		  <p>Strenuous - You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset.` +
-		  `You stop to rest only when necessary. You finish each day feeling very tired.</p><br>\n
-		  <p>Grueling - You travel about 16 hours a day, starting before sunrise and continuing until dark.` +
+		<hr id = "blue_line">
+		<p>Strenuous - You travel about 12 hours a day, starting just after sunrise and stopping shortly before sunset.` +
+		`You stop to rest only when necessary. You finish each day feeling very tired.</p><br>\n
+		<hr id = "blue_line">
+		<p>Grueling - You travel about 16 hours a day, starting before sunrise and continuing until dark.` +
 		  `You almost never stop to rest. You do not get enough sleep at night. You finish each day feeling absolutely` + `
 		  exhausted, and your health suffers.</p>
     </div>
-    <p class=\"prompt\">Press ENTER to continue</p>\n`;
+    <p class = "prompt white_black">Press ENTER to continue</p>\n`;
 
 	  Game.waitForInput(null, null, Game.scenes.ChangePace);;
 	  return;
@@ -1141,7 +1378,9 @@ var Game = {
 		<p>The amount of food the people in your party eat each day can change. Your choices are:</p>
 		<ol>\n
 		  <li>Filling - meals are large and generous.</li>
-		  <li>Meager - meals are small, but adwquate.</li>
+		  <br>
+		  <li>Meager - meals are small, but adequate.</li>
+		  <br>
 		  <li>Bare bones - meals are very small; everyone stays hungry.</li>
 		</ol>
 		<p>What is your choice? <span id="input"></span></p>\n
@@ -1283,7 +1522,8 @@ var Game = {
               // Determine a random width and depth
               width = randrange(30, 50);
               depth = randrange(1, 5);
-              Game.scenes.ArriveAtRiver(width, depth);
+
+              Game.scenes.ArriveAtRiver(width, depth, landmark);
            }
            else {
              Game.scenes.Journey(true);
@@ -1391,8 +1631,16 @@ var Game = {
         }, 1000);
       }
       return (end - bank1) * 60 + 1000;
+    },
+
+    RiverCrossingGame: function(){
+      Game.gameDiv.innerHTML=
+      `<div id="river_game">
+        <canvas id="canvas"></canvas>
+      </div>`;
+      startRiverGame();
     }
-  },
+  },//end Game.scenes
 
   alertBox : function(message, returnScene) {
 
@@ -1443,6 +1691,7 @@ var Game = {
 	  Game.gameCaravan.bait--;
 	  Game.gameCaravan.food += weights[fishNum];
 	  Game.alertBox("You caught a " + fish[fishNum] + " weighing " + weights[fishNum] + " pounds", Game.scenes.TrailMenu);
+	  document.getElementById("AlertBox").innerHTML += `<img class="fish" src="./img/fish.png">\n`
 	  return;
 	}
 
