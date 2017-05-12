@@ -155,7 +155,7 @@ Caravan.prototype.addPerson = function(person) {
 Caravan.prototype.removePerson = function(person) {
 
     var i = 0;
-	while (family[i].name != person.name) {
+	while (this.family[i].name != person.name) {
         i++
     }
 	this.family.splice(i, 1);

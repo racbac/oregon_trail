@@ -8,7 +8,15 @@ var Game = {
   gameDiv: document.getElementById("game"),
 
   start: function(){
+    Game.resetGame();
     Game.scenes.startScreen();
+  },
+
+  resetGame: function(){
+    Game.Caravan= new Caravan();
+    Game.date= new Date(),
+    Game.miles=0;
+    Game.branch=[null,null];
   },
 
   waitForInput: function(enterKeys,validationFunc,callback=function(){}){
@@ -541,7 +549,7 @@ var Game = {
     },
 
 	// Arrive at the river and show the width and depth
-	ArriveAtRiver: function(width, depth) {
+	ArriveAtRiver: function(width, depth, landmark) {
 
 	  var message = "You must cross the river in order to continue. The river at this point is currently " + width +
 	  " feet wide and " + depth + " feet deep in the middle."
@@ -554,8 +562,15 @@ var Game = {
       </div>\n
       <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
-	  Game.waitForInput(null, null, function() {Game.scenes.CrossRiver(width, depth) });
-
+	  if (landmark == "BigBlueRiverCrossing") {
+		Game.waitForInput(null, null, function() {Game.scenes.CrossBigBlue(width, depth) });  
+	  }
+	  else if (landmark == "SnakeRiverCrossing") {
+		Game.waitForInput(null, null, function() {Game.scenes.CrossSnakeRiver(width, depth) });
+	  }
+	  else {
+	    Game.waitForInput(null, null, function() {Game.scenes.CrossRiver(width, depth) });
+	  }
 	},
 
 	// Select an option for crossing the river
@@ -592,7 +607,7 @@ var Game = {
         if (depth >= 1) {
           // Every 10th of a foot adds a 5% chance of disaster
           var accidentChance = (depth - 1) * 50;
-        
+
           if (randrange(1, 100) < accidentChance) {
 			      eventResult = wagonTipOver(Game.gameCaravan); success = false;
 		      } else {
@@ -655,7 +670,7 @@ var Game = {
       }
 
       else if(choice == 5) {
-		
+
 	    Game.scenes.CrossingInfo(1, width, depth);
       }
     });
@@ -877,32 +892,32 @@ var Game = {
 
   // Show a series of dialog boxes explaining the river crossing options
   CrossingInfo:function(counter, width, depth) {
-	  
+
 	if (counter == 1) {
-		
+
 	  var message = "To ford a river means to pull your wagon across a shallow part of the river with your oxen still attached.";
 	  Game.dialogBox(null, function() {Game.scenes.CrossingInfo(2, width, depth)});
 	  document.getElementById("DialogBox").innerHTML = `<img class="text_decoration" src="./img/TextDecoration.png"><br>` + message;
 	  document.getElementById("DialogBox").style.top = "-100%";
 	  document.getElementById("DialogBox").innerHTML += `<img class="text_decoration" src="./img/TextDecoration.png">\n`;
 	}
-	
+
 	if (counter == 2) {
-		
+
 	  var message = "To caulk the wagon means to seal it so that no water can get in. The wagon can then be floated accross like a boat.";
 	  Game.dialogBox(message, function() {Game.scenes.CrossingInfo(3, width, depth)});
 	  document.getElementById("DialogBox").style.top = "-100%";
 	}
-	
+
 	if (counter == 3) {
-		
+
 	  var message = "To use a ferry means to put your wagon on top of a flat boat belonging to someone else." +
 	  "The owner of the ferry will take your wagon across the river.";
 	  Game.dialogBox(message, function() { Game.scenes.CrossRiver(width, depth); });
 	  document.getElementById("DialogBox").style.top = "-100%";
 	}
   },
-  
+
     Journey:function(leavingLandmark){
       Game.gameDiv.innerHTML =
 
@@ -952,16 +967,17 @@ var Game = {
                 else {
                   if(landmarks[nextLandmark.landmark].river){
                     // Determine a random width and depth
-                    width = randrange(30, 50);
+                    width = randrange(80, 300);
                     depth = randrange(1, 5);
-					
-					if (landmarks[nextLandmark.landmark].name = "Big Blue River Crossing") {
-					  Game.scenes.CrossBigBlue(width, depth);
-					}
-					else {
-                      Game.scenes.ArriveAtRiver(width, depth);
-					}
-                  }else{
+
+                    Game.scenes.ArriveAtRiver(width, depth, nextLandmark.landmark);
+                  }
+				  
+                  else if(nextLandmark.landmark=="WillametteValley"){//game finished
+                    //go to result scene, not:
+                    Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+                  }
+                  else{
                     Game.scenes.Journey(true);
                   }
                 }
@@ -971,11 +987,11 @@ var Game = {
               callback();
             }
         };
-          
+
         var updateDay = function() {
           timeOfDay=0;
           Game.date.setDate(Game.date.getDate()+1);
-          
+
           nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],leavingLandmark);
           Game.miles+= Math.min(Game.gameCaravan.getMph()*Game.gameCaravan.pace.rate,nextLandmark.milesToNext);
           nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
@@ -1003,7 +1019,7 @@ var Game = {
               if(examine.toUpperCase()=="Y"){
                 Game.scenes.Tombstone(tombstoneMsg);
               }
-              else {	
+              else {
                 callback();
               }
             });
@@ -1015,10 +1031,10 @@ var Game = {
         var checkDeath = function(callback) {
           // get deaths
           var deaths = Game.gameCaravan.updateHealth();
-         
+
           if (Game.gameCaravan.family.length == 0) { // see if everyone's dead
-            Game.alertBox("Everyone is dead.", Game.scenes.startScreen);
-          } 
+            Game.alertBox("Everyone is dead.", Game.start);
+          }
           else if (deaths.length > 0) { // see if anyone died
             for (var i in deaths) {
               Game.alertBox(deaths[i] + " has died.");
@@ -1092,22 +1108,33 @@ var Game = {
           }, 1000);
         } // end travelFunc
 
+
         if(leavingLandmark){
           var currentLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
-          if (Object.keys(landmarks[currentLandmark.landmark].routes).length>1){
+          var alertNextLandmark=function(){
+            Game.alertBox("From "+landmarks[currentLandmark.landmark].name+" it is "+nextLandmark.milesToNext+" miles to "+landmarks[nextLandmark.landmark].name+".");
+            Game.waitForInput(null,null,function(){
+              Game.removeAlertBox();
+              travelFunc();
+            });
+          }
+          if(currentLandmark.landmark=="TheDalles"&&leavingLandmark!="leaveTheDalles"){
+            Game.scenes.TheDalles();
+          }
+          else if (Object.keys(landmarks[currentLandmark.landmark].routes).length>1){//if trail branches
             var list="";
             if(currentLandmark.landmark=="SouthPass")
               list= `
                 <ol>
-                  <li>head for Fort Bridger</li>
                   <li>head for Green River Crossing</li>
+                  <li>head for Fort Bridger</li>
                   <li>see the map</li>
-                <ol>`;
+                </ol>`;
             else if(currentLandmark.landmark=="BlueMountains")
               list=`
               <ol>
-                <li>head for TheDalles</li>
                 <li>head for FortWallaWalla</li>
+                <li>head for TheDalles</li>
                 <li>see the map</li>
               </ol>
             `;
@@ -1118,41 +1145,75 @@ var Game = {
             }
             Game.waitForInput(null,validationFunc,function(choice){
               Game.removeAlertBox();
-              if(choice==1){
-                if(currentLandmark.landmark=="SouthPass")
-                  branch[0]=0;
-                else {
-                  branch[1]=0;
-                }
-              }
-              else if(choice==2){
-                if(currentLandmark.landmark=="SouthPass")
-                  branch[0]=1;
-                else {
-                  branch[1]=1;
-                }
-              }
-              else if(choice==3){
-                Game.scenes.ShowMap(function(){Game.scenes.journey(true)});
+              if(choice==3){
+                Game.scenes.ShowMap(function(){Game.scenes.Journey(true)});
                 return;
               }
-              travelLoop=setInterval(travelFunc,125); /*call travelFunc once per game hour, 3 seconds per game day*/
-              Game.waitForInput(null,null,function(){
-                clearInterval(travelLoop);
-                Game.scenes.TrailMenu();
-              });
-            });
-          }//if trail branches
-          Game.alertBox("From "+landmarks[currentLandmark.landmark].name+" it is "+nextLandmark.milesToNext+" miles to "+landmarks[nextLandmark.landmark].name+".");
-          Game.waitForInput(null,null,function(){
-            Game.removeAlertBox();
-            travelFunc();           
-          });
-        }
+              if(currentLandmark.landmark=="SouthPass"){
+                Game.branch[0]=+choice-1;
+              }
+              else if(currentLandmark.landmark=="BlueMountains"){
+                Game.branch[1]=+choice-1;
+              }
+
+              nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],true);
+              alertNextLandmark();
+            });//end wait for input for branch choice
+          }// end if trail branches
+          else{
+            alertNextLandmark();
+          }
+        }//endif leaving landmark
         else{
           travelFunc();
         }
 
+    },
+
+    TheDalles: function(){
+      Game.gameDiv.innerHTML=
+      `<div id="dalles" class="centered_content white_black">
+        <img class="text_decoration" src="./img/TextDecoration.png">
+        <div id="content">
+          <p>The trail divides here.</p>
+          <p>You may:</p>
+          <ol>
+            <li>Float down the Columbia River</li>
+            <li>Take the Barlow Toll Road</li>
+          </ol>
+          <p>What is your choice?<span id="input"></span></p>
+        </div>
+        <img class="text_decoration" src="./img/TextDecoration.png">
+      </div>`;
+      var validationFunc=function(input){
+        return input==1||input==2;
+      };
+      Game.waitForInput(null,validationFunc,function(choice){
+        if(choice==1){
+          //do the river game
+        }
+        else{
+          document.getElementById("content").innerHTML=
+          `<p>You must pay $14.00 to travel the Barlow road. Are you willing to do this?
+            <span id="input"><span>
+          </p>
+          `;
+          var validationFunc=function(input){
+            input =input.toUpperCase();
+            return input=="Y"||input=="N";
+          }
+          Game.waitForInput(null,validationFunc,function(input){
+            input=input.toUpperCase();
+            if(input=="Y"){
+              Game.gameCaravan.money-=14;
+              Game.scenes.Journey("leaveTheDalles");
+            }
+            else{
+              Game.scenes.TheDalles();
+            }
+          })
+        }
+      });
     },
 
     Tombstone : function(message) {
@@ -1392,7 +1453,13 @@ var Game = {
       </div>
       <p class = "prompt white_black">Press ENTER to continue</p>`;
 
-
+      if(landmark==landmarks.WillametteValley){
+        //go to result scene, not:
+        Game.waitForInput(null,null,function(){
+            Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+        });
+        return;
+      }
 
       Game.waitForInput(null,null,function(){Game.scenes.LandmarkMenu(landmark)});
 
@@ -1408,7 +1475,7 @@ var Game = {
 
          <div id="conditions">\n
            Weather: <span id = "conditions_weather">`+ Game.weather +`</span><br>\n
-           Health: <span id = "conditions_health">`+ Game.gameCaravan.health.string +`</span><br>\n
+           Health: <span id = "conditions_health">`+Game.gameCaravan.getHealth() +`</span><br>\n
            Pace: `+ Game.gameCaravan.pace.string +`<br>\n
            Rations: `+ Game.gameCaravan.rations.string +`<br>\n
          </div>\n
@@ -1451,13 +1518,8 @@ var Game = {
               // Determine a random width and depth
               width = randrange(30, 50);
               depth = randrange(1, 5);
-			  
-			  if (landmark.name == "Big Blue River Crossing") {
-			    Game.scenes.CrossBigBlue(width, depth);
-			  }
-			  else {
-                Game.scenes.ArriveAtRiver(width, depth);
-			  }
+
+              Game.scenes.ArriveAtRiver(width, depth, landmark);
            }
            else {
              Game.scenes.Journey(true);
@@ -1504,7 +1566,7 @@ var Game = {
       var width = canvas.width = canvas.clientWidth; var height = canvas.height = canvas.clientHeight;
       var hypo = Math.sqrt(width * width + height * height);
 
-      var grd; 
+      var grd;
       var bank1 = -40; var bank2 = 75; var end = (success ? 30 : 0);
       var BLUE = "#42B2FF"; var TAN = "#F6B68E";
 
@@ -1575,7 +1637,8 @@ var Game = {
 		"I think I just broke my leg and caught Ebola!";
 	}
 
-  var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
+  var alert = document.createElement("p"); //alert.appendChild(document.createTextNode(message));
+  alert.innerHTML=message;
   alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
 	Game.gameDiv.appendChild(alert);
 
@@ -1639,21 +1702,21 @@ var Game = {
     var randomIndex2= Math.floor(Math.random() * itemNames.length);
 
     while(randomIndex1==randomIndex2){
-    
+
 	randomIndex2=Math.floor(Math.random() * itemNames.length);
     }
 
     var amtwanted=Math.floor(Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1;
     var amttrade=Math.floor(Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1;
-    
+
 	if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
-		
+
 		var message = "You meet a trader who wants " + amtwanted + " " + itemNames[randomIndex1];
 		Game.dialogBox(message, returnScene);
 		document.getElementById("DialogBox").style.top = "-100%";
 		document.getElementById("DialogBox").innerHTML += `<br><br>You don't have this`
     }
-	
+
 	else{
 
 	  document.getElementById("input").remove();
@@ -1689,7 +1752,7 @@ var Game = {
     xhttp.open("GET", "./php/getTombstone.php?startMi="+ startMi +"&endMi=" + endMi, true);
     xhttp.send();
   },
-  
+
   // Ask the player for an epitaph, and add their tombstone to the database
   getTombstones : function(callback) {
       var xhttp = new XMLHttpRequest();
@@ -1708,12 +1771,12 @@ var Game = {
 	var name = Game.gameCaravan.family[0];
 	var date = Game.date;
 	var distance = Game.miles;
-	
+
 	// Need to redraw the DialogBox after being prompted to enter something
 	if (document.getElementById("DialogBox") != null) {
 	  document.getElementById("DialogBox").remove();
 	}
-	
+
 	Game.dialogBox("You and the rest of your caravan are dead. What is your epitaph?");
 
 	document.getElementById("DialogBox").style.top = "-100%";
@@ -1735,7 +1798,7 @@ var Game = {
 
 
 	  if (choice == "") {
-		  
+
 	    Game.alertBox("Please enter something for your final words", Game.setTombstone);
 		document.getElementById("AlertBox").style.top = "-175%";
 	  }
