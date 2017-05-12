@@ -4,11 +4,12 @@ var Game = {
   weather: "warm",
   miles: 0,
   branch:[null,null],
-
+  tombstones: [],
   gameDiv: document.getElementById("game"),
 
   start: function(){
     Game.scenes.startScreen();
+    Game.getTombstones();
   },
 
   waitForInput: function(enterKeys,validationFunc,callback=function(){}){
@@ -750,9 +751,9 @@ var Game = {
           document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         };
 
-        var examineTombstone = function(tombstoneMsg, callback) {
+        var examineTombstone = function(tombstone, callback) {
           // did we pass a tombstone?
-          if (tombstoneMsg != "null") {
+          if (tombstone != -1) {
             Game.alertBox("You passed a tombstone. Would you like to examine it?");
             document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
             var validationFunc=function(input){
@@ -762,7 +763,7 @@ var Game = {
             Game.waitForInput(null,validationFunc,function(examine){
               Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
-                Game.scenes.Tombstone(tombstoneMsg);
+                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br>"+tombstone.epitaph); 
               }
               else {	
                 callback();
@@ -851,11 +852,12 @@ var Game = {
               updateDay();
               checkEvent(function(){
                 checkDeath(function(){
-                  Game.getTombstone(Game.miles - travelled, Game.miles, function(message) {
-                    examineTombstone(message, function(){
-                      checkLandmark(function() {
-                        checkStatus ? Game.scenes.TrailMenu() : travelFunc();
-                      });
+                  var tombstone = Game.tombstones.find(function(stone){
+                    return stone.mile <= Game.miles && stone.mile >= Game.miles - travelled;
+                  });
+                  examineTombstone(tombstone, function(){
+                    checkLandmark(function() {
+                      checkStatus ? Game.scenes.TrailMenu() : travelFunc();
                     })
                   });
                 })
@@ -1403,12 +1405,12 @@ var Game = {
   },
   
   // Ask the player for an epitaph, and add their tombstone to the database
-  getTombstones : function(callback) {
+  getTombstones : function() {
       var xhttp = new XMLHttpRequest();
       var text = "";
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
-          callback(this.responseText);
+          Game.tombstones = JSON.parse(this.responseText);
         }
       };
       xhttp.open("GET", "./php/getTombstones.php", true);
