@@ -1,12 +1,30 @@
 var myGamePiece;
 var myObstacles=[];
+var infopage;
+ var GameCaravan= new Caravan();
+ var topborder;
+ var botborder;
+ var dock;
+ var gameDiv=document.getElementById("game");
 function startGame() {
-    
+   
+GameCaravan.wheels=3;
+GameCaravan.axles=3;
+GameCaravan.bait =5;
+ GameCaravan.food=100;
+ GameCaravan.tongues=3;
+ GameCaravan.clothing=400;
     //myGamePiece=new component(30,30,"wagonOnRiver.gif",10,120,"image");
-    
+    //infopage = new component("10px", "Consolas", "black", 10, 40, "text");
+    topborder = new component(480, 20, "peru", 0, 0,"block");
+    botborder=new component(480, 20, "peru", 0, 130,"block");
+    //dock=new component(20, 20, "black", 0, 0,"block");
     myGameArea.start();
     myGamePiece=new component(80,30,"../img/wagonOnRiver.gif",20,70,"image");
-    //myObstacle  = new component(20, 10, "../img/rock.gif", 200, 100,"image");   
+    //myObstacle  = new component(20, 10, "../img/rock.gif", 200, 100,"image"); 
+    botborder.update(); 
+    topborder.update();
+    //dock.update(); 
     myGamePiece.update();
     //myGamePiece = new component(30, 30, "red", 10, 120);
 }
@@ -30,8 +48,16 @@ var myGameArea = {
             myGameArea.key = false;
         })
         },
+    resume: function(){
+    	myObstacles=[];
+    	myGameArea.key = false;
+    	this.interval = setInterval(updateGameArea, 20);
+
+
+    },
     clear : function() {
         context.clearRect(0, 0, canvas.width, canvas.height);
+        
     },
     stop : function() {
         clearInterval(this.interval);
@@ -52,8 +78,12 @@ function component(width, height, color, x, y, type) {
   this.y = y;
   this.update = function() {
     ctx = canvas.getContext("2d");
-
-    if (type == "image") {
+	if (this.type == "text") {
+		ctx.font = this.width + " " + this.height;
+      	ctx.fillStyle = color;
+		ctx.fillText(this.text, this.x, this.y);
+	}
+   else if (type == "image") {
       ctx.drawImage(this.image,
         this.x,
         this.y,
@@ -68,10 +98,10 @@ function component(width, height, color, x, y, type) {
         this.y += this.speedY;        
     }
   this.crashWith = function(otherobj) {
-        var myleft = this.x;
+        var myleft = this.x+1;
         var myright = this.x + (this.width);
-        var mytop = this.y;
-        var mybottom = this.y + (this.height);
+        var mytop = this.y+1;
+        var mybottom = this.y + (this.height)-1;
         var otherleft = otherobj.x;
         var otherright = otherobj.x + (otherobj.width);
         var othertop = otherobj.y;
@@ -90,24 +120,38 @@ function updateGameArea() {
 
     //myGameArea.clear();
     myGamePiece.speedX = 0;
-    myGamePiece.speedY = 0; 
+    myGamePiece.speedY = 0;
+    myGameArea.frameNo+=1; 
     if (myGameArea.key && myGameArea.key == 37) {myGamePiece.speedX = -1; }
     if (myGameArea.key && myGameArea.key == 39) {myGamePiece.speedX = 1; }
     if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
     if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1; }
     var x, y,minHeight, maxHeight;
     for (i = 0; i < myObstacles.length; i += 1) {
-        if (myGamePiece.crashWith(myObstacles[i])) {
+        if (myGamePiece.crashWith(myObstacles[i])||myGamePiece.crashWith(topborder) ||myGamePiece.crashWith(botborder)) {
+ 			console.log("test");
+ 			myGamePiece.speedX=0;
+            myGamePiece.speedY=0;
+            myGameArea.key = false;
+           alert("You have lost "+destroyRandomSupplies(GameCaravan));
+            //infopage.update();
+            myGamePiece.x=20;
+            myGamePiece.y=70;
+            
             myGameArea.stop();
+            myGameArea.clear();
+
+            myGameArea.resume();
+            
+           
             return;
         }
     }
     myGameArea.clear();
-    myGameArea.frameNo += 1;
     if (myGameArea.frameNo == 1 || everyinterval(150)||everyinterval(100)) {
         x = canvas.width;
-        minHeight = 30;
-        maxHeight = 160;
+        minHeight = 20;
+        maxHeight = 130;
         //y = canvas.height - 100
         height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
         myObstacles.push(new component(20, 10, "../img/rock.gif", x, height,"image"));
@@ -116,8 +160,29 @@ function updateGameArea() {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
+    if (myGameArea.frameNo == 1000 ){
+    	//x = canvas.width;
+    	dock=new component(30, 30, "../img/dock.jpg", 300, 100,"image");}
+    if(myGameArea.frameNo>1000){
+    	dock.x+=-1;
+    	dock.update();
+    	if (myGamePiece.crashWith(dock)){
+    		myGamePiece.x=20;
+            myGamePiece.y=70;
+    	alert("you win!")
+    	}
+    }
+    if(myGameArea.frameNo==1500){
+        	alert("you went to far!");
+        	myGameArea.stop();
+    }
+    
+    
+    botborder.update();
 
-    myGamePiece.newPos();
+    topborder.update();
+   	myGamePiece.newPos();
+
     myGamePiece.update();
 
 }
