@@ -565,7 +565,7 @@ var Game = {
       <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
 	  if (landmark == "BigBlueRiverCrossing") {
-		Game.waitForInput(null, null, function() {Game.scenes.CrossBigBlue(width, depth) });  
+		Game.waitForInput(null, null, function() {Game.scenes.CrossBigBlue(width, depth) });
 	  }
 	  else if (landmark == "SnakeRiverCrossing") {
 		Game.waitForInput(null, null, function() {Game.scenes.CrossSnakeRiver(width, depth) });
@@ -626,12 +626,12 @@ var Game = {
         if (randrange(1, 100) < 30) {
 		  var eventResult = wagonTipOver(Game.gameCaravan);
           success = false;
-		}  
-		  
+		}
+
 		else {
 		  eventResult = "You crossed the river safely."; success = true;
         }
-        
+
         var time = Game.scenes.animateRiver("float", success);
         setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
       }
@@ -677,7 +677,7 @@ var Game = {
       }
     });
   },
-  
+
   // This is a modified CrossRiver() function for the Big Blue River, which has no ferry
   CrossBigBlue(width, depth) {
 
@@ -711,7 +711,7 @@ var Game = {
         if (depth >= 1) {
           // Every 10th of a foot adds a 5% chance of disaster
           var accidentChance = (depth - 1) * 50;
-        
+
           if (randrange(1, 100) < accidentChance) {
 			      eventResult = wagonTipOver(Game.gameCaravan); success = false;
 		      } else {
@@ -728,12 +728,12 @@ var Game = {
         if (randrange(1, 100) < 30) {
 		  var eventResult = wagonTipOver(Game.gameCaravan);
           success = false;
-		}  
-		  
+		}
+
 		else {
 		  eventResult = "You crossed the river safely."; success = true;
         }
-        
+
         var time = Game.scenes.animateRiver("float", success);
         setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
       }
@@ -760,12 +760,12 @@ var Game = {
       }
 
       else if(choice == 4) {
-		
+
 	    Game.scenes.CrossingInfo(1, width, depth);
       }
-    });  
+    });
   },
-  
+
   // This is a modified CrossRiver() function for the Snake River, which has the option to hire an Indian to cross
   CrossSnakeRiver(width, depth) {
 
@@ -800,7 +800,7 @@ var Game = {
         if (depth >= 1) {
           // Every 10th of a foot adds a 5% chance of disaster
           var accidentChance = (depth - 1) * 50;
-        
+
           if (randrange(1, 100) < accidentChance) {
 			      eventResult = wagonTipOver(Game.gameCaravan); success = false;
 		      } else {
@@ -817,12 +817,12 @@ var Game = {
         if (randrange(1, 100) < 30) {
 		  var eventResult = wagonTipOver(Game.gameCaravan);
           success = false;
-		}  
-		  
+		}
+
 		else {
 		  eventResult = "You crossed the river safely."; success = true;
         }
-        
+
         var time = Game.scenes.animateRiver("float", success);
         setTimeout(function() {Game.alertBox(eventResult, function(){Game.scenes.Journey(true)})}, time + 500);
       }
@@ -830,24 +830,24 @@ var Game = {
 	  else if(choice == 3) {
 
 		if (Game.gameCaravan.clothing < 3) {
-			
-		  var message = "This Native American can take you accross the river safely in exchange for 3 sets of clothes."+ 
+
+		  var message = "This Native American can take you accross the river safely in exchange for 3 sets of clothes."+
 		  " You don't have enough clothes to give him.";
 		  Game.dialogBox(message, function() {Game.scenes.CrossSnakeRiver(width, depth)});
 		  document.getElementById("DialogBox").style.top = "-100%";
 		}
-		
+
 		else {
 		  var message = "This Native American can take you accross the river safely in exchange for 3 sets of clothes."
 		  Game.dialogBox(message, function() {Game.scenes.CrossSnakeRiver(width, depth)});
-		  document.getElementById("game").innerHTML = 
+		  document.getElementById("game").innerHTML =
 		  `<div id="indian_cross_river" class="centered_content white_black">\n
 	        <img class="text_decoration" src="./img/TextDecoration.png">\n
 		    <p>` + message + `</p>
 		    <br>
 		    <p>Do you want him to help you cross?(Y/N) <span id="input"></span></p>\n
 		  </div>`
-		  
+
 		  var validationFunc=function(input){
               input=input.toUpperCase();
               return input=="Y"||input=="N";
@@ -861,9 +861,9 @@ var Game = {
 			  Game.scenes.CrossSnakeRiver(width, depth);
 			}
 		  });
-	    } 
+	    }
 	  }
-	  
+
 	  //let a day pass and change the width/depth slightly
       else if(choice == 4) {
 
@@ -886,10 +886,10 @@ var Game = {
       }
 
       else if(choice == 5) {
-		
+
 	    Game.scenes.CrossingInfo(1, width, depth);
       }
-    });  
+    });
   },
 
   // Show a series of dialog boxes explaining the river crossing options
@@ -974,7 +974,7 @@ var Game = {
 
                     Game.scenes.ArriveAtRiver(width, depth, nextLandmark.landmark);
                   }
-				  
+
                   else if(nextLandmark.landmark=="WillametteValley"){//game finished
                     //go to result scene, not:
                     Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
@@ -1641,7 +1641,7 @@ var Game = {
       `<div id="river_game">
         <canvas id="canvas"></canvas>
       </div>`;
-      startRiverGame();
+      Game.startRiverGame(function(){Game.scenes.Landmark(landmarks.WillametteValley)});
     }
   },//end Game.scenes
 
