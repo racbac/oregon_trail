@@ -56,6 +56,7 @@ body {
     color: rgb(255,200,170);
     font-family: "Rye", Serif;
     font-weight: lighter;
+    text-align: center;
 }
 
 .white_black { color: white; background-color: black; }
@@ -104,6 +105,8 @@ ol.col2 span, ul.col2 span {
     margin: 0;
 }
 
+#learnMore p {width: 75%;}
+
 #matt_intro { flex-direction: row !important;}
 
 #matt_img {
@@ -141,7 +144,7 @@ ol.col2 span, ul.col2 span {
 	padding: 2%;
 }
 
-#AlertBox {
+#AlertBox .AlertBox {
 	position: relative;
 	word-wrap: break-word;
 	z-index : 1;
