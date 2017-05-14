@@ -94,15 +94,86 @@ var Game = {
           Game.scenes.chooseOccupation();
         }
         else if(input ==2){
-          Game.gameDiv.innerHTML="<div>I will do this later. Enter to continue.</div>"
-          Game.waitForInput(null,null,Game.scenes.startScreen);
-        }
+          Game.gameDiv.innerHTML=
+            `<div id="learnMore"class="centered_content white_black">\n
+              <h1>The Oregon Trail</h1>\n
+              <img class="text_decoration" src="./img/TextDecoration.png">\n
+              <p>\n
+                Try taking a journey by covered wagon across 2000 miles of plains, rivers, and mountains. Try! On the plains, will you slosh your oxen through mud and water-filled ruts or will you plod through dust six inches deep?
+              </p>\n
+              <img class="text_decoration" src="./img/TextDecoration.png">\n
+            </div>\n
+            <p class="prompt white_black">Press ENTER to continue</p>\n`;
+            Game.waitForInput(null,null,function(){
+              Game.gameDiv.innerHTML = 
+                `<div id="learnMore" class="centered_content white_black">\n
+                  <h1>The Oregon Trail</h1>\n
+                  <img class="text_decoration" src="./img/TextDecoration.png">\n
+                  <p>\n
+                    How will you cross the rivers? If you have money, you might take a ferry (if there is a ferry). Or, you can ford the river and hope you aren't swallowed alive!  
+                  </p>\n
+                  <img class="text_decoration" src="./img/TextDecoration.png">\n
+                </div>\n
+                <p class="prompt white_black">Press ENTER to continue</p>\n`;
+              Game.waitForInput(null, null, function() {
+                Game.gameDiv.innerHTML = 
+                  `<div id="learnMore" class="centered_content white_black">\n
+                    <h1>The Oregon Trail</h1>\n
+                    <img class="text_decoration" src="./img/TextDecoration.png">\n
+                    <p>\n
+                      What about supplies? Well, if you're low on food you can fish. You might get a bass...you might. And there are carp in the mountains.
+                    </p>\n
+                    <img class="text_decoration" src="./img/TextDecoration.png">\n
+                  </div>\n
+                  <p class="prompt white_black">Press ENTER to continue</p>\n`;
+                Game.waitForInput(null, null, function() {
+                  Game.gameDiv.innerHTML = 
+                    `<div id="learnMore" class="centered_content white_black">\n
+                      <h1>The Oregon Trail</h1>\n
+                      <img class="text_decoration" src="./img/TextDecoration.png">\n
+                      <p>\n
+                        At the Dalles, you can try navigating the Columbia River, but if running the rapids with a makeshift raft makes you queasy, better take the Barlow Road.
+                      </p>\n
+                      <img class="text_decoration" src="./img/TextDecoration.png">\n
+                    </div>\n
+                    <p class="prompt white_black">Press ENTER to continue</p>\n`;
+                  Game.waitForInput(null, null, function() {
+                    Game.gameDiv.innerHTML = 
+                      `<div id="learnMore" class="centered_content white_black">\n
+                        <h1>The Oregon Trail</h1>\n
+                        <img class="text_decoration" src="./img/TextDecoration.png">\n
+                        <p>\n
+                          If for some reason you don't survive -- your wagon burns, or thieves steal your oxen, or you run out of provisions, or you die of cholera -- don't give up! Try again...and again...until your name is up with the others on The Oregon Top Ten.
+                        </p>\n
+                        <img class="text_decoration" src="./img/TextDecoration.png">\n
+                      </div>\n
+                      <p class="prompt white_black">Press ENTER to continue</p>\n`;
+                    Game.waitForInput(null, null, function() {
+                      Game.gameDiv.innerHTML = 
+                        `<div id="learnMore" class="centered_content white_black white_black">\n
+                          <h1>The Oregon Trail</h1>\n
+                          <img class="text_decoration" src="./img/TextDecoration.png">\n
+                          <p>\n
+                            The team responsible for the creation of this product includes: 
+                          </p>\n
+                          <ul class="square_list">\n
+                            <li>Rachel Backert</li>\n
+                            <li>Braxton Dubin</li>\n
+                            <li>Chen Kuo</li>\n
+                            <li>Alec Wieland</li>\n
+                          </ul>\n
+                          <img class="text_decoration" src="./img/TextDecoration.png">\n
+                        </div>\n
+                        <p class="prompt white_black">Press ENTER to continue</p>\n`;
+                      Game.waitForInput(null, null, Game.scenes.startScreen);
+                    })
+                  })
+                })
+              })
+            })
+         }
         else if(input == 3){
           Game.gameDiv.innerHTML="<div> I will do this later. Enter to continue.</div>"
-          Game.waitForInput(null,null,Game.scenes.startScreen);
-        }
-        else if(input == 4){
-          Game.gameDiv.innerHTML="<div>I will do this later. Enter to continue.</div>"
           Game.waitForInput(null,null,Game.scenes.startScreen);
         }
         else{
