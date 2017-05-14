@@ -50,7 +50,7 @@ function Caravan() {
     this.injured_oxen = 0;
     this.clothing = 0;
     this.bait = 0;
-    this.food = 0;
+	this.leader = "";
 }
 
 Caravan.prototype.updateFood = function() {

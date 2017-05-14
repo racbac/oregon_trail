@@ -178,6 +178,7 @@ var Game = {
         // Add the leader to the caravan
         var leader = new Person(leadername);
         Game.gameCaravan.addPerson(leader);
+		Game.gameCaravan.leader = leadername;
 
         document.getElementById("enterNames").innerHTML =
           ` <div class="white_black">\n
@@ -1782,9 +1783,9 @@ var Game = {
 
   setTombstone : function() {
 
-	var name = Game.gameCaravan.family[0];
+	var name = Game.gameCaravan.leader;
 	var date = Game.date;
-	var distance = Game.miles;
+	var mile = Game.miles;
 
 	// Need to redraw the DialogBox after being prompted to enter something
 	if (document.getElementById("DialogBox") != null) {
@@ -1821,9 +1822,14 @@ var Game = {
 
 		var epitaph = choice;
 		var xhttp = new XMLHttpRequest();
+		//xhttp.open("GET", "./php/set_tombstone.php?name="+ name +"&distance=" + distance + "&epitaph" + epitaph, true);
+		//xhttp.send();
+		console.log("Sent: " + name);
+		
 		xhttp.open("POST", "./php/set_tombstone.php", true);
 		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("name="+ name +"&distance=" + distance + "&epitaph" + epitaph);
+		xhttp.send("?name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
+		Game.scenes.startScreen();
       }
     })
 
