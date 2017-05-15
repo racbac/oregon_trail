@@ -56,6 +56,7 @@ body {
     color: rgb(255,200,170);
     font-family: "Rye", Serif;
     font-weight: lighter;
+    text-align: center;
 }
 
 .white_black { color: white; background-color: black; }
@@ -104,6 +105,20 @@ ol.col2 span, ul.col2 span {
     margin: 0;
 }
 
+#game table {
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+	border-spacing: 0.4em;
+	width: 75%;
+}
+
+#game table th {
+	font-weight: inherit;
+}
+
+#learnMore p {width: 75%;}
+
 #matt_intro { flex-direction: row !important;}
 
 #matt_img {
@@ -141,7 +156,17 @@ ol.col2 span, ul.col2 span {
 	padding: 2%;
 }
 
-#AlertBox {
+#game table {
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+}
+
+#game table th {
+	font-weight: inherit;
+}
+
+#AlertBox, .AlertBox {
 	position: relative;
 	word-wrap: break-word;
 	z-index : 1;
@@ -248,6 +273,13 @@ img.fish {
 	height: 50%;
 }
 
+#landmark {
+    position: absolute;
+    bottom: 0;
+    height: 35%;
+    transition: right 1s linear 0s;
+}
+
 #river_crossing > div { width: 50%; }
 
 #map { background-image: url("img/map.png"); }
@@ -262,4 +294,3 @@ img.fish {
 #canvas {
    background:url("./img/water.gif");
 }
-/***************/

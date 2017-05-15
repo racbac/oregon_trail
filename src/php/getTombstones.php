@@ -1,12 +1,15 @@
 <?php
     include("./CommonMethods.php");
     $COMMON = new Common(false);
-    $sql = "SELECT * FROM `tombstones` ORDER BY `mile` DESC";
+    $sql = "SELECT `mile`, `name`, `epitaph` FROM `tombstones` WHERE `date` IN (SELECT MAX(`date`) FROM `tombstones` GROUP BY FLOOR(`mile` / 40)) ORDER BY `mile`";
     $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
-    $info = mysql_fetch_assoc($rs);
-    if ($info != NULL) {
-        echo("Here lies ". $info['name']."<br>\n".$info['epitaph']);
-    } else {
-        echo("null");
+    $results = array();
+    while ($row = mysql_fetch_assoc($rs)) {
+        $results[] = array(
+            'mile' => $row['mile'],
+            'name' => $row['name'],
+            'epitaph' => $row['epitaph']
+        );
     }
+    echo(json_encode($results));
 ?>

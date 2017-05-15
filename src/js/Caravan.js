@@ -50,7 +50,7 @@ function Caravan() {
     this.injured_oxen = 0;
     this.clothing = 0;
     this.bait = 0;
-
+	this.leader = "";
 }
 
 Caravan.prototype.updateFood = function() {
@@ -109,13 +109,12 @@ Caravan.prototype.purchaseItems = function(purchases) {
 // Return the average health
 Caravan.prototype.getHealth = function() {
     var healths = ["dying", "very poor", "poor", "fair", "good"];
-	var familySize = this.family.length;
 	var totalHealth = 0;
 
-	for (var i = 0; i < familySize; i++) {
+	for (var i = 0; i < this.family.length; i++) {
 		totalHealth += this.family[i].health;
     }
-    totalHealth /= familySize;
+    totalHealth /= this.family.length;
     return healths[map(totalHealth, 0, 100, 0, 4)];
 }
 
@@ -218,6 +217,7 @@ Caravan.prototype.updateHealth = function() {
         if (dead == -1) {
             died.push(this.family[i].name);
             this.family.splice(i, 1);
+            this.food+=100;
         }
     }
     return died;
