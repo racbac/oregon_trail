@@ -1627,9 +1627,9 @@ var Game = {
 
     Results : function() {
       Game.gameDiv.innerHTML = 
-        `<div id="results" class="centered_content">\n
+        `<div id="results" class="centered_content white_black">\n
           <p class="black_white">Points for arriving in Oregon</p>\n
-          <table id="scores" class="white_black">
+          <table id="scores">
           </table>
         </div>\n
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
@@ -1652,7 +1652,7 @@ var Game = {
       total += printrow(Game.gameCaravan.bait, "bait", 1 / 50);
       total += printrow(Game.gameCaravan.food, "pounds of food", 1 / 25);
       total += printrow(Game.gameCaravan.money, "cash", 1 / 5);
-      document.getElementById("results").innerHTML += `<p>Total: ` + total + `</p>\n`;
+      document.getElementById("results").innerHTML += `<p class="white_black">Total: ` + total + `</p>\n`;
 
       Game.waitForInput(null, null, function() {
         Game.updateTopTen(Game.gameCaravan.family[0].name, total, function(rated) {
