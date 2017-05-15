@@ -1296,7 +1296,7 @@ var Game = {
       });
     },
 
-    Tombstone : function(message) {
+    Tombstone : function(message, callback) {
       Game.gameDiv.innerHTML=`
         <div id="tombstone" class="centered_content">\n
           <img src='./img/tombstone.png'/>
@@ -1306,6 +1306,7 @@ var Game = {
         document.getElementById("msg").style.textAlign ="center";
         document.getElementById("msg").style.top="150px";
         document.getElementById("msg").style.right="10px";
+		document.getElementById("msg").innerHTML = message;
       Game.waitForInput(null, null, function() {Game.scenes.Journey(false)});
     },
 
