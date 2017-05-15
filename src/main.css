@@ -294,3 +294,11 @@ img.fish {
 #canvas {
    background:url("./img/water.gif");
 }
+
+#msg {
+	width: 40%;
+	position: absolute;
+    text-align: center;
+    top: 25%;
+	word-wrap: break-word;
+}

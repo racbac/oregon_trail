@@ -1,4 +1,6 @@
 var Game = {
+	
+  // Variables initialized at the start of every attempt
   gameCaravan: new Caravan(),
   date: new Date(),
   weather: "warm",
@@ -7,12 +9,14 @@ var Game = {
   tombstones: [],
   gameDiv: document.getElementById("game"),
 
+  // Function that starts the game running
   start: function(){
     Game.resetGame();
     Game.scenes.startScreen();
     Game.getTombstones();
   },
 
+  // Function that clears variables so that a new game can be attempted
   resetGame: function(){
     Game.Caravan= new Caravan();
     Game.date= new Date(),
@@ -20,6 +24,8 @@ var Game = {
     Game.branch=[null,null];
   },
 
+  // Helper function used for taking user input. Checks against a given validation function for each keypress
+  // before adding the character to the input.
   waitForInput: function(enterKeys,validationFunc,callback=function(){}){
     enterKeys=enterKeys||[13];
     validationFunc=validationFunc||function(){return true};
@@ -61,7 +67,7 @@ var Game = {
     };
   },
 
-  // Use for times when the caravan gets lost or has to wait for something
+  // Helper function used to pass time and consume rations without the caravan moving forward
   passDays: function(numDays) {
 
 	Game.date.setDate(Game.date.getDate() + numDays);
@@ -72,6 +78,8 @@ var Game = {
   },
 
   scenes: {
+	  
+	// Screen that greets the player when they open the game, and allows them to start playing
     startScreen: function(){
       Game.gameDiv.innerHTML=
         '<div class=\"centered_content\">'+
@@ -180,6 +188,8 @@ var Game = {
         }
       });
     },
+	
+	// Screen where the player selects their occupation, which determines score and certain bonuses
     chooseOccupation: function(){
       Game.gameDiv.innerHTML =
         `<div id="choose_occupation" class="white_black">\n
@@ -293,6 +303,8 @@ var Game = {
             Game.waitForInput(null,null,nameFunc);
       });
     },
+	
+	// Screen where the player chooses the departure month, which will set the date and be used to determine weather
     chooseDepartureMonth:function(){
       Game.gameDiv.innerHTML =
       `<div id="chooseMonth" class="white_black">\n
@@ -347,6 +359,8 @@ var Game = {
         Game.scenes.MattStore();
       });
     },
+	
+	// Screen that informs the player of how their choice of departure month may effect the game
     adviceDepartureMonth:function(){
       Game.gameDiv.innerHTML =
         `<div class='white_black'>\n
@@ -358,6 +372,8 @@ var Game = {
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
       Game.waitForInput(null,null,Game.scenes.chooseDepartureMonth);
     },
+	
+	// Screen where the player is introduced to the general store, given advice on purchase of items, and is then allowed to buy items
     MattStore:function(){
       Game.gameDiv.innerHTML =
       `<div class='white_black'>\n`+
@@ -536,6 +552,7 @@ var Game = {
       });
     },
 
+	// Screen that allows a player to purchase items while they are at a landmark
     BuySupply:function(landmark){
       var store=landmark.store;
       Game.gameDiv.innerHTML=`<div id="buy_supply" class="centered_content white_black">\n
@@ -621,7 +638,7 @@ var Game = {
       })
     },
 
-	// Arrive at the river and show the width and depth
+	// Screen where the player arrives and the river and is told the width and depth of the river
 	ArriveAtRiver: function(width, depth, landmark) {
 
 	  var message = "You must cross the river in order to continue. The river at this point is currently " + width +
@@ -635,6 +652,7 @@ var Game = {
       </div>\n
       <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
+	  // The options for crossing the river will be different at Big Blue and Snake River Crossings.
 	  if (landmark == "BigBlueRiverCrossing") {
 		Game.waitForInput(null, null, function() {Game.scenes.CrossBigBlue(width, depth) });
 	  }
@@ -646,7 +664,8 @@ var Game = {
 	  }
 	},
 
-	// Select an option for crossing the river
+	// Screen where the player selects from a list of options in order to cross the river, where the river crossing animation
+	// is played, and where the result of the crossing attempt is announced (success, lost supplies, drowning)
 	CrossRiver:function(width, depth) {
 
 		document.getElementById("game").innerHTML =
@@ -837,7 +856,7 @@ var Game = {
     });
   },
 
-  // This is a modified CrossRiver() function for the Snake River, which has the option to hire an Indian to cross
+  // This is a modified CrossRiver() function for the Snake River, which has the option to hire an Indian to guide you across
   CrossSnakeRiver(width, depth) {
 
 		document.getElementById("game").innerHTML =
@@ -963,9 +982,10 @@ var Game = {
     });
   },
 
-  // Show a series of dialog boxes explaining the river crossing options
+  // Screen where inforamtion about the river crossing options is displayed
   CrossingInfo:function(counter, width, depth) {
 
+	// Create a new dialog box explaining each option
 	if (counter == 1) {
 
 	  var message = "To ford a river means to pull your wagon across a shallow part of the river with your oxen still attached.";
@@ -991,6 +1011,13 @@ var Game = {
 	}
   },
 
+    // Screen that the player looks at while they are traveling between landmarks. Performs several functions including:
+	//   - Animates the caravan moving between landmarks
+	//   - Updates information about the caravan and the weather
+	//   - Checks if a gravestone has been passed and asks if the player wants to examine it
+	//   - Determines if a random event occurs and displays the results if one does occur
+	//   - Checks if all caravan members are dead
+	//   - Allow the player to select a branching path when a fork occurs in the trail
     Journey:function(leavingLandmark){
       Game.gameDiv.innerHTML =
 
@@ -1250,6 +1277,8 @@ var Game = {
 
     },
 
+	// Screen where the player selects the final option before the end of the game, either taking the toll or floating
+	// down the river
     TheDalles: function(){
       Game.gameDiv.innerHTML=
       `<div id="dalles" class="centered_content white_black">
@@ -1296,20 +1325,22 @@ var Game = {
       });
     },
 
+	// Screen that displays a tombstone when the player passes one and chooses to examine it
     Tombstone : function(message, callback) {
       Game.gameDiv.innerHTML=`
         <div id="tombstone" class="centered_content">\n
           <img src='./img/tombstone.png'/>
-        </div>\n<div id="msg">hello<br>is it me you're<br> looking for?</div>
+		  <p id="msg">hello<br>is it me you're<br> looking for?</p>
+        </div>\n
+		
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
-        document.getElementById("msg").style.position ="absolute";
-        document.getElementById("msg").style.textAlign ="center";
-        document.getElementById("msg").style.top="150px";
-        document.getElementById("msg").style.right="10px";
-		document.getElementById("msg").innerHTML = message;
+
+  	  document.getElementById("msg").innerHTML = message;
       Game.waitForInput(null, null, function() {Game.scenes.Journey(false)});
     },
 
+	// Screen the comes up when the player hits "Enter" while traveling between landmarks. Allows them to select
+	// between several options or continue traveling
     TrailMenu: function(){
       document.getElementById("game").innerHTML=`
         <div id="trail_menu" class="centered_content white_black">\n
@@ -1360,6 +1391,8 @@ var Game = {
           Game.scenes.TrailMenu();
       });
     },
+	
+	// Screen that the players see when the player selects the "Check Supplies" option in the menu
     CheckSupply: function(returnScene){
       Game.gameDiv.innerHTML =
       `<div id="check_supplies" class="centered_content white_black">\n
@@ -1378,12 +1411,14 @@ var Game = {
       <p class="prompt white_black">Press ENTER to continue</p>\n`;
       Game.waitForInput(null, null, returnScene);
     },
+	
+	// Screen that displays the map when the player selects the "Look at Map" option
     ShowMap: function(returnScene){
       Map.display(Game.miles);
       Game.waitForInput(null,null,returnScene);
     },
 
-	// Change the pace that the caravan is travelling at
+	// Screen that displays option for the caravan's pace when the player selects the "Change Pace" option
 	ChangePace: function(returnScene) {
     returnScene=returnScene||Game.scenes.TrailMenu;
 	  Game.gameDiv.innerHTML =
@@ -1429,7 +1464,7 @@ var Game = {
 	  });
 	},
 
-	// Display the information about caravan pace options
+	// Screen that displays information about the caravan's pace options
 	PaceInfo: function() {
 	  Game.gameDiv.innerHTML =
 	  `<div id="pace_info" class="centered_content white_black">\n
@@ -1448,7 +1483,7 @@ var Game = {
 	  return;
 	},
 
-	// Change the amount of rations
+	// Screen that allows the player to select the amount of rations used when they select the "Change Rations" option
 	ChangeRations: function(returnScene) {
     returnScene=returnScene||Game.scenes.TrailMenu;
 	  Game.gameDiv.innerHTML =
@@ -1492,14 +1527,14 @@ var Game = {
 	  });
 	},
 
-	// Ask the player how many days to rest
+	// Function that asks the player how many days they would like to rest, and passes the time. Consumes rations and heals caravan members
 	StopToRest: function(returnScene) {
     returnScene=returnScene||Game.scenes.TrailMenu;
 	  document.getElementById("input").remove();
 	  Game.gameDiv.innerHTML += `<p id="AlertBox" class="white_black">How many days would you like to rest? <span id="input"></span></p>\n`;
 
 	  var validationFunc=function(input){
-      return Number.isInteger(+input) && +input>0 && +input<20;
+      return Number.isInteger(+input) && +input>=0 && +input<20;
     }
 
 	  Game.waitForInput(null,validationFunc,function(choice){
@@ -1527,6 +1562,7 @@ var Game = {
     })
   },
 
+  // Screen that shows the picture of the landmark.
   Landmark: function(landmark){
     Game.gameDiv.innerHTML=`
       <div id="landmark" class="centered_content white_black">
@@ -1550,6 +1586,7 @@ var Game = {
 
   },
 
+   // Screen that displays the options a player may select while they are currently at a landmark
    LandmarkMenu: function(landmark){
      document.getElementById("game").innerHTML=`
        <div id="landmark_menu" class="centered_content white_black">\n
@@ -1632,6 +1669,7 @@ var Game = {
        });//waitForInput
     },
 
+	// Screen that shows a player's final score upon successfully completing the game
     Results : function() {
       Game.gameDiv.innerHTML = 
         `<div id="results" class="centered_content white_black">\n
@@ -1672,6 +1710,7 @@ var Game = {
       })
     },
 
+	// Screen that shows the names/scores of the top ten scoring players
     OregonTopTen : function() {
       Game.getTopTen(function (results) {
         Game.gameDiv.innerHTML = 
@@ -1687,6 +1726,7 @@ var Game = {
       });
     },
 
+	// Screen that displays advice from other settlers when the player selects the "Talk to People" option at a landmark
     LandmarkTalk: function(landmark){
       var talk=landmark.talks[landmark.talkIndex];
       landmark.talkIndex=landmark.talkIndex==2?0:landmark.talkIndex+1;
@@ -1695,6 +1735,8 @@ var Game = {
       Game.dialogBox(message,function(){Game.scenes.LandmarkMenu(landmark)});
     },
 
+	// Creates a canvas and uses it to animate the wagon crossing the river. Animation is different depending on what method
+	// is used and wether the attempt is successful
     animateRiver: function(method, success) {
       // setup
       Game.gameDiv.innerHTML = `<div id="river_crossing" class="centered_content">\n<div class="ratio-wrapper ratio5-4">\n<canvas id="river_animation" class="ratio-content"></canvas>\n</div>\n</div>\n`;
@@ -1769,6 +1811,8 @@ var Game = {
       return (end - bank1) * 60 + 1000;
     },
 
+	// Screen where the player attempts to complete the challenge at the end of the game, where the wagon floats 
+	// down the Columbia River
     RiverCrossingGame: function(){
       Game.gameDiv.innerHTML=
       `<div id="river_game">
@@ -1778,28 +1822,31 @@ var Game = {
     }
   },//end Game.scenes
 
+  // Function that uses AJAX to see if a player's completed score can be added to the top ten
   updateTopTen : function(name, score, callback) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
-          callback(this.responseText);
-        }
-      };
-      xhttp.open("GET", "./php/updateTopTen.php?name="+ name +"&score=" + score, true);
-      xhttp.send();
-    },
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
+        callback(this.responseText);
+      }
+    };
+    xhttp.open("GET", "./php/updateTopTen.php?name="+ name +"&score=" + score, true);
+    xhttp.send();
+  },
 
-    getTopTen : function(callback) {
-      var xhttp = new XMLHttpRequest();
-      xhttp.onreadystatechange = function() {
-        if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
-          callback(this.responseText);
-        }
-      };
-      xhttp.open("GET", "./php/getTopTen.php", true);
-      xhttp.send();
-    },
+  // Function that uses AJAX to retrieve the 10 highest scores on record for the game
+  getTopTen : function(callback) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
+        callback(this.responseText);
+      }
+    };
+    xhttp.open("GET", "./php/getTopTen.php", true);
+    xhttp.send();
+  },
 
+  // Function that displays a message in a small box in the middle of the screen.
   alertBox : function(message, returnScene) {
 
 	if (message == null) {
@@ -1807,13 +1854,14 @@ var Game = {
 		"I think I just broke my leg and caught Ebola!";
 	}
 
-  var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
-  alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
+    var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
+    alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
 	Game.gameDiv.appendChild(alert);
 
 	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
   },
 
+  // Helper function that removes the alert box from the screen
   removeAlertBox : function() {
 
     var alerts = document.getElementsByClassName("AlertBox")
@@ -1822,15 +1870,19 @@ var Game = {
     }
   },
 
+  // Function that displays a large message in a large box that covers most of the screen
   dialogBox : function(dialog, returnScene) {
     Game.gameDiv.innerHTML += `<p id="DialogBox" class="white_black">` + dialog + `</p>\n`;
 	Game.waitForInput(null,null,function() {Game.removeDialogBox(); returnScene() || null;});
   },
 
+  // Helper function that removes the dialog box from the screen
   removeDialogBox : function() {
     document.getElementById("DialogBox").remove();
   },
 
+  // Function used when the player selects the "Fish for Food" option while traveling the trail. Randomly determines
+  // if the fishing attempt was successful and adds food to the caravan depending on what was caught.
   fishingGame:function(){
     if (Game.gameCaravan.bait == 0) {
 
@@ -1863,6 +1915,9 @@ var Game = {
 	  return;
     }
   },
+  
+  // Function used when the player selects the "Attempt to Trade" option while traveling or at a landmark. Randomly determines
+  // the items up for trade, and the amount offered/wanted
   trading:function(returnScene){
     returnScene=returnScene||Game.scenes.TrailMenu;
     var div=Game.gameDiv.children[0];
@@ -1910,6 +1965,8 @@ var Game = {
       Game.waitForInput(null,validationFunc,tradeFunc);
     }
   },
+  
+  // Function that determines if a tombstone has been passed while traveling along the trail
   getTombstone : function(startMi, endMi, callback) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -1921,7 +1978,7 @@ var Game = {
     xhttp.send();
   },
 
-  // Ask the player for an epitaph, and add their tombstone to the database
+  // Function that uses AJAX to retrieve the name and epitaph of a tombstone so that it can be displayed
   getTombstones : function() {
       var xhttp = new XMLHttpRequest();
       xhttp.onreadystatechange = function() {
@@ -1932,7 +1989,9 @@ var Game = {
       xhttp.open("GET", "./php/getTombstones.php", true);
       xhttp.send();
     },
-
+	
+  // Function used when all caravan members are dead. Asks the player for a message to place on their gravestons, and
+  // then uses AJAX to update the database with their tombstone.
   setTombstone : function() {
 
 	var name = Game.gameCaravan.leader;
@@ -1962,7 +2021,6 @@ var Game = {
 	epitaphInput.setAttribute("id", "input");
 
 	Game.waitForInput(null, null, function(choice) {
-
 
 	  if (choice == "") {
 
