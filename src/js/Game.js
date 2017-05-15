@@ -1100,7 +1100,7 @@ var Game = {
 
         var examineTombstone = function(tombstone, callback) {
           // did we pass a tombstone?
-          if (tombstone != -1) {
+          if (tombstone != null) {
             Game.alertBox("You passed a tombstone. Would you like to examine it?");
             document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
             var validationFunc=function(input){
@@ -1329,10 +1329,8 @@ var Game = {
     Tombstone : function(message, callback) {
       Game.gameDiv.innerHTML=`
         <div id="tombstone" class="centered_content">\n
-          <img src='./img/tombstone.png'/>
-		  <p id="msg">hello<br>is it me you're<br> looking for?</p>
+          <p id="msg">hello<br>is it me you're<br> looking for?</p>
         </div>\n
-		
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
 
   	  document.getElementById("msg").innerHTML = message;

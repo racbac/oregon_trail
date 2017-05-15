@@ -74,6 +74,11 @@ body {
     padding-left: 4em;
 }
 
+#tombstone {
+    background-image: url("./img/tombstone.png");
+    background-size: contain;
+}
+
 #game > div p {
 	margin: 0.2em;
 }
@@ -298,7 +303,7 @@ img.fish {
 #msg {
 	width: 40%;
 	position: absolute;
-    text-align: center;
-    top: 25%;
+	text-align: center;
+	top: 30%;
 	word-wrap: break-word;
 }
