@@ -105,6 +105,19 @@ ol.col2 span, ul.col2 span {
     margin: 0;
 }
 
+#game table {
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+	border-spacing: 0.4em;
+	width: 75%;
+	text-align: center;
+}
+
+#game table th {
+	font-weight: inherit;
+}
+
 #learnMore p {width: 75%;}
 
 #matt_intro { flex-direction: row !important;}
@@ -144,7 +157,17 @@ ol.col2 span, ul.col2 span {
 	padding: 2%;
 }
 
-#AlertBox .AlertBox {
+#game table {
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+}
+
+#game table th {
+	font-weight: inherit;
+}
+
+#AlertBox, .AlertBox {
 	position: relative;
 	word-wrap: break-word;
 	z-index : 1;

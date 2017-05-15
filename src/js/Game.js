@@ -173,8 +173,7 @@ var Game = {
             })
          }
         else if(input == 3){
-          Game.gameDiv.innerHTML="<div> I will do this later. Enter to continue.</div>"
-          Game.waitForInput(null,null,Game.scenes.startScreen);
+          Game.scenes.OregonTopTen();
         }
         else{
           Game.scenes.startScreen();
@@ -1624,68 +1623,62 @@ var Game = {
             Game.scenes.LandmarkMenu(landmark);
          }
        });//waitForInput
-   },
+    },
 
-   Results : function() {
-    Game.gameDiv.innerHTML = 
-      `<div id="results" class="centered_content">\n
-        <p class="black_white">Points for arriving in Oregon</p>\n
-        <table id="scores">
+    Results : function() {
+      Game.gameDiv.innerHTML = 
+        `<div id="results" class="centered_content">\n
+          <p class="black_white">Points for arriving in Oregon</p>\n
+          <table id="scores" class="white_black">
+          </table>
+        </div>\n
+        <p class="prompt white_black">Press ENTER to continue</p>\n`;
+      var total = 0;
+      var printrow = function(num, thing, scorePer) {
+        document.getElementById("scores").innerHTML += `<tr><td>` + num + `</td><td>` + thing + `</td><td>` + Math.floor(num * scorePer) + `</td></tr>\n`;
+        return Math.floor(num * scorePer);
+      };
+      var healths = {}; healthStrs=["very poor", "poor", "fair", "good"];
+      for (var person in Game.gameCaravan.family) { // how many people in family per health level
+        healths[map(Game.gameCaravan.family[person].health, 0, 100, 0, 3)] = healths[map(Game.gameCaravan.family[person].health, 0, 100, 0, 3)] + 1 || 1;
+      }
+      for (var healthInd in healths) { // how many different health levels, and their scores
+        total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2));
+      }
+      total += printrow(1, "wagon", 50);
+      total += printrow(Game.gameCaravan.oxen, "oxen", 4);
+      total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2);
+      total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2);
+      total += printrow(Game.gameCaravan.bait, "bait", 1 / 50);
+      total += printrow(Game.gameCaravan.food, "pounds of food", 1 / 25);
+      total += printrow(Game.gameCaravan.money, "cash", 1 / 5);
+      document.getElementById("results").innerHTML += `<p>Total: ` + total + `</p>\n`;
 
-          <tr>
-            <td></td>
-            <td>wagon</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>oxen</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>spare wagon aprts</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>sets of clothing</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>bait</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td>pounds of food</td>
-            <td></td>
-          </tr>
-          <tr>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </table>
-      </div>\n
-      <p class="prompt white_black">Press ENTER to continue</p>\n`;
-    var scores = []; var healths = []; var healthStr;
-    var healthStrs = ["very poor", "poor", "fair", "good"];
-    for (var person in Game.gameCaravan.family) {
-      
-    }
-    for (var prop in healths) {
-      document.getElementById("scores").innerHTML = `<tr><td>` + healths[prop] + `</td><td>`+ (healths[prop] > 1 ? `people` : `person`) +` in ` + prop + `health</td><td>` + healthVals[] + `</td></tr>`;
-    }
-    scores.push(50);
-    scores.push(Game.gameCaravan.oxen * 4);
-    scores.push((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles) * 2);
-    scores.push(Game.gameCaravan.clothing * 2);
-    scores.push(Math.floor(Game.gameCaravan.bait / 50));
-    scores.push(Math.floor(Game.gameCaravan.food / 25));
-    scores.push(Math.floor(Game.gameCaravan.money / 5));
-  },
+      Game.waitForInput(null, null, function() {
+        Game.updateTopTen(Game.gameCaravan.family[0].name, total, function(rated) {
+          if (rated == "true") {
+            Game.alertBox("Congratulations! You ranked in the Oregon Top Ten!", Game.scenes.startScreen);
+          } else {
+            Game.scenes.startScreen();
+          }
+        });
+      })
+    },
+
+    OregonTopTen : function() {
+      Game.getTopTen(function (results) {
+        Game.gameDiv.innerHTML = 
+          `<div id="topTen" class="centered_content white_black">
+            <p>The Oregon Top Ten</p>
+            <table>
+              <tr><th>Name</th><th>Points</th><th>Rating</th></tr>`
+              + results +
+            `</table>
+          </div>
+          <p class="prompt white_black">Press ENTER to continue</p>\n`;
+        Game.waitForInput(null, null, Game.scenes.startScreen);
+      });
+    },
 
     LandmarkTalk: function(landmark){
       var talk=landmark.talks[landmark.talkIndex];
@@ -1777,6 +1770,28 @@ var Game = {
       Game.startRiverGame(function(){Game.scenes.Landmark(landmarks.WillametteValley)});
     }
   },//end Game.scenes
+
+  updateTopTen : function(name, score, callback) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
+          callback(this.responseText);
+        }
+      };
+      xhttp.open("GET", "./php/updateTopTen.php?name="+ name +"&score=" + score, true);
+      xhttp.send();
+    },
+
+    getTopTen : function(callback) {
+      var xhttp = new XMLHttpRequest();
+      xhttp.onreadystatechange = function() {
+        if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
+          callback(this.responseText);
+        }
+      };
+      xhttp.open("GET", "./php/getTopTen.php", true);
+      xhttp.send();
+    },
 
   alertBox : function(message, returnScene) {
 
@@ -1890,7 +1905,6 @@ var Game = {
   },
   getTombstone : function(startMi, endMi, callback) {
     var xhttp = new XMLHttpRequest();
-    var text = "";
     xhttp.onreadystatechange = function() {
       if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
         callback(this.responseText);
@@ -1903,7 +1917,6 @@ var Game = {
   // Ask the player for an epitaph, and add their tombstone to the database
   getTombstones : function() {
       var xhttp = new XMLHttpRequest();
-      var text = "";
       xhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
           Game.tombstones = JSON.parse(this.responseText);
