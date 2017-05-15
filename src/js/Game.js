@@ -1626,6 +1626,67 @@ var Game = {
        });//waitForInput
    },
 
+   Results : function() {
+    Game.gameDiv.innerHTML = 
+      `<div id="results" class="centered_content">\n
+        <p class="black_white">Points for arriving in Oregon</p>\n
+        <table id="scores">
+
+          <tr>
+            <td></td>
+            <td>wagon</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>oxen</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>spare wagon aprts</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>sets of clothing</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>bait</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td>pounds of food</td>
+            <td></td>
+          </tr>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+        </table>
+      </div>\n
+      <p class="prompt white_black">Press ENTER to continue</p>\n`;
+    var scores = []; var healths = []; var healthStr;
+    var healthStrs = ["very poor", "poor", "fair", "good"];
+    for (var person in Game.gameCaravan.family) {
+      
+    }
+    for (var prop in healths) {
+      document.getElementById("scores").innerHTML = `<tr><td>` + healths[prop] + `</td><td>`+ (healths[prop] > 1 ? `people` : `person`) +` in ` + prop + `health</td><td>` + healthVals[] + `</td></tr>`;
+    }
+    scores.push(50);
+    scores.push(Game.gameCaravan.oxen * 4);
+    scores.push((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles) * 2);
+    scores.push(Game.gameCaravan.clothing * 2);
+    scores.push(Math.floor(Game.gameCaravan.bait / 50));
+    scores.push(Math.floor(Game.gameCaravan.food / 25));
+    scores.push(Math.floor(Game.gameCaravan.money / 5));
+  },
+
     LandmarkTalk: function(landmark){
       var talk=landmark.talks[landmark.talkIndex];
       landmark.talkIndex=landmark.talkIndex==2?0:landmark.talkIndex+1;

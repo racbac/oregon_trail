@@ -109,10 +109,9 @@ Caravan.prototype.purchaseItems = function(purchases) {
 // Return the average health
 Caravan.prototype.getHealth = function() {
     var healths = ["dying", "very poor", "poor", "fair", "good"];
-	var familySize = this.family.length;
 	var totalHealth = 0;
 
-	for (var i = 0; i < familySize; i++) {
+	for (var i = 0; i < this.family.length; i++) {
 		totalHealth += this.family[i].health;
     }
     totalHealth /= familySize;
