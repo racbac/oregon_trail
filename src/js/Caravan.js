@@ -114,7 +114,7 @@ Caravan.prototype.getHealth = function() {
 	for (var i = 0; i < this.family.length; i++) {
 		totalHealth += this.family[i].health;
     }
-    totalHealth /= familySize;
+    totalHealth /= this.family.length;
     return healths[map(totalHealth, 0, 100, 0, 4)];
 }
 
