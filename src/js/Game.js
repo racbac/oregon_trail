@@ -1084,6 +1084,8 @@ var Game = {
               Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
                 Game.scenes.Tombstone("Here lies "+tombstone.name+"<br>"+tombstone.epitaph); 
+				console.log(tombstone.name);
+				console.log(tombstone.epitaph);
               }
               else {
                 callback();
@@ -1933,7 +1935,7 @@ var Game = {
   setTombstone : function() {
 
 	var name = Game.gameCaravan.leader;
-	var date = Game.date;
+	var date = Game.date.getMonth() + " " + Game.date.getDate() + ", " + Game.date.getFullYear();
 	var mile = Game.miles;
 
 	// Need to redraw the DialogBox after being prompted to enter something
@@ -1971,13 +1973,12 @@ var Game = {
 
 		var epitaph = choice;
 		var xhttp = new XMLHttpRequest();
-		//xhttp.open("GET", "./php/set_tombstone.php?name="+ name +"&distance=" + distance + "&epitaph" + epitaph, true);
-		//xhttp.send();
-		console.log("Sent: " + name);
-		
-		xhttp.open("POST", "./php/set_tombstone.php", true);
-		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-		xhttp.send("?name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
+		xhttp.open("GET", "./php/set_tombstone.php?name=" + name + "&date=" + date + "&mile=" + mile + "&epitaph=" + epitaph, true);
+		xhttp.send();
+//		xhttp.open("POST", "./php/set_tombstone.php", true);
+//		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+//		xhttp.send("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
+//		console.log("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
 		Game.scenes.startScreen();
       }
     })
