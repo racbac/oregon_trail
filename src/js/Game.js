@@ -1118,7 +1118,7 @@ var Game = {
             Game.waitForInput(null,validationFunc,function(examine){
               Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
-                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph); 
+                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph);
               }
               else {
                 callback();
@@ -1212,7 +1212,7 @@ var Game = {
               checkEvent(function(){
                 checkDeath(function(){
                   var tombstone = Game.tombstones.find(function(stone){
-                    return stone.mile <= Game.miles && stone.mile >= Game.miles - travelled;
+                    return stone.mile <= Game.miles && stone.mile > Game.miles - travelled;
                   });
                   examineTombstone(tombstone, function(){
                     checkLandmark(function() {
