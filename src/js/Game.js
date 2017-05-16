@@ -1155,7 +1155,7 @@ var Game = {
           if (eventChance < 5) {
             var eventResult = randomEvent(Game.gameCaravan);
             if(Game.gameCaravan.food==0){
-              getDisease(Game.gameCaravan);
+              eventResult = getDisease(Game.gameCaravan);
             }
             // Random event will return null if event was inapplicable
             if (eventResult != null) {
