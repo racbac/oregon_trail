@@ -256,7 +256,9 @@ function getDisease(caravan) {
 			diseaseChance += 45;
 			break;
 	}
-
+	if (caravan.food==0){
+		diseaseChance+=60;
+	}
 	// Randomly generate a number between 1 and 100
 	var caughtDisease = Math.floor((Math.random() * 100) + 1);
 
