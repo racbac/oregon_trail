@@ -546,5 +546,7 @@ function weightedRand(specs) {
  	}
  	if (chance >5){
  		caravan.disabled =false;
+ 		return true;
  	}
+ 	return false;
  }
