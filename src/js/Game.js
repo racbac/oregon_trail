@@ -1685,6 +1685,8 @@ var Game = {
           </table>
         </div>\n
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
+      var bonus=Game.gameCaravan.occupation.bonus;
+
       var total = 0;
       var printrow = function(num, thing, scorePer) {
         document.getElementById("scores").innerHTML += `<tr><td>` + num + `</td><td>` + thing + `</td><td>` + Math.floor(num * scorePer) + `</td></tr>\n`;
@@ -1695,15 +1697,16 @@ var Game = {
         healths[map(Game.gameCaravan.family[person].health, 0, 100, 0, 3)] = healths[map(Game.gameCaravan.family[person].health, 0, 100, 0, 3)] + 1 || 1;
       }
       for (var healthInd in healths) { // how many different health levels, and their scores
-        total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2));
+        total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2)*bonus);
       }
-      total += printrow(1, "wagon", 50);
-      total += printrow(Game.gameCaravan.oxen, "oxen", 4);
-      total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2);
-      total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2);
-      total += printrow(Game.gameCaravan.bait, "bait", 1 / 50);
-      total += printrow(Game.gameCaravan.food, "pounds of food", 1 / 25);
-      total += printrow(Game.gameCaravan.money, "cash", 1 / 5);
+      total += printrow(1, "wagon", 50*bonus);
+      total += printrow(Game.gameCaravan.oxen, "oxen", 4*bonus);
+      total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2*bonus);
+      total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2*bonus);
+      total += printrow(Game.gameCaravan.bait, "bait", bonus / 50);
+      total += printrow(Game.gameCaravan.food, "pounds of food", bonus / 25);
+      total += printrow(Game.gameCaravan.money, "cash", bonus / 5);
+
       document.getElementById("results").innerHTML += `<p class="white_black">Total: ` + total + `</p>\n`;
 
       Game.waitForInput(null, null, function() {
