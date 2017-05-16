@@ -1,5 +1,9 @@
+/****Game.js
+* instanciate a Game object that serves as the main driver of the game and update the HTML
+***/
+
 var Game = {
-	
+
   // Variables initialized at the start of every attempt
   gameCaravan: new Caravan(),
   date: new Date(),
@@ -81,7 +85,7 @@ var Game = {
   },
 
   scenes: {
-	  
+
 	// Screen that greets the player when they open the game, and allows them to start playing
     startScreen: function(){
       Game.gameDiv.innerHTML=
@@ -116,18 +120,18 @@ var Game = {
             </div>\n
             <p class="prompt white_black">Press ENTER to continue</p>\n`;
             Game.waitForInput(null,null,function(){
-              Game.gameDiv.innerHTML = 
+              Game.gameDiv.innerHTML =
                 `<div id="learnMore" class="centered_content white_black">\n
                   <h1>The Oregon Trail</h1>\n
                   <img class="text_decoration" src="./img/TextDecoration.png">\n
                   <p>\n
-                    How will you cross the rivers? If you have money, you might take a ferry (if there is a ferry). Or, you can ford the river and hope you aren't swallowed alive!  
+                    How will you cross the rivers? If you have money, you might take a ferry (if there is a ferry). Or, you can ford the river and hope you aren't swallowed alive!
                   </p>\n
                   <img class="text_decoration" src="./img/TextDecoration.png">\n
                 </div>\n
                 <p class="prompt white_black">Press ENTER to continue</p>\n`;
               Game.waitForInput(null, null, function() {
-                Game.gameDiv.innerHTML = 
+                Game.gameDiv.innerHTML =
                   `<div id="learnMore" class="centered_content white_black">\n
                     <h1>The Oregon Trail</h1>\n
                     <img class="text_decoration" src="./img/TextDecoration.png">\n
@@ -138,7 +142,7 @@ var Game = {
                   </div>\n
                   <p class="prompt white_black">Press ENTER to continue</p>\n`;
                 Game.waitForInput(null, null, function() {
-                  Game.gameDiv.innerHTML = 
+                  Game.gameDiv.innerHTML =
                     `<div id="learnMore" class="centered_content white_black">\n
                       <h1>The Oregon Trail</h1>\n
                       <img class="text_decoration" src="./img/TextDecoration.png">\n
@@ -149,7 +153,7 @@ var Game = {
                     </div>\n
                     <p class="prompt white_black">Press ENTER to continue</p>\n`;
                   Game.waitForInput(null, null, function() {
-                    Game.gameDiv.innerHTML = 
+                    Game.gameDiv.innerHTML =
                       `<div id="learnMore" class="centered_content white_black">\n
                         <h1>The Oregon Trail</h1>\n
                         <img class="text_decoration" src="./img/TextDecoration.png">\n
@@ -160,12 +164,12 @@ var Game = {
                       </div>\n
                       <p class="prompt white_black">Press ENTER to continue</p>\n`;
                     Game.waitForInput(null, null, function() {
-                      Game.gameDiv.innerHTML = 
+                      Game.gameDiv.innerHTML =
                         `<div id="learnMore" class="centered_content white_black white_black">\n
                           <h1>The Oregon Trail</h1>\n
                           <img class="text_decoration" src="./img/TextDecoration.png">\n
                           <p>\n
-                            The team responsible for the creation of this product includes: 
+                            The team responsible for the creation of this product includes:
                           </p>\n
                           <ul class="square_list">\n
                             <li>Rachel Backert</li>\n
@@ -191,7 +195,7 @@ var Game = {
         }
       });
     },
-	
+
 	// Screen where the player selects their occupation, which determines score and certain bonuses
     chooseOccupation: function(){
       Game.gameDiv.innerHTML =
@@ -200,9 +204,9 @@ var Game = {
           <p>Many kinds of people made the trip to Oregon.</p>\n
           <p>You may:</p>\n
           <ol>\n
-            <li>Be a banker</li>\n
-            <li>Be a carpenter</li>\n
-            <li>Be a farmer</li>\n
+            <li>Be a banker from Boston</li>\n
+            <li>Be a carpenter from Ohio</li>\n
+            <li>Be a farmer from Illinois</li>\n
             <li>Find out the difference between the choices</li>\n
           </ol>\n
 		  <p>What is your choice? <span id="input"></span></p>\n
@@ -306,7 +310,7 @@ var Game = {
             Game.waitForInput(null,null,nameFunc);
       });
     },
-	
+
 	// Screen where the player chooses the departure month, which will set the date and be used to determine weather
     chooseDepartureMonth:function(){
       Game.gameDiv.innerHTML =
@@ -362,7 +366,7 @@ var Game = {
         Game.scenes.MattStore();
       });
     },
-	
+
 	// Screen that informs the player of how their choice of departure month may effect the game
     adviceDepartureMonth:function(){
       Game.gameDiv.innerHTML =
@@ -375,7 +379,7 @@ var Game = {
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
       Game.waitForInput(null,null,Game.scenes.chooseDepartureMonth);
     },
-	
+
 	// Screen where the player is introduced to the general store, given advice on purchase of items, and is then allowed to buy items
     MattStore:function(){
       Game.gameDiv.innerHTML =
@@ -634,6 +638,11 @@ var Game = {
           Game.waitForInput(null,validationFunc,function(quantity){
             var name=items[choice-1];
             var cost=landmark.store[items[choice-1]].cost;
+            if(Game.gameCaravan[name]+Number(quantity)>MAXIMUM[name.toUpperCase()]){
+              document.getElementById("buy_supply").innerHTML+="<p>You may only take "+MAXIMUM[name.toUpperCase()]+" "+name+".</p>"
+              Game.waitForInput(null,null,function(){Game.scenes.BuySupply(landmark)});
+              return;
+            }
             Game.gameCaravan.purchaseItems([{item:name,cost:cost,quantity:+quantity}]);
             Game.scenes.BuySupply(landmark);
           });
@@ -656,10 +665,10 @@ var Game = {
       <p class="prompt" class="white_black">Press ENTER to continue</p>\n`;
 
 	  // The options for crossing the river will be different at Big Blue and Snake River Crossings.
-	  if (landmark == "BigBlueRiverCrossing") {
+	  if (landmark == "BigBlueRiverCrossing"||landmark.name == "Big Blue River Crossing") {
 		Game.waitForInput(null, null, function() {Game.scenes.CrossBigBlue(width, depth) });
 	  }
-	  else if (landmark == "SnakeRiverCrossing") {
+	  else if (landmark == "SnakeRiverCrossing"|| landmark.name == "Snake River Crossing") {
 		Game.waitForInput(null, null, function() {Game.scenes.CrossSnakeRiver(width, depth) });
 	  }
 	  else {
@@ -670,8 +679,8 @@ var Game = {
 	// Screen where the player selects from a list of options in order to cross the river, where the river crossing animation
 	// is played, and where the result of the crossing attempt is announced (success, lost supplies, drowning)
 	CrossRiver:function(width, depth) {
-
-		Game.gameDiv.innerHTML =
+    Game.weather = getWeather(Game.date.getMonth());
+		document.getElementById("game").innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
         <p>`+ landmarks[landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],false).landmark].name +`</p>\n
 	      <img class="text_decoration" src="./img/TextDecoration.png">\n
@@ -800,9 +809,9 @@ var Game = {
 		Game.gameDiv.innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
 	      <img class="text_decoration" src="./img/TextDecoration.png">\n
-        <p>Weather: ` + Game.weather + `</p>\n
-        <p>River width: ` + width + `</p>\n
-        <p>River depth: ` + depth + `</p>\n
+        <p>Weather: `+Game.weather+`</p>\n
+        <p>River width: ` + width.toFixed(2) + `</p>\n
+        <p>River depth: ` + depth.toFixed(2) + `</p>\n
         <p>You may:</p>\n
         <ol>\n
           <li>attempt to ford the river</li>\n
@@ -888,9 +897,9 @@ var Game = {
 		Game.gameDiv.innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
 	      <img class="text_decoration" src="./img/TextDecoration.png">\n
-        <p>Weather: ` + Game.weather + `</p>\n
-        <p>River width: ` + width + `</p>\n
-        <p>River depth: ` + depth + `</p>\n
+        <p>Weather: `+Game.weather+`</p>\n
+        <p>River width: ` + width.toFixed(2) + `</p>\n
+        <p>River depth: ` + depth.toFixed(2) + `</p>\n
         <p>You may:</p>\n
         <ol>\n
           <li>attempt to ford the river</li>\n
@@ -1102,8 +1111,8 @@ var Game = {
                   }
 
                   else if(nextLandmark.landmark=="WillametteValley"){//game finished
-                    //go to result scene, not:
-                    Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+
+                    Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.scenes.Results);
                   }
                   else{
                     Game.scenes.Journey(true);
@@ -1138,7 +1147,7 @@ var Game = {
             Game.waitForInput(null,validationFunc,function(examine){
               Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
-                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph); 
+                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph);
               }
               else {
                 callback();
@@ -1175,6 +1184,9 @@ var Game = {
           var eventChance = (Math.random() * 10);
           if (eventChance < 5) {
             var eventResult = randomEvent(Game.gameCaravan);
+            if(Game.gameCaravan.food==0){
+              eventResult = getDisease(Game.gameCaravan);
+            }
             // Random event will return null if event was inapplicable
             if (eventResult != null) {
               Game.alertBox(eventResult, function() {
@@ -1189,7 +1201,26 @@ var Game = {
                     clearInterval(losedays);
                     callback();
                   }, 2400);
-                } else {
+
+                }
+				
+				// See if the wagon has been disabled
+			    else if ((eventResult = "A wagon wheel broke") && (Game.gameCaravan.wheels == 0)) {
+				  Game.gameCaravan.disabled = true;
+				  Game.gameCaravan.neededPart = "wagon wheel";
+				  Game.scenes.WagonDisabled();
+				}
+				else if ((eventResult = "Your wagon tongue broke") && (Game.gameCaravan.wheels == 0)) {
+				  Game.gameCaravan.disabled = true;
+				  Game.gameCaravan.neededPart = "wagon tongue";
+				  Game.scenes.WagonDisabled();				  
+				}
+				else if ((eventResult = "Your wagon axle broke") && (Game.gameCaravan.wheels == 0)) {
+				  Game.gameCaravan.disabled = true;
+				  Game.gameCaravan.neededPart = "wagon axle";
+				  Game.scenes.WagonDisabled();
+				}
+				else {
                   callback();
                 }
               });
@@ -1216,11 +1247,12 @@ var Game = {
           nextLandmark=landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1]);
 
           document.getElementById("landmark").setAttribute("src", "./img/" + landmarks[nextLandmark.landmark].icon);
-          
+
           // day's events
           setTimeout(function(){
+            var timeTraveled=travelled/Game.gameCaravan.getMph();
             document.getElementById("landmark").style.right = 33 + nextLandmark.milesToNext + "%";
-            document.getElementById("landmark").style.transitionDuration = 75*travelled + "ms";
+            document.getElementById("landmark").style.transitionDuration = 200*timeTraveled + "ms";
             document.getElementById("oxen").src="./img/oxen_walking.gif";
             setTimeout(function() {
               document.getElementById("oxen").src = "./img/oxen_standing.png";
@@ -1228,7 +1260,7 @@ var Game = {
               checkEvent(function(){
                 checkDeath(function(){
                   var tombstone = Game.tombstones.find(function(stone){
-                    return stone.mile <= Game.miles && stone.mile >= Game.miles - travelled;
+                    return stone.mile <= Game.miles && stone.mile > Game.miles - travelled;
                   });
                   examineTombstone(tombstone, function(){
                     checkLandmark(function() {
@@ -1237,7 +1269,7 @@ var Game = {
                   });
                 })
               });
-            }, 75*travelled);
+            }, 200*timeTraveled);
           }, 1000);
         } // end travelFunc
 
@@ -1303,6 +1335,50 @@ var Game = {
 
     },
 
+	// Screen that appears a wagon component broke with no replacement parts availabled
+	WagonDisabled: function() {
+		
+	  Game.alertBox("Your " + Game.gameCaravan.neededPart + " has broken. Would you like to try and repair it?");
+	  
+	  document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
+	  
+	  var validationFunc=function(input){
+        input=input.toUpperCase();
+        return input=="Y"||input=="N";
+      };
+	  Game.waitForInput(null,validationFunc,function(input){
+        if(input=="Y") {
+          if (attemptToRepair(Game.gameCaravan) == true) {
+			Game.alertBox("You were able to repair the " + Game.gameCaravan.neededPart + ".");
+			Game.gameCaravan.neededPart = "";
+		  }
+		  else {
+			Game.scenes.wagonDisabledInfo(1);
+		  }
+		}
+        else {
+          Game.scenes.WagonDisabledInfo(1);
+		}
+      });	
+	},
+
+	// Screen that informs the player that a replacement part must be traded for in order to get the wagon moving again
+	WagonDisabledInfo: function(counter) {
+		
+	  Game.removeAlertBox();
+		
+	  if (counter == 1) {
+		  
+		var message = "Since your " + Game.gameCaravan.neededPart + "was not repaired, you will have to trade for a new one.";
+	    Game.alertBox(message, function() {Game.scenes.WagonDisabledInfo(2)});
+	  }
+	  
+	  if (counter == 2) {
+	    var message = "Until you get a new " + Game.gameCaravan.neededPart + ", you will be stuck in place.";
+	    Game.alertBox(message, Game.scenes.TrailMenu);
+	  }
+	},
+	
 	// Screen where the player selects the final option before the end of the game, either taking the toll or floating
 	// down the river
     TheDalles: function(){
@@ -1395,8 +1471,14 @@ var Game = {
         return  +input>0 && +input<9;
       }
       Game.waitForInput(null,validationFunc,function(input){
-        if(input==1)
-          Game.scenes.Journey();
+        if(input==1) {
+		  if (Game.gameCaravan.disabled == true) {
+			Game.alertBox("You need to get a new " + Game.gameCaravan.neededPart + " before you can continue", Game.scenes.TrailMenu);
+		  }
+		  else {
+           Game.scenes.Journey();
+		  }
+		}
         else if (input==2)
           Game.scenes.CheckSupply(Game.scenes.TrailMenu);
         else if(input==3)
@@ -1415,7 +1497,7 @@ var Game = {
           Game.scenes.TrailMenu();
       });
     },
-	
+
 	// Screen that the players see when the player selects the "Check Supplies" option in the menu
     CheckSupply: function(returnScene){
       Game.gameDiv.innerHTML =
@@ -1435,7 +1517,7 @@ var Game = {
       <p class="prompt white_black">Press ENTER to continue</p>\n`;
       Game.waitForInput(null, null, returnScene);
     },
-	
+
 	// Screen that displays the map when the player selects the "Look at Map" option
     ShowMap: function(returnScene){
       Map.display(Game.miles);
@@ -1599,9 +1681,9 @@ var Game = {
       <p class = "prompt white_black">Press ENTER to continue</p>`;
 
       if(landmark==landmarks.WillametteValley){
-        //go to result scene, not:
+        //go to result scene
         Game.waitForInput(null,null,function(){
-            Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+            Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.scenes.Results);
         });
         return;
       }
@@ -1695,13 +1777,14 @@ var Game = {
 
 	// Screen that shows a player's final score upon successfully completing the game
     Results : function() {
-      Game.gameDiv.innerHTML = 
+      Game.gameDiv.innerHTML =
         `<div id="results" class="centered_content white_black">\n
           <p class="black_white">Points for arriving in Oregon</p>\n
           <table id="scores">
           </table>
         </div>\n
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
+      var bonus=Game.gameCaravan.occupation.bonus;
       var total = 0;
       var printrow = function(num, thing, scorePer) {
         document.getElementById("scores").innerHTML += `<tr><td>` + num + `</td><td>` + thing + `</td><td>` + Math.floor(num * scorePer) + `</td></tr>\n`;
@@ -1712,23 +1795,29 @@ var Game = {
         healths[map(Game.gameCaravan.family[person].health, 0, 100, 0, 3)] = healths[map(Game.gameCaravan.family[person].health, 0, 100, 0, 3)] + 1 || 1;
       }
       for (var healthInd in healths) { // how many different health levels, and their scores
-        total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2));
+        total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2)*bonus);
       }
-      total += printrow(1, "wagon", 50);
-      total += printrow(Game.gameCaravan.oxen, "oxen", 4);
-      total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2);
-      total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2);
-      total += printrow(Game.gameCaravan.bait, "bait", 1 / 50);
-      total += printrow(Game.gameCaravan.food, "pounds of food", 1 / 25);
-      total += printrow(Game.gameCaravan.money, "cash", 1 / 5);
+      total += printrow(1, "wagon", 50*bonus);
+      total += printrow(Game.gameCaravan.oxen, "oxen", 4*bonus);
+      total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2*bonus);
+      total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2*bonus);
+      total += printrow(Game.gameCaravan.bait, "bait", bonus / 50);
+      total += printrow(Game.gameCaravan.food, "pounds of food", bonus / 25);
+      total += printrow(Game.gameCaravan.money, "cash", bonus / 5);
+
       document.getElementById("results").innerHTML += `<p class="white_black">Total: ` + total + `</p>\n`;
+
+      if(bonus>1){
+        var bonusMessage='<p>For going as a '+Game.gameCaravan.occupation.string+', your points are '+(bonus==2?"doubled":"tripled")+'.</p>';
+        document.getElementById("results").innerHTML += bonusMessage;
+      }
 
       Game.waitForInput(null, null, function() {
         Game.updateTopTen(Game.gameCaravan.family[0].name, total, function(rated) {
           if (rated == "true") {
-            Game.alertBox("Congratulations! You ranked in the Oregon Top Ten!", Game.scenes.startScreen);
+            Game.alertBox("Congratulations! You ranked in the Oregon Top Ten!", Game.start);
           } else {
-            Game.scenes.startScreen();
+            Game.start();
           }
         });
       })
@@ -1737,7 +1826,7 @@ var Game = {
 	// Screen that shows the names/scores of the top ten scoring players
     OregonTopTen : function() {
       Game.getTopTen(function (results) {
-        Game.gameDiv.innerHTML = 
+        Game.gameDiv.innerHTML =
           `<div id="topTen" class="centered_content white_black">
             <p>The Oregon Top Ten</p>
             <table>
@@ -1835,7 +1924,7 @@ var Game = {
       return (end - bank1) * 60 + 1000;
     },
 
-	// Screen where the player attempts to complete the challenge at the end of the game, where the wagon floats 
+	// Screen where the player attempts to complete the challenge at the end of the game, where the wagon floats
 	// down the Columbia River
     RiverCrossingGame: function(){
       Game.gameDiv.innerHTML=
@@ -1872,17 +1961,17 @@ var Game = {
 
   // Function that displays a message in a small box in the middle of the screen.
   alertBox : function(message, returnScene) {
-
+  returnScene=returnScene||function(){};
 	if (message == null) {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
 	}
 
-    var alert = document.createElement("p"); alert.appendChild(document.createTextNode(message));
+    var alert = document.createElement("p"); alert.innerHTML=message;
     alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
 	Game.gameDiv.appendChild(alert);
 
-	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
+	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene();});
   },
 
   // Helper function that removes the alert box from the screen
@@ -1939,23 +2028,26 @@ var Game = {
 	  return;
     }
   },
-  
+
   // Function used when the player selects the "Attempt to Trade" option while traveling or at a landmark. Randomly determines
   // the items up for trade, and the amount offered/wanted
   trading:function(returnScene){
     returnScene=returnScene||Game.scenes.TrailMenu;
     var div=Game.gameDiv.children[0];
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
+	
+	// Need this other array for when a wagon is disabled
+	var longerNames=["wagon tongue", "wagon wheel", "wagon axle","clothing","oxen","food","bait"];
     var randomIndex1= Math.floor(Math.random() * itemNames.length);
     var randomIndex2= Math.floor(Math.random() * itemNames.length);
 
     while(randomIndex1==randomIndex2){
 
-	randomIndex2=Math.floor(Math.random() * itemNames.length);
+	  randomIndex2=Math.floor(Math.random() * itemNames.length);
     }
 
-    var amtwanted=Math.floor(Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1;
-    var amttrade=Math.floor(Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1;
+    var amtwanted=Math.ceil(((Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1) / 3);
+    var amttrade=Math.ceil(((Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1) / 3);
 
 	if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
 
@@ -1979,6 +2071,11 @@ var Game = {
       var tradeFunc=function(input){
         if(input.toUpperCase()=="Y"){
           Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
+		  
+		  // If the wagon was disabled, see if this is the part that needed replacing
+		  if (longerNames[item2] == Game.gameCaravan.neededPart) {
+			Game.gameCaravan.disabled = false;
+		  }
         }
         returnScene();
       };
@@ -2001,14 +2098,14 @@ var Game = {
       xhttp.open("GET", "./php/getTombstones.php", true);
       xhttp.send();
     },
-	
+
   // Function used when all caravan members are dead. Asks the player for a message to place on their gravestons, and
   // then uses AJAX to update the database with their tombstone.
   setTombstone : function() {
 
 	var name = Game.gameCaravan.leader;
 	var date = Game.date.getFullYear() + "-" + Game.date.getMonth() + "-" + Game.date.getDate();
-	
+
 	var mile = Game.miles;
 
 	// Need to redraw the DialogBox after being prompted to enter something
@@ -2046,7 +2143,6 @@ var Game = {
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("GET", "./php/set_tombstone.php?name=" + name + "&date=" + date + "&mile=" + mile + "&epitaph=" + epitaph, true);
 		xhttp.send();
-		Game.scenes.startScreen();
       }
     })
 

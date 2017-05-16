@@ -1,3 +1,7 @@
+/***RiverCrossingGame.js
+*implements the mini river game at the end of the game
+*must be included after Game.js
+*/
 var myGamePiece;
 var myObstacles=[];
 var infopage;
@@ -122,25 +126,34 @@ function updateGameArea() {
     if (myGameArea.key && myGameArea.key == 38) {myGamePiece.speedY = -1; }
     if (myGameArea.key && myGameArea.key == 40) {myGamePiece.speedY = 1; }
     var x, y,minHeight, maxHeight;
+
+    var crashedFunc=function(){
+      myGamePiece.speedX=0;
+      myGamePiece.speedY=0;
+      myGameArea.key = false;
+      myGameArea.stop();
+
+     Game.alertBox("You have lost "+ (destroyRandomSupplies(Game.gameCaravan)||"nothing."),function(){
+       //infopage.update();
+       myGamePiece.x=20;
+       myGamePiece.y=70;
+       myGameArea.clear();
+       myGameArea.resume();
+
+     });
+   };
+   if (myGamePiece.crashWith(topborder) ||myGamePiece.crashWith(botborder)){
+     crashedFunc();
+   }else{
     for (i = 0; i < myObstacles.length; i += 1) {
-        if (myGamePiece.crashWith(myObstacles[i])||myGamePiece.crashWith(topborder) ||myGamePiece.crashWith(botborder)) {
- 			console.log("test");
- 			myGamePiece.speedX=0;
-            myGamePiece.speedY=0;
-            myGameArea.key = false;
-            myGameArea.stop();
-
-           Game.alertBox("You have lost "+ (destroyRandomSupplies(Game.gameCaravan)||"nothing."),function(){
-             //infopage.update();
-             myGamePiece.x=20;
-             myGamePiece.y=70;
-             myGameArea.clear();
-             myGameArea.resume();
-
-           });
+        if (myGamePiece.crashWith(myObstacles[i])) {
+ 			      crashedFunc();
         }
     }
+  }
     myGameArea.clear();
+
+
     if (myGameArea.frameNo == 1 || everyinterval(150)||everyinterval(100)) {
 
         x = myGameArea.canvas.width;
@@ -155,6 +168,8 @@ function updateGameArea() {
         myObstacles[i].x += -1;
         myObstacles[i].update();
     }
+    botborder.update();
+    topborder.update();
     if (myGameArea.frameNo == 1000 ){
     	//x = canvas.width;
     	dock=new component(30, 30, "./img/dock.jpg", 300, 100,"image");}
@@ -162,22 +177,20 @@ function updateGameArea() {
     	dock.x+=-1;
     	dock.update();
     	if (myGamePiece.crashWith(dock)){
-    		myGamePiece.x=20;
-        myGamePiece.y=70;
         myGameArea.stop();
+        myGamePiece.update();
     	Game.alertBox("You have arrived at Oregon.",riverGameReturnScene);
       return;
     	}
     }
     if(myGameArea.frameNo==1500){
         	myGameArea.stop();
+          myGamePiece.update();
           Game.alertBox("You missed the dock, lost "+(destroyRandomSupplies(Game.gameCaravan)||"nothing.", riverGameReturnScene));
     }
 
 
-    botborder.update();
 
-    topborder.update();
    	myGamePiece.newPos();
 
     myGamePiece.update();

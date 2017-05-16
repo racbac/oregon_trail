@@ -1,3 +1,7 @@
+/***Store.js
+* implements a Store class that keeps the price of items in the store
+* and provides functions for transactions in the store
+*/
 function Store(ox, clothes, bait, axle, wheel, tongue, food) {
     this.bill = 0.00;
 

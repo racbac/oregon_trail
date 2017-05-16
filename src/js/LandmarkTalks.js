@@ -1,3 +1,10 @@
+/*** LandmarkTalks.js
+* set the talks informations at each landmark
+* must be included after Landmarks.js
+*/
+
+
+//talkIndex is the index of the current speaker at each landmark, initially set to 0
 for(landmark in landmarks){
 	landmarks[landmark].talkIndex=0;
 }
