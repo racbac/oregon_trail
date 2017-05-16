@@ -120,9 +120,9 @@ Caravan.prototype.getHealth = function() {
 
 // Remove a person from the caravan (because they died)
 Caravan.prototype.removePerson = function(person) {
-	if (person instanceof Number)
+	if (typeof person == 'number')
 		this.family.splice(person, 1);
-	else if (person instanceof String) {
+	else if (typeof person == 'string') {
 		var i = 0;
 		while (this.family[i].name != person)
 			i++;
@@ -148,16 +148,6 @@ Caravan.prototype.removeOx = function(oxenNum) {
 Caravan.prototype.addPerson = function(person) {
 
 	this.family.push(person);
-}
-
-// Remove a person from the caravan (because they died)
-Caravan.prototype.removePerson = function(person) {
-
-    var i = 0;
-	while (this.family[i].name != person.name) {
-        i++
-    }
-	this.family.splice(i, 1);
 }
 
 Caravan.prototype.getMph = function() {
