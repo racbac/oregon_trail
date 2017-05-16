@@ -2146,7 +2146,8 @@ var Game = {
 		xhttp.send();
       }
     })
-
+    Game.scenes.Tombstone(epitaphInput);
+    Game.start();
   }
 };
 
