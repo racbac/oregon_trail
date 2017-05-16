@@ -114,20 +114,18 @@ ol.col2 span, ul.col2 span {
 	font-size: inherit;
 	color: inherit;
 	font-weight: inherit;
-	border-spacing: 0.4em;
-	width: 75%;
+	border-spacing: 2.5em 0.8em;
+    text-align: center;
 }
 
 #game table th {
 	font-weight: inherit;
 }
 
-#learnMore p {width: 75%;}
-
 #matt_intro { flex-direction: row !important;}
 
 #matt_img {
-    background-image: url("./img/mal.png");
+    background-image: url("./img/matt.png");
     background-size: contain;
     background-repeat: no-repeat;
     flex: 1;
@@ -159,16 +157,6 @@ ol.col2 span, ul.col2 span {
 	background-color: white;
 	margin: 2%;
 	padding: 2%;
-}
-
-#game table {
-	font-size: inherit;
-	color: inherit;
-	font-weight: inherit;
-}
-
-#game table th {
-	font-weight: inherit;
 }
 
 #AlertBox, .AlertBox {
@@ -239,6 +227,10 @@ img.text_decoration {
 
 img.text_decoration:nth-of-type(2) {
 	margin-top: auto;
+}
+
+img.text_decoration ~ * {
+	width: 75%;
 }
 
 img.fish {

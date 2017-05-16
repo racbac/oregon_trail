@@ -192,7 +192,7 @@ var Game = {
 	// Screen where the player selects their occupation, which determines score and certain bonuses
     chooseOccupation: function(){
       Game.gameDiv.innerHTML =
-        `<div id="choose_occupation" class="white_black">\n
+        `<div id="choose_occupation" class="white_black centered_content">\n
         <img class="text_decoration" src="./img/TextDecoration.png">\n
           <p>Many kinds of people made the trip to Oregon.</p>\n
           <p>You may:</p>\n
@@ -307,7 +307,7 @@ var Game = {
 	// Screen where the player chooses the departure month, which will set the date and be used to determine weather
     chooseDepartureMonth:function(){
       Game.gameDiv.innerHTML =
-      `<div id="chooseMonth" class="white_black">\n
+      `<div id="chooseMonth" class="white_black centered_content">\n
         <img class="text_decoration" src="./img/TextDecoration.png">\n
         <div>\n
           <p>It is 1848. Your jumping off place for Oregon is Independence, Missouri. You must decide which month to leave Independence.</p>\n
@@ -363,7 +363,7 @@ var Game = {
 	// Screen that informs the player of how their choice of departure month may effect the game
     adviceDepartureMonth:function(){
       Game.gameDiv.innerHTML =
-        `<div class='white_black'>\n
+        `<div class='white_black centered_content'>\n
 		  <img class="text_decoration" src="./img/TextDecoration.png">
           <p>You attend a public meeting held for \"folks with the California - Oregon fever.\" You're told:<br><br>\n
           If you leave too early, there won't be any grass for your oxen to eat. If you leave too late, you may not get to Oregon before winter comes. If you leave at just the right time, there will be green grass and the weather will still be cool.</p>\n
@@ -376,7 +376,7 @@ var Game = {
 	// Screen where the player is introduced to the general store, given advice on purchase of items, and is then allowed to buy items
     MattStore:function(){
       Game.gameDiv.innerHTML =
-      `<div class='white_black'>\n`+
+      `<div class='white_black centered_content'>\n`+
 	      `<img class="text_decoration" src="./img/TextDecoration.png">`+
 	      `<p>Before leaving Independence you should buy equipment and supplies.`+
 	      `You have $` + Game.gameCaravan.occupation.cash + ` in cash, but you don't have to spend it all now.</p>`+
@@ -389,7 +389,7 @@ var Game = {
           `<div id="matt_intro">\n
             <div id="matt_img"></div>\n
               <div class="white_black">\n
-                <p>Hello, I'm Mal. So you're going to Oregon! I can fix you up with what you need:</p>\n
+                <p>Hello, I'm Matt. So you're going to Oregon! I can fix you up with what you need:</p>\n
                 <ul class="square_list">\n<li>a team of oxen to pull your wagon</li>\n
                   <li>clothing for both summer and winter</li>\n
                   <li>plenty of food for the trip</li>\n
@@ -406,7 +406,7 @@ var Game = {
 
           `<div id="mattstore" class="white_black">\n
               <div>\n
-                <p>Mal's General Store<br>\n
+                <p>Matt's General Store<br>\n
                 Independence, Missouri<br>\n` +
                 MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() + `</p>\n
               </div>\n
@@ -423,7 +423,7 @@ var Game = {
                   </ol>\n
 				          <hr id = "red_line">
                   <p>Total Bill: <span id="total_bill">$`+thestore.bill.toFixed(2)+`</span></p>\n
-                  <p>Amount you have:<span id="money">$`+(Game.gameCaravan.money - thestore.bill).toFixed(2)+`</span></p>\n
+                  <p>Amount you have:<span id="money">$`+Game.gameCaravan.money.toFixed(2)+`</span></p>\n
                   <p>Which item would you like to buy? <span id="input"></span></p>\n
                 </div>\n
             </div>\n
@@ -530,7 +530,7 @@ var Game = {
             Game.gameDiv.innerHTML=
             `<div id="mattstore" class="white_black">\n
               <p>\n
-                Mal's General Store<br>\n
+                Matt's General Store<br>\n
                 Independence, Missouri<br>\n
               </p>\n
               <p id="matt_advice">\n
