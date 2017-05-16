@@ -1110,7 +1110,7 @@ var Game = {
             Game.waitForInput(null,validationFunc,function(examine){
               Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
-                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br>"+tombstone.epitaph); 
+                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph); 
 				console.log(tombstone.name);
 				console.log(tombstone.epitaph);
               }
@@ -1993,7 +1993,8 @@ var Game = {
   setTombstone : function() {
 
 	var name = Game.gameCaravan.leader;
-	var date = Game.date.getMonth() + " " + Game.date.getDate() + ", " + Game.date.getFullYear();
+	var date = Game.date.getFullYear() + "-" + Game.date.getMonth() + "-" + Game.date.getDate();
+	
 	var mile = Game.miles;
 
 	// Need to redraw the DialogBox after being prompted to enter something
