@@ -51,6 +51,8 @@ function Caravan() {
     this.clothing = 0;
     this.bait = 0;
 	this.leader = "";
+	this.disabled = false;
+	this.neededPart = "";
 }
 
 Caravan.prototype.updateFood = function() {

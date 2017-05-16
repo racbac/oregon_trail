@@ -1163,7 +1163,26 @@ var Game = {
                     clearInterval(losedays);
                     callback();
                   }, 2400);
-                } else {
+
+                }
+				
+				// See if the wagon has been disabled
+			    else if ((eventResult = "A wagon wheel broke") && (Game.gameCaravan.wheels == 0)) {
+				  Game.gameCaravan.disabled = true;
+				  Game.gameCaravan.neededPart = "wagon wheel";
+				  Game.scenes.WagonDisabled();
+				}
+				else if ((eventResult = "Your wagon tongue broke") && (Game.gameCaravan.wheels == 0)) {
+				  Game.gameCaravan.disabled = true;
+				  Game.gameCaravan.neededPart = "wagon tongue";
+				  Game.scenes.WagonDisabled();				  
+				}
+				else if ((eventResult = "Your wagon axle broke") && (Game.gameCaravan.wheels == 0)) {
+				  Game.gameCaravan.disabled = true;
+				  Game.gameCaravan.neededPart = "wagon axle";
+				  Game.scenes.WagonDisabled();
+				}
+				else {
                   callback();
                 }
               });
@@ -1277,6 +1296,50 @@ var Game = {
 
     },
 
+	// Screen that appears a wagon component broke with no replacement parts availabled
+	WagonDisabled: function() {
+		
+	  Game.alertBox("Your " + Game.gameCaravan.neededPart + " has broken. Would you like to try and repair it?");
+	  
+	  document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
+	  
+	  var validationFunc=function(input){
+        input=input.toUpperCase();
+        return input=="Y"||input=="N";
+      };
+	  Game.waitForInput(null,validationFunc,function(input){
+        if(input=="Y") {
+          if (attemptToRepair(Game.gameCaravan) == true) {
+			Game.alertBox("You were able to repair the " + Game.gameCaravan.neededPart + ".");
+			Game.gameCaravan.neededPart = "";
+		  }
+		  else {
+			Game.scenes.wagonDisabledInfo(1);
+		  }
+		}
+        else {
+          Game.scenes.WagonDisabledInfo(1);
+		}
+      });	
+	},
+
+	// Screen that informs the player that a replacement part must be traded for in order to get the wagon moving again
+	WagonDisabledInfo: function(counter) {
+		
+	  Game.removeAlertBox();
+		
+	  if (counter == 1) {
+		  
+		var message = "Since your " + Game.gameCaravan.neededPart + "was not repaired, you will have to trade for a new one.";
+	    Game.alertBox(message, function() {Game.scenes.WagonDisabledInfo(2)});
+	  }
+	  
+	  if (counter == 2) {
+	    var message = "Until you get a new " + Game.gameCaravan.neededPart + ", you will be stuck in place.";
+	    Game.alertBox(message, Game.scenes.TrailMenu);
+	  }
+	},
+	
 	// Screen where the player selects the final option before the end of the game, either taking the toll or floating
 	// down the river
     TheDalles: function(){
@@ -1369,8 +1432,14 @@ var Game = {
         return  +input>0 && +input<9;
       }
       Game.waitForInput(null,validationFunc,function(input){
-        if(input==1)
-          Game.scenes.Journey();
+        if(input==1) {
+		  if (Game.gameCaravan.disabled == true) {
+			Game.alertBox("You need to get a new " + Game.gameCaravan.neededPart + " before you can continue", Game.scenes.TrailMenu);
+		  }
+		  else {
+           Game.scenes.Journey();
+		  }
+		}
         else if (input==2)
           Game.scenes.CheckSupply(Game.scenes.TrailMenu);
         else if(input==3)
@@ -1920,6 +1989,9 @@ var Game = {
     returnScene=returnScene||Game.scenes.TrailMenu;
     var div=Game.gameDiv.children[0];
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
+	
+	// Need this other array for when a wagon is disabled
+	var longerNames=["wagon tongue", "wagon wheel", "wagon axle","clothing","oxen","food","bait"];
     var randomIndex1= Math.floor(Math.random() * itemNames.length);
     var randomIndex2= Math.floor(Math.random() * itemNames.length);
 
@@ -1953,6 +2025,11 @@ var Game = {
       var tradeFunc=function(input){
         if(input.toUpperCase()=="Y"){
           Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
+		  
+		  // If the wagon was disabled, see if this is the part that needed replacing
+		  if (longerNames[item2] == Game.gameCaravan.neededPart) {
+			Game.gameCaravan.disabled = false;
+		  }
         }
         returnScene();
       };
@@ -2033,10 +2110,6 @@ var Game = {
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("GET", "./php/set_tombstone.php?name=" + name + "&date=" + date + "&mile=" + mile + "&epitaph=" + epitaph, true);
 		xhttp.send();
-//		xhttp.open("POST", "./php/set_tombstone.php", true);
-//		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//		xhttp.send("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
-//		console.log("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
 		Game.scenes.startScreen();
       }
     })
