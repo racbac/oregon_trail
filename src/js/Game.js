@@ -2038,6 +2038,7 @@ var Game = {
   // the items up for trade, and the amount offered/wanted
   trading:function(returnScene){
     returnScene=returnScene||Game.scenes.TrailMenu;
+    Game.passDays(1);
     var div=Game.gameDiv.children[0];
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
 
@@ -2047,8 +2048,7 @@ var Game = {
     var randomIndex2= Math.floor(Math.random() * itemNames.length);
 
     while(randomIndex1==randomIndex2){
-
-	  randomIndex2=Math.floor(Math.random() * itemNames.length);
+	     randomIndex2=Math.floor(Math.random() * itemNames.length);
     }
 
     var amtwanted=Math.ceil(((Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1) / 3);
