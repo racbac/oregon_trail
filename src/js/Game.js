@@ -80,6 +80,7 @@ var Game = {
 
 	for (var i = 0; i < numDays; i++) {
 	  Game.gameCaravan.updateFood();
+    Game.gameCaravan.updateHealth();
 	}
   },
 
@@ -676,20 +677,23 @@ var Game = {
     Game.weather = getWeather(Game.date.getMonth());
 		document.getElementById("game").innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
+        <p>`+ landmarks[landmarks.getNextLandMark(Game.miles,Game.branch[0],Game.branch[1],false).landmark].name +`</p>\n
 	      <img class="text_decoration" src="./img/TextDecoration.png">\n
-        <p>Weather: `+Game.weather+`</p>\n
-        <p>River width: ` + width.toFixed(2) + `</p>\n
-        <p>River depth: ` + depth.toFixed(2) + `</p>\n
-        <p>You may:</p>\n
-        <ol>\n
-          <li>attempt to ford the river</li>\n
-          <li>caulk the wagon and float it across</li>\n
-          <li>take a ferry across</li>\n
-          <li>wait to see if conditions improve</li>\n
-          <li>get more information</li>\n
-        </ol>\n
+        <div id="txt">
+          <p>Weather: `+Game.weather+`</p>\n
+          <p>River width: ` + width.toFixed(2) + `</p>\n
+          <p>River depth: ` + depth.toFixed(2) + `</p>\n
+          <p>You may:</p>\n
+          <ol>\n
+            <li>attempt to ford the river</li>\n
+            <li>caulk the wagon and float it across</li>\n
+            <li>take a ferry across</li>\n
+            <li>wait to see if conditions improve</li>\n
+            <li>get more information</li>\n
+          </ol>\n
+          <p>What is your choice? <span id="input"></span></p>\n
+        </div>\n
         <img class="text_decoration" src="./img/TextDecoration.png">\n
-        <p>What is your choice? <span id="input"></span></p>\n
       </div>\n`;
 
     var validationFunc=function(input){
@@ -736,13 +740,33 @@ var Game = {
       else if(choice == 3){
         if (randrange(1, 5) <= 2) {
           Game.passDays(1);
-          Game.alertBox("No ferry comes around today. Lose one day waiting", Game.scenes.CrossRiver);
+          if (randrange(1, 10) > 5) {
+          // Round to 2 decimal places
+            var newDepth = depth - Math.round(Math.random()) / 100;
+          } else {
+            var newDepth = depth + Math.round(Math.random()) / 100;
+          }
+
+          if (randrange(1, 10) > 5) {
+            var newWidth = width - Math.round(Math.random()) / 100;
+          } else {
+            var newWidth = width + Math.round(Math.random()) / 100;
+          }
+            Game.alertBox("No ferry comes around today. Lose one day waiting", function() {Game.scenes.CrossRiver(newWidth, newDepth)});
         }
 
         else {
-          Game.gameCaravan.money -= 50;
-          var time = Game.scenes.animateRiver("ferry", true);
-          setTimeout(function() {Game.alertBox("The ferry got you across safely.", function(){Game.scenes.Journey(true)})}, time + 500);
+          document.getElementById("txt").innerHTML = "The ferry operator says that he will charge you $5.00, and that you will have to wait 6 days. Are you willing to do this? <span id='input'>_</span>";
+          Game.waitForInput(null, function(input) {return input.toUpperCase() == "Y" || input.toUpperCase() == "N"}, function(input) {
+            if (input.toUpperCase() == "Y") {
+              Game.gameCaravan.money -= 5;
+              Game.passDays(6);
+              var time = Game.scenes.animateRiver("ferry", true);
+              setTimeout(function() {Game.alertBox("The ferry got you across safely.", function(){Game.scenes.Journey(true)})}, time + 500);
+            } else {
+              Game.scenes.CrossRiver(width, depth);
+            }
+          })
         }
       }
 
