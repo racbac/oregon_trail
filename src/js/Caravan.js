@@ -8,9 +8,9 @@ const PACE = {
 }
 
 const OCCUPATION = {
-    FARMER: {string: "farmer from Illinois", bonus: 3, cash: 800.00, ability: "oxen"},
-    BANKER: {string: "banker from Boston", bonus: 1, cash: 1600.00, ability: ""},
-    CARPENTER: {string: "carpenter from Ohio", bonus: 2, cash: 400.00, ability: "wagon"}
+    FARMER: {string: "farmer", bonus: 3, cash: 800.00, ability: "oxen"},
+    BANKER: {string: "banker", bonus: 1, cash: 1600.00, ability: ""},
+    CARPENTER: {string: "carpenter", bonus: 2, cash: 400.00, ability: "wagon"}
 }
 
 const RATIONS = {

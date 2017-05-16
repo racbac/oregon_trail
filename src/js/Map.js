@@ -1,3 +1,9 @@
+/***Map.js
+* instanciate a Map object that can display the map and shows the traveled Trail
+* also set the map coordinate of each landmark,
+* as well as branches at each landmarks and the distance to next landmarks.
+*and implements a function for getting the next landmark based on current miles
+*/
 var Map={
   /*
   * branchOption1 0 = Green River Crossing, 1= Fort Bridger
@@ -6,7 +12,7 @@ var Map={
   display: function(miles,branchOption1,branchOption2){
 
     var svgContent="";
-    /*for(var landmark in Map.landmarks){
+    /*for(var landmark in Map.landmarks){//uncomment this to see the location of each landmark as a red dot
       var x=Map.landmarks[landmark].coordinate.x;
       var y=Map.landmarks[landmark].coordinate.y;
       svgContent+='<circle cx="'+x+'" cy="'+y+'" r="5" fill="red" />';
@@ -108,6 +114,10 @@ var Map={
 
   landmarks.WillametteValley.coordinate={x:110, y:115};
 
+//getNextLandMark
+//given traveled miles, branching options, and whether you are just leaving the landmark,
+//return the next landmark on your trail
+//
   landmarks.getNextLandMark=function(miles,branchOption1,branchOption2,leavingLandmark){
     var milesTraveled=0;
     var landmarktraveled="Independence";

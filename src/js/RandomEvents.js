@@ -30,7 +30,7 @@ function death() {
 function randomEvent(caravan) {
 
 	// There are 12 events, so generate a random number between 1 and 12
-	var eventNum = Math.floor((Math.random() * 14) + 1);
+	var eventNum = Math.floor((Math.random() * 15) + 1);
 
 	switch(eventNum) {
 		case 1:
@@ -256,7 +256,9 @@ function getDisease(caravan) {
 			diseaseChance += 45;
 			break;
 	}
-
+	if (caravan.food==0){
+		diseaseChance+=60;
+	}
 	// Randomly generate a number between 1 and 100
 	var caughtDisease = Math.floor((Math.random() * 100) + 1);
 
@@ -271,7 +273,7 @@ function getDisease(caravan) {
 		var chosenDisease = diseaseNames[randrange(0,2)];
 
 
-		var victim = family[randrange(0,familySize)];
+		var victim = family[randrange(0,familySize-1)];
 		victim.sicken(40);
 
 		if (victim.disease == chosenDisease) {
@@ -536,4 +538,15 @@ function weightedRand(specs) {
  function map(num, min1, max1, min2, max2)
  {
    return Math.floor((num - min1) * (max2 - min2) / (max1 - min1) + min2);
+ }
+ function attemptToFixWagon(wagonpart,caravan){
+ 	var chance=Math.floor((Math.random() * 10) + 1);
+ 	if (caravan.occupation==carpenter){
+ 		chance=Math.floor((Math.random() * 7) + 4);
+ 	}
+ 	if (chance >5){
+ 		caravan.disabled =false;
+ 		return true;
+ 	}
+ 	return false;
  }
