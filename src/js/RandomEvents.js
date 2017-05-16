@@ -30,7 +30,7 @@ function death() {
 function randomEvent(caravan) {
 
 	// There are 12 events, so generate a random number between 1 and 12
-	var eventNum = Math.floor((Math.random() * 14) + 1);
+	var eventNum = Math.floor((Math.random() * 15) + 1);
 
 	switch(eventNum) {
 		case 1:
