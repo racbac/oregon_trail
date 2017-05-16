@@ -1154,6 +1154,9 @@ var Game = {
           var eventChance = (Math.random() * 10);
           if (eventChance < 5) {
             var eventResult = randomEvent(Game.gameCaravan);
+            if(Game.gameCaravan.food==0){
+              getDisease(Game.gameCaravan);
+            }
             // Random event will return null if event was inapplicable
             if (eventResult != null) {
               Game.alertBox(eventResult, function() {
