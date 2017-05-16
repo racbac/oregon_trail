@@ -73,30 +73,28 @@ function wrongTrail() {
 
 function wagonWheelBreak(caravan) {
 
-	if (caravan.wheels - 1 < 0) {
-		return null;
+	if (caravan.wheels != 0) {
+		caravan.wheels -= 1;
 	}
 
-	caravan.wheels -= 1;
 	return "A wagon wheel broke";
 }
 
 function wagonTongueBreak(caravan) {
 
-	if (caravan.tongues - 1 < 0) {
-		return null;
+	if (caravan.tongues != 0) {
+		caravan.tongues -= 1;
 	}
 
-	caravan.tongues -= 1;
 	return "Your wagon tongue broke";
 }
 
 function wagonAxleBreak(caravan) {
 
-	if (caravan.axles - 1 < 0) {
-		return null;
+	if (caravan.axles != 0) {
+		caravan.axles -= 1;
 	}
-	  caravan.axles -= 1;
+	
 	  return "Your wagon axle broke";
 }
 
@@ -330,7 +328,7 @@ function wagonTipOver(caravan) {
 			return "The wagon tipped over, but you didn't lose any supplies";
 		}
 
-		return "The wagon tipped over and you lost" + messageEnd;
+		return "The wagon tipped over and you lost " + messageEnd;
 	}
 }
 
@@ -539,13 +537,12 @@ function weightedRand(specs) {
  {
    return Math.floor((num - min1) * (max2 - min2) / (max1 - min1) + min2);
  }
- function attemptToFixWagon(wagonpart,caravan){
+ function attemptToFixWagon(caravan){
  	var chance=Math.floor((Math.random() * 10) + 1);
- 	if (caravan.occupation==carpenter){
+ 	if (caravan.occupation.string=="carpenter"){
  		chance=Math.floor((Math.random() * 7) + 4);
  	}
  	if (chance >5){
- 		caravan.disabled =false;
  		return true;
  	}
  	return false;
