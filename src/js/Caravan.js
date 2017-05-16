@@ -159,7 +159,7 @@ Caravan.prototype.getMph = function() {
     } else {
         mph = 3;
     }
-    return (mph > 40) ?  40 : mph;
+    return (mph > 10) ?  10 : mph;
 }
 
 Caravan.prototype.sickenOxen = function() {

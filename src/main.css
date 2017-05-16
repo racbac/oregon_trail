@@ -116,6 +116,8 @@ ol.col2 span, ul.col2 span {
 	font-weight: inherit;
 }
 
+
+
 #matt_intro { flex-direction: row !important;}
 
 #matt_img {
@@ -240,7 +242,7 @@ img.fish {
 }
 
 #store_image {
-	
+
 	width: 30%;
     padding: 5%;
 }
@@ -255,7 +257,7 @@ img.fish {
 }
 
 #blue_line {
-	
+
 	width: 90%;
 	height: 5px;
 	background-color: cyan;

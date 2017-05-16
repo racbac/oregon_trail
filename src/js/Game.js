@@ -571,6 +571,12 @@ var Game = {
         <div class="centered_content white_black">\n
           You May Buy:
           <table id="options" class="white_black">\n
+            <colgroup>
+               <col span="1" style="width: 5%;">
+               <col span="1" style="width: 40%;">
+               <col span="1" style="width: 5%;">
+               <col span="1" style="width: 25%;">
+            </colgroup>
           </table>\n
         </div>\n
         <p>You have $<span id="money"></span> to spend.</p>\n
@@ -1203,7 +1209,7 @@ var Game = {
                   }, 2400);
 
                 }
-				
+
 				// See if the wagon has been disabled
 			    else if ((eventResult = "A wagon wheel broke") && (Game.gameCaravan.wheels == 0)) {
 				  Game.gameCaravan.disabled = true;
@@ -1213,7 +1219,7 @@ var Game = {
 				else if ((eventResult = "Your wagon tongue broke") && (Game.gameCaravan.wheels == 0)) {
 				  Game.gameCaravan.disabled = true;
 				  Game.gameCaravan.neededPart = "wagon tongue";
-				  Game.scenes.WagonDisabled();				  
+				  Game.scenes.WagonDisabled();
 				}
 				else if ((eventResult = "Your wagon axle broke") && (Game.gameCaravan.wheels == 0)) {
 				  Game.gameCaravan.disabled = true;
@@ -1337,11 +1343,11 @@ var Game = {
 
 	// Screen that appears a wagon component broke with no replacement parts availabled
 	WagonDisabled: function() {
-		
+
 	  Game.alertBox("Your " + Game.gameCaravan.neededPart + " has broken. Would you like to try and repair it?");
-	  
+
 	  document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
-	  
+
 	  var validationFunc=function(input){
         input=input.toUpperCase();
         return input=="Y"||input=="N";
@@ -1359,26 +1365,26 @@ var Game = {
         else {
           Game.scenes.WagonDisabledInfo(1);
 		}
-      });	
+      });
 	},
 
 	// Screen that informs the player that a replacement part must be traded for in order to get the wagon moving again
 	WagonDisabledInfo: function(counter) {
-		
+
 	  Game.removeAlertBox();
-		
+
 	  if (counter == 1) {
-		  
+
 		var message = "Since your " + Game.gameCaravan.neededPart + "was not repaired, you will have to trade for a new one.";
 	    Game.alertBox(message, function() {Game.scenes.WagonDisabledInfo(2)});
 	  }
-	  
+
 	  if (counter == 2) {
 	    var message = "Until you get a new " + Game.gameCaravan.neededPart + ", you will be stuck in place.";
 	    Game.alertBox(message, Game.scenes.TrailMenu);
 	  }
 	},
-	
+
 	// Screen where the player selects the final option before the end of the game, either taking the toll or floating
 	// down the river
     TheDalles: function(){
@@ -2035,7 +2041,7 @@ var Game = {
     returnScene=returnScene||Game.scenes.TrailMenu;
     var div=Game.gameDiv.children[0];
     var itemNames=["tongues","wheels","axles","clothing","oxen","food","bait"];
-	
+
 	// Need this other array for when a wagon is disabled
 	var longerNames=["wagon tongue", "wagon wheel", "wagon axle","clothing","oxen","food","bait"];
     var randomIndex1= Math.floor(Math.random() * itemNames.length);
@@ -2071,7 +2077,7 @@ var Game = {
       var tradeFunc=function(input){
         if(input.toUpperCase()=="Y"){
           Game.gameCaravan.trade(item1,amtwanted,item2,amttrade);
-		  
+
 		  // If the wagon was disabled, see if this is the part that needed replacing
 		  if (longerNames[item2] == Game.gameCaravan.neededPart) {
 			Game.gameCaravan.disabled = false;
