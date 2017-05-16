@@ -638,6 +638,11 @@ var Game = {
           Game.waitForInput(null,validationFunc,function(quantity){
             var name=items[choice-1];
             var cost=landmark.store[items[choice-1]].cost;
+            if(Game.gameCaravan[name]+Number(quantity)>MAXIMUM[name.toUpperCase()]){
+              document.getElementById("buy_supply").innerHTML+="<p>You may only take "+MAXIMUM[name.toUpperCase()]+" "+name+".</p>"
+              Game.waitForInput(null,null,function(){Game.scenes.BuySupply(landmark)});
+              return;
+            }
             Game.gameCaravan.purchaseItems([{item:name,cost:cost,quantity:+quantity}]);
             Game.scenes.BuySupply(landmark);
           });
