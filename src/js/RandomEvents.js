@@ -273,7 +273,7 @@ function getDisease(caravan) {
 		var chosenDisease = diseaseNames[randrange(0,2)];
 
 
-		var victim = family[randrange(0,familySize)];
+		var victim = family[randrange(0,familySize-1)];
 		victim.sicken(40);
 
 		if (victim.disease == chosenDisease) {
