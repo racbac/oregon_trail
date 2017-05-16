@@ -11,6 +11,8 @@ var Game = {
   miles: 0,
   branch:[null,null],
   tombstones: [],
+  bg: "",
+  ground: "",
   gameDiv: document.getElementById("game"),
 
   // Function that starts the game running
@@ -648,7 +650,7 @@ var Game = {
 	  var message = "You must cross the river in order to continue. The river at this point is currently " + width +
 	  " feet wide and " + depth + " feet deep in the middle."
 
-	  document.getElementById("game").innerHTML =
+	  Game.gameDiv.innerHTML =
       `<div id="cross_river_message" class="centered_content white_black">\n
         <img class="text_decoration" src="./img/TextDecoration.png">\n
         <p>` + message + `</p>\n
@@ -775,7 +777,7 @@ var Game = {
   // This is a modified CrossRiver() function for the Big Blue River, which has no ferry
   CrossBigBlue(width, depth) {
 
-		document.getElementById("game").innerHTML =
+		Game.gameDiv.innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
 	      <img class="text_decoration" src="./img/TextDecoration.png">\n
         <p>Weather: `+Game.weather+`</p>\n
@@ -863,7 +865,7 @@ var Game = {
   // This is a modified CrossRiver() function for the Snake River, which has the option to hire an Indian to guide you across
   CrossSnakeRiver(width, depth) {
 
-		document.getElementById("game").innerHTML =
+		Game.gameDiv.innerHTML =
       `<div id="cross_river" class="centered_content white_black">\n
 	      <img class="text_decoration" src="./img/TextDecoration.png">\n
         <p>Weather: `+Game.weather+`</p>\n
@@ -934,7 +936,7 @@ var Game = {
 		else {
 		  var message = "This Native American can take you accross the river safely in exchange for 3 sets of clothes."
 		  Game.dialogBox(message, function() {Game.scenes.CrossSnakeRiver(width, depth)});
-		  document.getElementById("game").innerHTML =
+		  Game.gameDiv.innerHTML =
 		  `<div id="indian_cross_river" class="centered_content white_black">\n
 	        <img class="text_decoration" src="./img/TextDecoration.png">\n
 		    <p>` + message + `</p>
@@ -1028,7 +1030,7 @@ var Game = {
         `<div id="journey" class="centered_content white_black">\n
           <div id="animation">\n
             <img id="landmark"/>\n
-            <img id="bg" src="./img/bg_grass.png">\n
+            <div id="bg"></div>\n
             <img id="oxen" src="./img/oxen_standing.png">\n
           </div>\n
           <div id="ground"></div>\n
@@ -1053,6 +1055,8 @@ var Game = {
         document.getElementById("food").innerHTML=Game.gameCaravan.food;
         document.getElementById("next_landmark").innerHTML=nextLandmark.milesToNext;
         document.getElementById("miles").innerHTML=Game.miles;
+        document.getElementById("bg").style.backgroundImage = landmarks[nextLandmark.landmark].bg ? Game.bg = "url(./img/" + landmarks[nextLandmark.landmark].bg + ")" : Game.bg;
+        document.getElementById("ground").style.backgroundColor = landmarks[nextLandmark.landmark].ground ? Game.ground = landmarks[nextLandmark.landmark].ground : Game.ground;
 
         var checkLandmark = function(callback) {
           if(nextLandmark.milesToNext==0){
@@ -1105,7 +1109,7 @@ var Game = {
         var examineTombstone = function(tombstone, callback) {
           // did we pass a tombstone?
           if (tombstone != null) {
-            Game.alertBox("You passed a tombstone. Would you like to examine it?");
+            Game.alertBox("You passed a tombstone. Would you like to examine it? ");
             document.getElementById("AlertBox").innerHTML+='<span id="input"></span>';
             var validationFunc=function(input){
               input=input.toUpperCase();
@@ -1114,10 +1118,7 @@ var Game = {
             Game.waitForInput(null,validationFunc,function(examine){
               Game.removeAlertBox();
               if(examine.toUpperCase()=="Y"){
-                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph);
-
-				console.log(tombstone.name);
-				console.log(tombstone.epitaph);
+                Game.scenes.Tombstone("Here lies "+tombstone.name+"<br><br>"+tombstone.epitaph); 
               }
               else {
                 callback();
@@ -1349,7 +1350,7 @@ var Game = {
 	// Screen the comes up when the player hits "Enter" while traveling between landmarks. Allows them to select
 	// between several options or continue traveling
     TrailMenu: function(){
-      document.getElementById("game").innerHTML=`
+      Game.gameDiv.innerHTML=`
         <div id="trail_menu" class="centered_content white_black">\n
           <div id="date" >`+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
 
@@ -1595,7 +1596,7 @@ var Game = {
 
    // Screen that displays the options a player may select while they are currently at a landmark
    LandmarkMenu: function(landmark){
-     document.getElementById("game").innerHTML=`
+     Game.gameDiv.innerHTML=`
        <div id="landmark_menu" class="centered_content white_black">\n
         <div>
           `+landmark.name+`
@@ -1630,7 +1631,7 @@ var Game = {
          document.getElementById("buy_supply").style.display="none";
        }
        var validationFunc=function(input){
-         if(!Number.isInteger(+input)||+input<0){console.log(input);
+         if(!Number.isInteger(+input)||+input<0){
            return false;
          }
          if(landmark.store){
@@ -1685,7 +1686,6 @@ var Game = {
           </table>
         </div>\n
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
-      var bonus=Game.gameCaravan.occupation.bonus;
 
       var total = 0;
       var printrow = function(num, thing, scorePer) {
@@ -1699,7 +1699,7 @@ var Game = {
       for (var healthInd in healths) { // how many different health levels, and their scores
         total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2)*bonus);
       }
-      total += printrow(1, "wagon", 50*bonus);
+      total += printrow(1, "wagon", 50*Game.gameCaravan.occupation.bonus);
       total += printrow(Game.gameCaravan.oxen, "oxen", 4*bonus);
       total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2*bonus);
       total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2*bonus);
@@ -1976,18 +1976,6 @@ var Game = {
     }
   },
 
-  // Function that determines if a tombstone has been passed while traveling along the trail
-  getTombstone : function(startMi, endMi, callback) {
-    var xhttp = new XMLHttpRequest();
-    xhttp.onreadystatechange = function() {
-      if (this.readyState == 4 && this.status == 200) { // do once response, data are ready
-        callback(this.responseText);
-      }
-    };
-    xhttp.open("GET", "./php/getTombstone.php?startMi="+ startMi +"&endMi=" + endMi, true);
-    xhttp.send();
-  },
-
   // Function that uses AJAX to retrieve the name and epitaph of a tombstone so that it can be displayed
   getTombstones : function() {
       var xhttp = new XMLHttpRequest();
@@ -2023,7 +2011,6 @@ var Game = {
 	  document.getElementById("input").remove();
     }
 
-
 	var epitaphInput = document.createElement('div');
 
 	document.getElementById("DialogBox").innerHTML += `<br>`;
@@ -2045,11 +2032,6 @@ var Game = {
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("GET", "./php/set_tombstone.php?name=" + name + "&date=" + date + "&mile=" + mile + "&epitaph=" + epitaph, true);
 		xhttp.send();
-//		xhttp.open("POST", "./php/set_tombstone.php", true);
-//		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-//		xhttp.send("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
-//		console.log("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
-		Game.start();
       }
     })
 
