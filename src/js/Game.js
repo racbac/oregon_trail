@@ -570,13 +570,7 @@ var Game = {
 `+ MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() +`</div>\n
         <div class="centered_content white_black">\n
           You May Buy:
-          <table id="options" class="white_black">\n
-            <colgroup>
-               <col span="1" style="width: 5%;">
-               <col span="1" style="width: 40%;">
-               <col span="1" style="width: 5%;">
-               <col span="1" style="width: 25%;">
-            </colgroup>
+          <table id="options" class="white_black" style="font-size: 15px;">\n
           </table>\n
         </div>\n
         <p>You have $<span id="money"></span> to spend.</p>\n
@@ -642,6 +636,7 @@ var Game = {
             return Number.isInteger(input)&&input>=0;
           }
           Game.waitForInput(null,validationFunc,function(quantity){
+            document.getElementById("input").removeAttribute("id");
             var name=items[choice-1];
             var cost=landmark.store[items[choice-1]].cost;
             if(Game.gameCaravan[name]+Number(quantity)>MAXIMUM[name.toUpperCase()]){
