@@ -1779,7 +1779,7 @@ var Game = {
           </table>
         </div>\n
         <p class="prompt white_black">Press ENTER to continue</p>\n`;
-
+      var bonus=Game.gameCaravan.occupation.bonus;
       var total = 0;
       var printrow = function(num, thing, scorePer) {
         document.getElementById("scores").innerHTML += `<tr><td>` + num + `</td><td>` + thing + `</td><td>` + Math.floor(num * scorePer) + `</td></tr>\n`;
@@ -1792,7 +1792,7 @@ var Game = {
       for (var healthInd in healths) { // how many different health levels, and their scores
         total += printrow(healths[healthInd], (healths[healthInd] > 1 ? `people` : `person`) + ` in ` + healthStrs[+healthInd] + ` health`, 100 * (+healthInd + 2)*bonus);
       }
-      total += printrow(1, "wagon", 50*Game.gameCaravan.occupation.bonus);
+      total += printrow(1, "wagon", 50*bonus);
       total += printrow(Game.gameCaravan.oxen, "oxen", 4*bonus);
       total += printrow((Game.gameCaravan.wheels + Game.gameCaravan.tongues + Game.gameCaravan.axles), "spare wagon parts",  2*bonus);
       total += printrow(Game.gameCaravan.clothing, "sets of clothing", 2*bonus);
