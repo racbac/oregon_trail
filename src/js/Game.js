@@ -203,9 +203,9 @@ var Game = {
           <p>Many kinds of people made the trip to Oregon.</p>\n
           <p>You may:</p>\n
           <ol>\n
-            <li>Be a banker</li>\n
-            <li>Be a carpenter</li>\n
-            <li>Be a farmer</li>\n
+            <li>Be a banker from Boston</li>\n
+            <li>Be a carpenter from Ohio</li>\n
+            <li>Be a farmer from Illinois</li>\n
             <li>Find out the difference between the choices</li>\n
           </ol>\n
 		  <p>What is your choice? <span id="input"></span></p>\n
@@ -1708,6 +1708,11 @@ var Game = {
       total += printrow(Game.gameCaravan.money, "cash", bonus / 5);
 
       document.getElementById("results").innerHTML += `<p class="white_black">Total: ` + total + `</p>\n`;
+
+      if(bonus>1){
+        var bonusMessage='<p>For going as a '+Game.gameCaravan.occupation.string+', your points are '+(bonus==2?"doubled":"tripled")+'.</p>';
+        document.getElementById("results").innerHTML += bonusMessage;
+      }
 
       Game.waitForInput(null, null, function() {
         Game.updateTopTen(Game.gameCaravan.family[0].name, total, function(rated) {
