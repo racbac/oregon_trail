@@ -1,3 +1,7 @@
+/***LandmarkStores.js
+* Set the store information of each landmark
+*must be included after Landmarks.js
+*/
 landmarks.Independence.store=new Store(20,10,2,10,10,10,0.2);
 landmarks.KansasRiverCrossing.store=null;
 landmarks.BigBlueRiverCrossing.store=null;

@@ -1,3 +1,7 @@
+/***RiverCrossingGame.js
+*implements the mini river game at the end of the game
+*must be included after Game.js
+*/
 var myGamePiece;
 var myObstacles=[];
 var infopage;

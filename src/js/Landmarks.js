@@ -1,3 +1,7 @@
+/**Landmarks.js
+* create a landmarks object that stores all the information of each landmark,
+*some of the landmark informations are set in Map.js, LandmarkTalks.js, and LandmarkStores.js
+*/
 var landmarks=
 {
 Independence:{name:"Independence", river:false, img:"img/landmarks/independence.png"},

@@ -1,3 +1,7 @@
+/****Game.js
+* instanciate a Game object that serves as the main driver of the game and update the HTML
+***/
+
 var Game = {
 
   // Variables initialized at the start of every attempt
