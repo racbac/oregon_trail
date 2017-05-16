@@ -1074,8 +1074,8 @@ var Game = {
                   }
 
                   else if(nextLandmark.landmark=="WillametteValley"){//game finished
-                    //go to result scene, not:
-                    Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+
+                    Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.scenes.Results);
                   }
                   else{
                     Game.scenes.Journey(true);
@@ -1575,9 +1575,9 @@ var Game = {
       <p class = "prompt white_black">Press ENTER to continue</p>`;
 
       if(landmark==landmarks.WillametteValley){
-        //go to result scene, not:
+        //go to result scene
         Game.waitForInput(null,null,function(){
-            Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.start);
+            Game.alertBox("Congratulations! You have made it to Oregon! Let's see how many points you have received.",Game.scenes.Results);
         });
         return;
       }
@@ -1702,9 +1702,9 @@ var Game = {
       Game.waitForInput(null, null, function() {
         Game.updateTopTen(Game.gameCaravan.family[0].name, total, function(rated) {
           if (rated == "true") {
-            Game.alertBox("Congratulations! You ranked in the Oregon Top Ten!", Game.scenes.startScreen);
+            Game.alertBox("Congratulations! You ranked in the Oregon Top Ten!", Game.start);
           } else {
-            Game.scenes.startScreen();
+            Game.start();
           }
         });
       })
@@ -1848,7 +1848,7 @@ var Game = {
 
   // Function that displays a message in a small box in the middle of the screen.
   alertBox : function(message, returnScene) {
-
+  returnScene=returnScene||function(){};
 	if (message == null) {
 		message = "Oh my god everybody is dead! Even the oxen and the children are dead! This was a terrible idea! "+
 		"I think I just broke my leg and caught Ebola!";
@@ -1858,7 +1858,7 @@ var Game = {
     alert.setAttribute("class", "white_black AlertBox"); alert.setAttribute("id", "AlertBox");
 	Game.gameDiv.appendChild(alert);
 
-	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene() || null;});
+	Game.waitForInput(null,null,function() {Game.removeAlertBox(); returnScene();});
   },
 
   // Helper function that removes the alert box from the screen
