@@ -537,3 +537,12 @@ function weightedRand(specs) {
  {
    return Math.floor((num - min1) * (max2 - min2) / (max1 - min1) + min2);
  }
+ function attemptToFixWagon(wagonpart,caravan){
+ 	var chance=Math.floor((Math.random() * 10) + 1);
+ 	if (caravan.occupation==carpenter){
+ 		chance=Math.floor((Math.random() * 7) + 4);
+ 	}
+ 	if (chance >5){
+ 		caravan.disabled =false;
+ 	}
+ }
