@@ -2039,7 +2039,7 @@ var Game = {
 //		xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 //		xhttp.send("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
 //		console.log("name="+ name + "&date=" + date + "&mile=" + mile + "&epitaph" + epitaph);
-		Game.scenes.startScreen();
+		Game.start();
       }
     })
 
