@@ -26,8 +26,8 @@ const MAXIMUM = {
     TONGUES: 3,
     AXLES: 3,
     FOOD: 2000,
-    CLOTHING: 10000,
-    BAIT: 10000
+    CLOTHING: 20,
+    BAIT: 500
 }
 
 // Caravan constructor

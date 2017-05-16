@@ -2038,11 +2038,11 @@ var Game = {
 
     while(randomIndex1==randomIndex2){
 
-	randomIndex2=Math.floor(Math.random() * itemNames.length);
+	  randomIndex2=Math.floor(Math.random() * itemNames.length);
     }
 
-    var amtwanted=Math.floor(Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1;
-    var amttrade=Math.floor(Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1;
+    var amtwanted=Math.ceil(((Math.random() * MAXIMUM[itemNames[randomIndex1].toUpperCase()])+1) / 3);
+    var amttrade=Math.ceil(((Math.random() *  MAXIMUM[itemNames[randomIndex2].toUpperCase()])+1) / 3);
 
 	if(amtwanted>Game.gameCaravan[itemNames[randomIndex1]]){
 
