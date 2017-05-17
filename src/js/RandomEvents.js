@@ -130,9 +130,12 @@ function foundSupplies(caravan) {
 
 function foundWildBerries(caravan) {
 	document.getElementById("animation").innerHTML += `<img id="berries" src="./img/wild_fruit.png" style="position: absolute; height: 30%; bottom: 0; right: 33%" >`;
-	var remove = function() {
-		document.getElementById("berries").remove();
-		document.removeEventListener("keypress", remove);
+	function remove() {
+		var x = event.charCode || event.keyCode;
+      	if(x == 13){
+			document.getElementById("berries").remove();
+			document.removeEventListener("keypress", remove);
+		}
 	};
 	document.addEventListener("keypress", remove);
 	caravan.food += 20;
@@ -190,11 +193,14 @@ function oxenSick(caravan) {
 
 function suppliesStolen(caravan) {
 	document.getElementById("animation").innerHTML += `<img id="thief" src="./img/thief.png" style="position: absolute; height: 45%; bottom: 0; right: 0">`;
-	var remove = function() {
-		document.getElementById("thief").remove();
-		document.removeEventListener("keypress", remove);
+	function remove(e) {
+		var x = event.charCode || event.keyCode;
+      	if(x == 13){
+			document.getElementById("thief").remove();
+			document.removeEventListener("keypress", remove);
+		}
 	};
-	document.addEventListener("keypress", remove);
+	document.addEventListener("keypress", remove(e));
 	var messageStart = "A thief has stolen ";
 	var messageEnd = destroyRandomSupplies(caravan);
 
