@@ -4,7 +4,7 @@
 */
 var landmarks=
 {
-Independence:{name:"Independence", river:false, img:"img/landmarks/independence.png", icon: "fort_independence.png"},
+Independence:{name:"Independence", river:false, img:"img/landmarks/independence.png", icon: "fort.png"},
 KansasRiverCrossing:{name:"Kansas River Crossing", river:true ,img:"img/landmarks/kansasriver.png", icon: "river.png", ground: "#04B600", bg: "bg_grass.png"},
 BigBlueRiverCrossing:{name:"Big Blue River Crossing", river:true ,img:"img/landmarks/bigblueriver.png", icon: "river.png"},
 FortKearney:{name:"Fort Kearney", river:false ,img:"img/landmarks/fortkearney.png", icon: "fort_kearney.png"},
