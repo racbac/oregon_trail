@@ -12,19 +12,13 @@ var infopage;
 Game.startRiverGame=function(returnScene){
     riverGameReturnScene=returnScene;
     myGameArea.canvas=document.getElementById("canvas");
-    //myGamePiece=new component(30,30,"wagonOnRiver.gif",10,120,"image");
-    //infopage = new component("10px", "Consolas", "black", 10, 40, "text");
-    topborder = new component(480, 20, "peru", 0, 0,"block");
-    botborder=new component(480, 20, "peru", 0, 130,"block");
-    //dock=new component(20, 20, "black", 0, 0,"block");
+    topborder = new component(480, 20, "#F6B68E", 0, 0,"block");
+    botborder=new component(480, 20, "#F6B68E", 0, 130,"block");
     myGameArea.start();
-    myGamePiece=new component(80,30,"./img/wagonOnRiver.gif",20,70,"image");
-    //myObstacle  = new component(20, 10, "../img/rock.gif", 200, 100,"image");
+    myGamePiece=new component(30,25,"./img/wagonOnRiver.png",20,70,"image");
     botborder.update();
     topborder.update();
-    //dock.update();
     myGamePiece.update();
-    //myGamePiece = new component(30, 30, "red", 10, 120);
 };
 function everyinterval(n) {
     if ((myGameArea.frameNo / n) % 1 == 0) {return true;}
@@ -33,11 +27,8 @@ function everyinterval(n) {
 var myGameArea = {
     canvas : undefined,
     start : function() {
-        //this.canvas.width = 480;
-        //this.canvas.height = 270;
         this.context = this.canvas.getContext("2d");
-        //document.body.insertBefore(this.canvas, document.body.childNodes[0]);
-    	  this.frameNo = 0;
+        this.frameNo = 0;
         this.interval = setInterval(updateGameArea, 20);
         window.addEventListener('keydown', function (e) {
             myGameArea.key = e.keyCode;
@@ -162,7 +153,7 @@ function updateGameArea() {
 
         //y = canvas.height - 100
         height = Math.floor(Math.random()*(maxHeight-minHeight+1)+minHeight);
-        myObstacles.push(new component(20, 10, "./img/rock.gif", x, height,"image"));
+        myObstacles.push(new component(20, 10, "./img/rock.png", x, height,"image"));
     }
     for (i = 0; i < myObstacles.length; i += 1) {
         myObstacles[i].x += -1;
@@ -172,7 +163,7 @@ function updateGameArea() {
     topborder.update();
     if (myGameArea.frameNo == 1000 ){
     	//x = canvas.width;
-    	dock=new component(30, 30, "./img/dock.jpg", 300, 100,"image");}
+    	dock=new component(50, 75, "./img/dock.png", 300, 100,"image");}
     if(myGameArea.frameNo>1000){
     	dock.x+=-1;
     	dock.update();

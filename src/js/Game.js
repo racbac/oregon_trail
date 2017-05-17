@@ -1065,7 +1065,7 @@ var Game = {
           </div>\n
           <div id="ground"></div>\n
           <div id="status" class="black_white">\n
-            <p>press ENTER to size up the situation</p>\n
+            <p class="white_black">press ENTER to size up the situation</p>\n
             <ul class="plain_list">\n
               <li>Date: <span id="date"></span></li>\n
               <li>Weather: <span id="weather"></span></li>\n
