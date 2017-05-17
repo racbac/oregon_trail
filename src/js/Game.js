@@ -1191,22 +1191,11 @@ var Game = {
             // Random event will return null if event was inapplicable
             if (eventResult != null) {
               Game.alertBox(eventResult, function() {
-                if (eventResult == "Took the wrong trail, lose 3 days") {
-                  var losedays = setInterval(function(){
-                    Game.date.setDate(Game.date.getDate()+1);
-                    document.getElementById("date").innerHTML=  MONTH[Game.date.getMonth()] + " " + Game.date.getDate() + ", " + Game.date.getFullYear() ;
-                    document.getElementById("weather").innerHTML= Game.weather = getWeather(Game.date.getMonth());
-                    document.getElementById("food").innerHTML = Game.gameCaravan.updateFood();
-                  }, 800);
-                  setTimeout(function() {
-                    clearInterval(losedays);
-                    callback();
-                  }, 2400);
-
-                }
-
-				// See if the wagon has been disabled
-			    else if ((eventResult == "A wagon wheel broke") && (Game.gameCaravan.wheels == 0)) {
+				if (eventResult == "Found wild berries") {
+          document.getElementById("berries").remove();
+        }
+        // See if the wagon has been disabled
+			    if ((eventResult == "A wagon wheel broke") && (Game.gameCaravan.wheels == 0)) {
 				  Game.gameCaravan.disabled = true;
 				  Game.gameCaravan.neededPart = "wagon wheel";
 				  Game.scenes.WagonDisabled();

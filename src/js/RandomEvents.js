@@ -129,7 +129,12 @@ function foundSupplies(caravan) {
 }
 
 function foundWildBerries(caravan) {
-
+	document.getElementById("animation").innerHTML += `<img id="berries" src="./img/wild_fruit.png" style="position: absolute; height: 30%; bottom: 0; right: 33%" >`;
+	var remove = function() {
+		document.getElementById("berries").remove();
+		document.removeEventListener("keypress", remove);
+	};
+	document.addEventListener("keypress", remove);
 	caravan.food += 20;
 	return "Found wild berries";
 }
@@ -184,8 +189,13 @@ function oxenSick(caravan) {
 }
 
 function suppliesStolen(caravan) {
-
-	var messageStart = "A group of bandits have stolen ";
+	document.getElementById("animation").innerHTML += `<img id="thief" src="./img/thief.png" style="position: absolute; height: 45%; bottom: 0; right: 0">`;
+	var remove = function() {
+		document.getElementById("thief").remove();
+		document.removeEventListener("keypress", remove);
+	};
+	document.addEventListener("keypress", remove);
+	var messageStart = "A thief has stolen ";
 	var messageEnd = destroyRandomSupplies(caravan);
 
 	if (messageEnd == null) {
