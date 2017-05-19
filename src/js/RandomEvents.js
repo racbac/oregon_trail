@@ -200,7 +200,7 @@ function suppliesStolen(caravan) {
 			document.removeEventListener("keypress", remove);
 		}
 	};
-	document.addEventListener("keypress", remove(e));
+	document.addEventListener("keypress", remove);
 	var messageStart = "A thief has stolen ";
 	var messageEnd = destroyRandomSupplies(caravan);
 
