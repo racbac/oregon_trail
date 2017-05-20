@@ -25,7 +25,7 @@ Store.prototype.adjust_bill = function(item, new_quantity) {
     this.bill += this[item].cost * this[item].quantity;
 }
 
-Store.prototype.item_bill = function(...items) {
+Store.prototype.item_bill = function(items) {
     var bill = 0.00;
     for (var i = 0; i < items.length; i++) {
         bill += this[items[i]].cost * this[items[i]].quantity;

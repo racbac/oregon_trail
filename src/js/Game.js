@@ -422,11 +422,11 @@ var Game = {
                 <div>\n
 				          <hr id = "red_line">
                   <ol class="col2">\n
-                    <li>Oxen<span id="oxen_bill">$`+thestore.item_bill("oxen").toFixed(2)+`</span></li>\n
-                    <li>Food<span id="food_bill">$`+thestore.item_bill("food").toFixed(2)+`</span></li>\n
-                    <li>Clothing<span id="clothing_bill">$`+thestore.item_bill("clothing").toFixed(2)+`</span></li>\n
-                    <li>Bait<span id="bait_bill">$`+thestore.item_bill("bait").toFixed(2)+`</span></li>\n
-                    <li>Spare Parts<span id="spare_bill">$`+thestore.item_bill("axles", "tongues", "wheels").toFixed(2)+`</span></li>\n
+                    <li>Oxen<span id="oxen_bill">$`+thestore.item_bill(["oxen"]).toFixed(2)+`</span></li>\n
+                    <li>Food<span id="food_bill">$`+thestore.item_bill(["food"]).toFixed(2)+`</span></li>\n
+                    <li>Clothing<span id="clothing_bill">$`+thestore.item_bill(["clothing"]).toFixed(2)+`</span></li>\n
+                    <li>Bait<span id="bait_bill">$`+thestore.item_bill(["bait"]).toFixed(2)+`</span></li>\n
+                    <li>Spare Parts<span id="spare_bill">$`+thestore.item_bill(["axles", "tongues", "wheels"]).toFixed(2)+`</span></li>\n
                   </ol>\n
 				          <hr id = "red_line">
                   <p>Total Bill: <span id="total_bill">$`+thestore.bill.toFixed(2)+`</span></p>\n
