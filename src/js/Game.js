@@ -1342,7 +1342,7 @@ var Game = {
 			
 			Game.alertBox("You were able to repair the " + Game.gameCaravan.neededPart + ".", Game.scenes.Journey);
 			Game.gameCaravan.neededPart = "";
-		  	Game.gameCaravan.disabled == false;
+		  	Game.gameCaravan.disabled = false;
 		  }
 		  else {
 			Game.alertBox("You were not able to repair the " + Game.gameCaravan.neededPart + ".", function() {Game.scenes.WagonDisabledInfo(1)});
@@ -2135,6 +2135,7 @@ var Game = {
 		var xhttp = new XMLHttpRequest();
 		xhttp.open("GET", "./php/set_tombstone.php?name=" + name + "&date=" + date + "&mile=" + mile + "&epitaph=" + epitaph, true);
 		xhttp.send();
+		Game.scenes.startScreen();
       }
     })
 
