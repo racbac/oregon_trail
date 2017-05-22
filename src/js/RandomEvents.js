@@ -130,7 +130,7 @@ function foundSupplies(caravan) {
 
 function foundWildBerries(caravan) {
 	document.getElementById("animation").innerHTML += `<img id="berries" src="./img/wild_fruit.png" style="position: absolute; height: 30%; bottom: 0; right: 33%" >`;
-	function remove() {
+	function remove(event) {
 		var x = event.charCode || event.keyCode;
       	if(x == 13){
 			document.getElementById("berries").remove();
@@ -193,7 +193,7 @@ function oxenSick(caravan) {
 
 function suppliesStolen(caravan) {
 	document.getElementById("animation").innerHTML += `<img id="thief" src="./img/thief.png" style="position: absolute; height: 45%; bottom: 0; right: 0">`;
-	function remove(e) {
+	function remove(event) {
 		var x = event.charCode || event.keyCode;
       	if(x == 13){
 			document.getElementById("thief").remove();
