@@ -9,7 +9,7 @@ KansasRiverCrossing:{name:"Kansas River Crossing", river:true ,img:"img/landmark
 BigBlueRiverCrossing:{name:"Big Blue River Crossing", river:true ,img:"img/landmarks/bigblueriver.png", icon: "river.png"},
 FortKearney:{name:"Fort Kearney", river:false ,img:"img/landmarks/fortkearney.png", icon: "fort_kearney.png"},
 ChimneyRock:{name:"Chimney Rock", river:false ,img:"img/landmarks/chimneyrock.png", icon: "chimney_rock.png"},
-FortLaramie:{name:"Fort Laramie", river:false ,img:"img/landmarks/fortlaramie.png", icon: "fort_independence.png"},
+FortLaramie:{name:"Fort Laramie", river:false ,img:"img/landmarks/fortlaramie.png", icon: "fort.png"},
 IndependenceRock:{name:"Independence Rock", river:false ,img:"img/landmarks/independencerock.png", icon: "independence_rock.png", bg: "bg_mountains.png", ground: "#FFCFB2"},
 SouthPass:{name:"South Pass", river:false ,img:"img/landmarks/southpass.png", icon: "pass.png"},
 FortBridger:{name: "Fort Bridger", river:false ,img:"img/landmarks/fortbridger.png", icon: "fort_bridger.png"},

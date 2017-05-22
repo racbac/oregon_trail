@@ -133,8 +133,8 @@ function foundWildBerries(caravan) {
 	function remove(event) {
 		var x = event.charCode || event.keyCode;
       	if(x == 13){
-			document.getElementById("berries").remove();
 			document.removeEventListener("keypress", remove);
+			document.getElementById("berries") ? document.getElementById("berries").remove() : null;
 		}
 	};
 	document.addEventListener("keypress", remove);
@@ -196,8 +196,8 @@ function suppliesStolen(caravan) {
 	function remove(event) {
 		var x = event.charCode || event.keyCode;
       	if(x == 13){
-			document.getElementById("thief").remove();
 			document.removeEventListener("keypress", remove);
+			document.getElementById("thief") ? document.getElementById("thief").remove() : null;
 		}
 	};
 	document.addEventListener("keypress", remove);

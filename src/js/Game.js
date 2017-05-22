@@ -1191,9 +1191,7 @@ var Game = {
             // Random event will return null if event was inapplicable
             if (eventResult != null) {
               Game.alertBox(eventResult, function() {
-				if (eventResult == "Found wild berries") {
-          document.getElementById("berries").remove();
-        }
+			
         // See if the wagon has been disabled
 			    if ((eventResult == "A wagon wheel broke") && (Game.gameCaravan.wheels == 0)) {
 				  Game.gameCaravan.disabled = true;
@@ -1515,7 +1513,7 @@ var Game = {
 	// Screen that displays the map when the player selects the "Look at Map" option
     ShowMap: function(returnScene){
       Map.display(Game.miles);
-      Game.waitForInput(null,null,returnScene);
+      Game.waitForInput([13/*enter*/,32/*space*/],null,returnScene);
     },
 
 	// Screen that displays option for the caravan's pace when the player selects the "Change Pace" option
