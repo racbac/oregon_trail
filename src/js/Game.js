@@ -338,23 +338,23 @@ var Game = {
       Game.waitForInput(null,validationFunc,function(choice){
         if(choice==1){
           //set departure month to March
-          Game.date = new Date("3-01-1848");
+          Game.date = new Date("1848-03-01");
         }
         else if(choice==2){
           //set departure month to April
-          Game.date = new Date("4-01-1848");
+          Game.date = new Date("1848-04-01");
         }
         else if(choice ==3){
           //set departure moth to May
-          Game.date = new Date("5-01-1848");
+          Game.date = new Date("1848-05-01");
         }
         else if(choice ==4){
           //set departure month to June
-          Game.date = new Date("6-01-1848");
+          Game.date = new Date("1848-06-01");
         }
         else if(choice==5){
           //set departure month to July
-          Game.date = new Date("7-01-1848");
+          Game.date = new Date("1848-07-01");
         }
         else if(choice ==6){
           Game.scenes.adviceDepartureMonth();
