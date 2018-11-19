@@ -1,0 +1,48 @@
+# Project Outline
+## Objects
+- Caravan
+    - members
+        - Person family[]
+        - int health
+        - int pace
+        - int rations
+        - int food
+        - float money
+        - int boxes_ammo
+        - int tongues
+        - int wheels
+        - int axles
+        - int oxen
+    - methods
+- Store
+- Journey
+    - Date today
+    - int miles_travelled
+    - int weather
+- Game
+    - members
+    - methods
+        - start_game()
+# Game Mechanics
+## Speed (miles per day)
+- Influenced by
+    - base speed
+        - healthy ox: +5 mi/day per ox (limit 40 mi/day)
+        - injured ox: +4 mi/day per ox (limit 40 mi/day)
+        - family: family travels 3 mi/day on foot
+    - pace
+        - steady: 1
+        - strenuous: 1.5
+        - grueling: 2
+    - weight?
+        - belongings: n/a for now
+        - people: 0.9 per person
+    - weather?
+        - hot: 0.8
+        - warm 1
+        - cool 1
+        - cold 0.9
+        - rainy: 0.9
+        - very rainy: 0.8
+        - snowy: 0.8
+        - very snowy: 0.6
