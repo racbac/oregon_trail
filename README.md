@@ -1,7 +1,14 @@
-# Background
-- Your team project is to make a web replica of the original game Oregon Trail. (found [here](https://archive.org/details/msdos_Oregon_Trail_The_1990))
-# Assignment
-- The project is to make this game web-based using JavaScript, PHP, AJAX, and MySQL. How you use each will be up to the team design, but at the very least, to keep the high score should be using MySQL. There will be a ton of programming just the overall game logic. This should be taken care of by JavaScript, PHP, etc…
-- In one departure from the original, there is an option in the game to hunt for food. This would be difficult to render in JavaScript, so to simplify have the leader of the group go fishing and give random chances on if a fish is caught, and how heavy it is.
-- Second departure “can” be the graphics. They do not have to be the same hideous graphics of the DOS game. You can update, but should be in the same theme.
-- Third, for those that were brand new to the game, some helpful hint (especially when buying or just starting to travel) would be suggested.
+# The Oregon Trail
+## Description
+Our team created a loyal replica of the 1990 release of classic computer game The Oregon Trail using web technologies. Players act as the leader of a five person caravan traveling across the United States via the Oregon Trail during 1848. We took special care to replicate the game's graphics, content, locations, events, and pathways. The game's logic runs on JavaScript, with its various components managed in JavaScript objects. PHP, AJAX, and SQL enable our special features: a scoreboard for the best, and tombstones for the rest.
+
+## Features
+- Scoreboard: Stores names and scores of the top ten players in database.
+- Tombstones: Upon death, players write an epitaph, which is stored in the database along with their name, and distance travelled. Future players will see a tombstone at the same location, with the previous player's name and epitaph. Each new game retrieves most recent tombstone for each 40 mile section of the trail via AJAX.
+- Random events: Each day, players may encounter a random event, e.g. robbers, broken wagons, finding wild berries.
+- Health: Players can choose their pace of travel, daily rations, and rest days, all of which affect their party's rate of sickness and health.
+- Animation: The graphics for river crossings are created using HTML canvas.
+- Conditions: The game tracks and updates a slew of variables—weather, date, food, supplies, party members' health, distance travelled—depending on the game's conditions and the player's options.
+
+## Technologies used
+JavaScript, HTML, CSS, AJAX, PHP, SQL
