@@ -1,10 +1,10 @@
 <?php
-    include("./CommonMethods.php");
-    $COMMON = new Common(false);
+    require_once("./CommonMethods.php");
+    
     $sql = "SELECT `mile`, `name`, `epitaph` FROM `tombstones` WHERE `date` IN (SELECT MAX(`date`) FROM `tombstones` GROUP BY FLOOR(`mile` / 40)) ORDER BY `mile`";
-    $rs = $COMMON->executeQuery($sql, $_SERVER["SCRIPT_NAME"]);
+    $rs = $pdo->query($sql);
     $results = array();
-    while ($row = mysqli_fetch_assoc($rs)) {
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
         $results[] = array(
             'mile' => $row['mile'],
             'name' => $row['name'],

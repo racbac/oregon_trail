@@ -1,11 +1,10 @@
 <?php
-    include("./CommonMethods.php");
-    $COMMON = new Common(false);
+    require_once("./CommonMethods.php");
 
     $sql = "SELECT * FROM `oregon_top_ten` ORDER BY `points` DESC LIMIT 10";
-    $rs = $COMMON->executeQuery($sql, $_SERVER['SCRIPT_NAME']);
+    $rs = $pdo->query($sql);
 
-    while ($row = mysqli_fetch_assoc($rs)) {
+    while ($row = $rs->fetch(PDO::FETCH_ASSOC)) {
         echo("<tr><td>".$row['name']."</td><td>".$row['points']."</td><td>".$row['rating']."</td></tr>\n");
     }
 ?>
