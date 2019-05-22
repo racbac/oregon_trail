@@ -10,22 +10,22 @@
     $stmt = $pdo->query($sql);
     $rs = $stmt->fetch(PDO::FETCH_ASSOC);
     if ($rs['points'] < $score) {
-        $sql = "DELETE FROM `oregon_top_ten` WHERE `key` = ':key'".
+        $sql = "DELETE FROM `oregon_top_ten` WHERE `key` = :loKey".
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(array(':key' => $rs['key']));
+        $stmt->execute(array(':loKey' => $rs['key']));
         $rs = $stmt->fetch(PDO::FETCH_ASSOC);
-        $sql = "INSERT INTO `oregon_top_ten` (`name`, `points`, `rating`) VALUES (':name',':score',':rating')";
+        $sql = "INSERT INTO `oregon_top_ten` (`name`, `points`, `rating`) VALUES (:player,:score,:rating)";
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(array(':name' => $_GET['name'], ':score' => $score, ':rating' => $rating));
+        $stmt->execute(array(':player' => $_GET['name'], ':score' => $score, ':rating' => $rating));
         echo("true");
     } else {
         $sql = "SELECT COUNT(*) `oregon_top_ten`";
         $stmt = $pdo->query($sql);
         $rs = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($rs[0] < 10) {
-            $sql = "INSERT INTO `oregon_top_ten`(`name`, `points`, `rating`) VALUES (':name', ':score', ':rating')";
+            $sql = "INSERT INTO `oregon_top_ten`(`name`, `points`, `rating`) VALUES (:player, :score, :rating)";
             $stmt = $pdo->prepare($sql);
-            $stmt->execute(array(':name' => $_GET['name'], ':score' => $score, ':rating' => $rating));
+            $stmt->execute(array(':player' => $_GET['name'], ':score' => $score, ':rating' => $rating));
             echo("true");
         } else {
             echo("false");
